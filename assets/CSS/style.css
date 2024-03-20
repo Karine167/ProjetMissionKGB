@@ -1,0 +1,25 @@
+body, header{
+    background-color: #DCD2CC;
+    border-color: #DCD2CC;
+}
+
+.btn-primary {
+    font-family: "Martel Sans", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    --bs-btn-color: black;
+    --bs-btn-bg: #BDC3CB;
+    --bs-btn-border-color: black;
+    --bs-btn-border-radius: 10px;
+    --bs-btn-hover-color: black;
+    --bs-btn-hover-bg: #CCAFA5;
+    --bs-btn-hover-border-color: #CCAFA5;
+    --bs-btn-focus-shadow-rgb: #CCAFA5;
+    --bs-btn-active-color: black;
+    --bs-btn-active-bg: #CCAFA5;
+    --bs-btn-active-border-color: #CCAFA5;
+    --bs-btn-active-shadow: inset 0 3px 5px #CCAFA5;
+    --bs-btn-disabled-color: black;
+    --bs-btn-disabled-bg: #FFF;
+    --bs-btn-disabled-border-color: #FFF;
+}

@@ -1,2 +1,6 @@
-<?php
-echo "projet Mission KGB";
+<?php 
+require 'templates/header.php';
+require 'templates/footer.php';
+
+
+
