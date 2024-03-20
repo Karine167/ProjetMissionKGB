@@ -1,6 +1,10 @@
 <?php 
-require 'templates/header.php';
-require 'templates/footer.php';
 
+spl_autoload_register();
+
+use App\Controller\Controller;
+
+$controller = new Controller();
+$controller->route();
 
 
