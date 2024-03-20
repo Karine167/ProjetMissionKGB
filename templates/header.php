@@ -12,12 +12,12 @@
 </head>
 <body>
 
-<header class="d-flex flex-wrap justify-content-center py-2 mb-2 border-bottom">
-    <a href="/" class="d-flex align-items-center mb-1 ps-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+<header class="d-flex flex-wrap  py-2 mb-2 border-bottom">
+    <a href="/" class="d-flex justify-content-start align-items-center mb-1 ps-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
         <img src="assets/images/logoKGB.png" height="100">
     </a>
 
-    <ul class="nav nav-pills p-3">
+    <ul class="nav nav-pills justify-content-end p-3">
         <li class="nav-item"><a href="#" class="btn btn-primary pt-2" aria-current="page">Connexion</a></li>
         <li class="nav-item"><a href="#" class="btn d-none btn-primary pt-2" aria-current="page">Déconnexion</a></li>
     </ul>

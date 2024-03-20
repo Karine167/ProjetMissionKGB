@@ -2,6 +2,14 @@ body, header{
     background-color: #DCD2CC;
     border-color: #DCD2CC;
 }
+footer{
+    font-family: "Martel Sans", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color : black;
+    background-color: #CCAFA5;
+    border-color: #CCAFA5;
+}
 
 .btn-primary {
     font-family: "Martel Sans", sans-serif;
@@ -22,4 +30,12 @@ body, header{
     --bs-btn-disabled-color: black;
     --bs-btn-disabled-bg: #FFF;
     --bs-btn-disabled-border-color: #FFF;
+}
+@media (max-width: 576px) { 
+    body, header, footer, .btn-primary{
+        font-size: smaller;
+    }
+    header a img{
+        height: 80px;
+    }    
 }
