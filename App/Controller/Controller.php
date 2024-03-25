@@ -13,17 +13,17 @@ class Controller
             switch ($_GET['controller']){
                 case 'front':
                     // afficher la page d'accueil du front
+                    require_once _TEMPLATEPATH_.'/homeFront.php';
                     var_dump ("accueil Front");
                     break;
                 case 'auth':
                     // aller au formulaire d'authentification
-                    var_dump ("Authentification");
-                    $adminRepository = new AdminRepository();
-                    $admin = $adminRepository->findOneByEmail('john.doe@test.com');
-                    var_dump($admin);
+                    $controller = new AuthController();
+                    $controller->route();
                     break;
                 case 'back':
                     // afficher la page d'accueil du back
+                    require_once _TEMPLATEPATH_.'/homeBack.php';
                     var_dump ("accueil Back");
                 default :
                     //erreur
@@ -31,6 +31,7 @@ class Controller
             }
         }else {
             // charger la page d'accueil du front
+            require_once _TEMPLATEPATH_.'/homeFront.php';
         }
     }
 }

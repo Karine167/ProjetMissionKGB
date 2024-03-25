@@ -18,8 +18,12 @@
     </a>
 
     <ul class="nav nav-pills justify-content-end p-3">
-        <li class="nav-item"><a href="#" class="btn btn-primary pt-2" aria-current="page">Connexion</a></li>
-        <li class="nav-item"><a href="#" class="btn d-none btn-primary pt-2" aria-current="page">Déconnexion</a></li>
+        <?php if (!array_key_exists('user', $_SESSION)) {?>
+            <li class="nav-item"><a href="/index.php?controller=auth&action=login" class="btn btn-primary pt-2" aria-current="page">Connexion</a></li>
+        <?php } else { ?>
+            <li class="nav-item"><a href="/index.php?controller=back" class="btn btn-primary pt-2" aria-current="page">Administration</a></li>
+            <li class="nav-item"><a href="/index.php?controller=auth&action=logout" class="btn btn-primary pt-2" aria-current="page">Déconnexion</a></li>
+        <?php } ?>
     </ul>
 </header>
     
