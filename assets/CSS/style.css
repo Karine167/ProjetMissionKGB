@@ -2,6 +2,27 @@ body, header{
     background-color: #DCD2CC;
     border-color: #DCD2CC;
 }
+.pageTitle{
+    font-family: "Nunito", sans-serif;
+    font-size: 2em;
+    font-style: italic;
+    font-weight: 1000;
+    background-color: #CCAFA5;
+    color : black;
+}
+
+.formConnect input{
+    background-color: #DCD2CC;
+}
+
+.formConnect{
+    font-family: "Open Sans", sans-serif;
+    font-size: 1.4em;
+    font-style: italic;
+    font-weight: 500;
+    background-color:#EDE7DC;
+    color : black;
+}
 footer{
     font-family: "Martel Sans", sans-serif;
     font-weight: 400;
