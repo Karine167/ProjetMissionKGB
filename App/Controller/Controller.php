@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Db\Mysql;
+use App\Repository\AdminRepository;
+
 class Controller
 {
     public function route():void
@@ -15,6 +18,9 @@ class Controller
                 case 'auth':
                     // aller au formulaire d'authentification
                     var_dump ("Authentification");
+                    $adminRepository = new AdminRepository();
+                    $admin = $adminRepository->findOneByEmail('john.doe@test.com');
+                    var_dump($admin);
                     break;
                 case 'back':
                     // afficher la page d'accueil du back
