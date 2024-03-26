@@ -34,4 +34,23 @@ class Controller
             require_once _TEMPLATEPATH_.'/homeFront.php';
         }
     }
+
+    protected function render(string $view, array $parameters = []): void
+    {
+        $viewPath = _TEMPLATEPATH_ . $view . '.php';
+
+        try {
+            if (!file_exists($viewPath)) {
+                throw new \Exception("Ce fichier n'existe pas : " . $viewPath);
+            }else {
+                extract($parameters);
+                require_once $viewPath;
+            }
+        }catch (\Exception $e) {
+            $error = $e->getMessage();
+            $this->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
 }

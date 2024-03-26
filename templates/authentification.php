@@ -11,11 +11,17 @@ require_once _TEMPLATEPATH_.'/header.php';
                 <div class="mb-5 ms-1">
                     <div class="mt-3 mb-5 mx-2">
                         <label for="email" class="form-label">Email :</label>
-                        <input type="email" class="form-control" id="email" name="email">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="adresse@exemple.com">
+                        <?php if (!empty($errors['email'])){?>
+                            <div class="alert alert-danger"><?php echo($errors['email']) ?></div>
+                        <?php } ?>
                     </div>
                     <div class="mt-3 mb-5 mx-2">
                         <label for="password" class="form-label">Mot de passe :</label>
-                        <input type="password" class="form-control" id="password" name="password">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="password">
+                        <?php if (!empty($errors['password'])){?>
+                            <div class="alert alert-danger"><?php echo($errors['password']) ?></div>
+                        <?php } ?>
                     </div>
                     <input type="submit" name="connect" class="m-3 btn btn-primary" value="Se connecter">
                 </div>
