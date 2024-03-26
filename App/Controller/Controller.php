@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Db\Mysql;
 use App\Repository\AdminRepository;
 
+
 class Controller
 {
     public function route():void
@@ -13,8 +14,11 @@ class Controller
             switch ($_GET['controller']){
                 case 'front':
                     // afficher la page d'accueil du front
-                    require_once _TEMPLATEPATH_.'/homeFront.php';
-                    var_dump ("accueil Front");
+                    if (empty($_GET['action'])){
+                        $_GET['action']='home';
+                    }
+                    $homeController = new MissionController();
+                    $homeController->route();
                     break;
                 case 'auth':
                     // aller au formulaire d'authentification
@@ -31,11 +35,13 @@ class Controller
             }
         }else {
             // charger la page d'accueil du front
-            require_once _TEMPLATEPATH_.'/homeFront.php';
+            $_GET['action']='home';
+                    $homeController = new MissionController();
+                    $homeController->route();
         }
     }
 
-    protected function render(string $view, array $parameters = []): void
+    public function render(string $view, array $parameters = []): void
     {
         $viewPath = _TEMPLATEPATH_ . $view . '.php';
 

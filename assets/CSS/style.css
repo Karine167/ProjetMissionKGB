@@ -2,11 +2,11 @@ body, header{
     background-color: #DCD2CC;
     border-color: #DCD2CC;
 }
-.pageTitle{
+.pageTitle, h1{
     font-family: "Nunito", sans-serif;
-    font-size: 2em;
+    font-size: 1.3em;
     font-style: italic;
-    font-weight: 1000;
+    font-weight: 800;
     background-color: #CCAFA5;
     color : black;
 }
@@ -17,10 +17,51 @@ body, header{
 
 .formConnect{
     font-family: "Open Sans", sans-serif;
-    font-size: 1.4em;
+    font-size: 1.2em;
     font-style: italic;
     font-weight: 500;
     background-color:#EDE7DC;
+    color : black;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th {
+    font-family: "Open Sans", sans-serif;
+    font-size: 1.2em;
+    font-style: italic;
+    font-weight: 500;
+}
+
+td{
+    font-family: "Martel Sans", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+.tabMissions {
+    text-align: center;
+    background-color:#EDE7DC;
+    color : black;
+}
+.detailMission{
+    background-color:#EDE7DC;
+    color : black;
+}
+
+.attributName{
+    font-family: "Open Sans", sans-serif;
+    font-size: 1em;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.attributValue{
+    font-family: "Martel Sans", sans-serif;
+    font-size: 1em;
+    font-weight: 400;
+    font-style: normal;
     color : black;
 }
 footer{
@@ -59,4 +100,7 @@ footer{
     header a img{
         height: 80px;
     }    
+    .pageTitle, h1{
+        font-size: 1.1em;
+    }
 }

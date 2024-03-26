@@ -13,16 +13,16 @@
 <body>
 
 <header class="d-flex flex-wrap  py-2 mb-2 border-bottom">
-    <a href="/" class="d-flex justify-content-start align-items-center mb-1 ps-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+    <a href="/" class="d-flex justify-content-start align-items-center mb-1 ps-3 mb-md-0 me-md-auto">
         <img src="assets/images/logoKGB.png" height="100">
     </a>
 
-    <ul class="nav nav-pills justify-content-end p-3">
+    <ul class="nav nav-pills justify-content-end  me-md-5 pt-3 pe-md-5">
         <?php if (!array_key_exists('user', $_SESSION)) {?>
-            <li class="nav-item"><a href="/index.php?controller=auth&action=login" class="btn btn-primary pt-2" aria-current="page">Connexion</a></li>
+            <li class="nav-item"><a href="/index.php?controller=auth&action=login" class="btn btn-primary pt-2" aria-current="pageConnexion">Connexion</a></li>
         <?php } else { ?>
-            <li class="nav-item"><a href="/index.php?controller=back" class="btn btn-primary pt-2" aria-current="page">Administration</a></li>
-            <li class="nav-item"><a href="/index.php?controller=auth&action=logout" class="btn btn-primary pt-2" aria-current="page">Déconnexion</a></li>
+            <li class="nav-item"><a href="/index.php?controller=back" class="btn btn-primary pt-2" aria-current="pageAdministration">Administration</a></li>
+            <li class="nav-item"><a href="/index.php?controller=auth&action=logout" class="btn btn-primary pt-2" aria-current="pageDéconnexion">Déconnexion</a></li>
         <?php } ?>
     </ul>
 </header>
