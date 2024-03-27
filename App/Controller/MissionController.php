@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Db\Mysql;
 use App\Controller\Controller;
 use App\Repository\MissionRepository;
+use App\Repository\TargetRepository;
 
 class MissionController extends Controller
 {
@@ -59,9 +60,13 @@ class MissionController extends Controller
                 if (!$mission){
                     $errors['mission']='Cette mission n\'existe pas.';    
                 }
+                $targetRepository = new TargetRepository();
+                $targets = $targetRepository->findAllTargetsByMissionId($id);
+
                 $this->render('/detailFront', [
                     'errors'=> $errors,
                     'mission' => $mission,
+                    'targets' => $targets,
                 ]);     
             }else{
                 throw new \Exception("Aucun id spécifié");

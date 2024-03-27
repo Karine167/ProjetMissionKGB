@@ -36,7 +36,10 @@ require_once _TEMPLATEPATH_.'/header.php';
                         <div class="row m-1 p-1 d-flex">
                             <div class="col-12 col-md-6">
                                 <h2 class="attributName">Cible(s) : </h2>
-                                <p class="attributValue"><?php echo("............"); ?></p>
+                                <div class="attributValue"><?php if (!is_null($targets)) {
+                                    foreach ($targets as $target) { ?>
+                                        <p> <?php echo($target) ?></p>
+                                    <?php } } ?></div>
                                 <h2 class="attributName">Planque(s)  (type de planque) : </h2>
                                 <p class="attributValue"><?php echo("............". "(". ".................." . ")"); ?></p>
                             </div>
