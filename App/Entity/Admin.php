@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use DateTime;
 
-class Admin
+class Admin extends Person
 {
     private string $idAdmin;
     private ?string $email = '';

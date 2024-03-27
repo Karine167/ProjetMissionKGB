@@ -16,7 +16,7 @@ require_once _TEMPLATEPATH_.'/header.php';
                     <div class="detailMission ">
                         <div class="row m-1 p-1 d-flex">
                             <div class="col-12 col-md-6 col-lg-4">
-                                <h2 class="attributName">Nom de Code : <span class="attributValue"><?php echo($mission->getCodeName()); ?></span></h2>
+                                <h2 class="attributName">Nom de Code : <span class="attributValue"><?php if (!is_null($mission->getCodeName())) {echo($mission->getCodeName());} ?></span></h2>
                                 <h2 class="attributName">Statut : <span class="attributValue"><?php echo("............"); ?></span></h2>
                                 <h2 class="attributName">Type : <span class="attributValue"><?php echo("............"); ?></span></h2>   
                             </div>
@@ -31,18 +31,18 @@ require_once _TEMPLATEPATH_.'/header.php';
                         </div>
                         <div class="row m-1 p-1 d-flex">
                             <h2 class="attributName">Description : </h2>
-                            <p class="attributValue"><?php echo($mission->getDescription()); ?></p>
+                            <p class="attributValue"><?php if (!is_null($mission->getDescription())) {echo($mission->getDescription());} ?></p>
                         </div>
                         <div class="row m-1 p-1 d-flex">
                             <div class="col-12 col-md-6">
                                 <h2 class="attributName">Cible(s) : </h2>
                                 <p class="attributValue"><?php echo("............"); ?></p>
-                                <h2 class="attributName">Planque(s) : </h2>
-                                <p class="attributValue"><?php echo("............"); ?></p>
+                                <h2 class="attributName">Planque(s)  (type de planque) : </h2>
+                                <p class="attributValue"><?php echo("............". "(". ".................." . ")"); ?></p>
                             </div>
                             <div class="col-12 col-md-6">
                                 <h2 class="attributName">Agent(s) : </h2>
-                                <p class="attributValue"><?php echo("............"); ?></p>
+                                <p class="attributValue"><?php echo("....."); ?></p>
                                 <h2 class="attributName">Contact(s) : </h2>
                                 <p class="attributValue"><?php echo("............"); ?></p>
                             </div>
