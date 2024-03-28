@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Db\Mysql;
 use App\Controller\Controller;
+use App\Repository\AgentRepository;
+use App\Repository\ContactRepository;
 use App\Repository\MissionRepository;
 use App\Repository\TargetRepository;
 
@@ -55,18 +57,28 @@ class MissionController extends Controller
         try{
             if (isset($_GET['id'])){
                 $id = $_GET['id'];
+                //recherche de la mission
                 $missionRepository = new MissionRepository();
                 $mission = $missionRepository->findOneById($id);
                 if (!$mission){
                     $errors['mission']='Cette mission n\'existe pas.';    
                 }
+                //recherche des cibles
                 $targetRepository = new TargetRepository();
                 $targets = $targetRepository->findAllTargetsByMissionId($id);
-
+                //recherche des contacts
+                $contactRepository = new ContactRepository();
+                $contacts = $contactRepository->findAllContactsByMissionId($id);
+                //recherche des agents
+                $agentRepository = new AgentRepository();
+                $agents = $agentRepository->findAllAgentsByMissionId($id);
                 $this->render('/detailFront', [
                     'errors'=> $errors,
                     'mission' => $mission,
                     'targets' => $targets,
+                    'contacts' => $contacts,
+                    'agents' => $agents,
+                    
                 ]);     
             }else{
                 throw new \Exception("Aucun id spécifié");

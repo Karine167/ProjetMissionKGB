@@ -44,7 +44,7 @@ class Mysql
     public function getPDO():\PDO
     {
         if (is_null($this->pdo)){
-            $this->pdo = new \PDO('mysql:host=' . $this->db_host . ';port='. $this->db_port. ';dbname=' . $this->db_name . ";'", $this->db_user, $this->db_password);
+            $this->pdo = new \PDO('mysql:host=' . $this->db_host . ';port='. $this->db_port. ';charset=utf8mb4;dbname=' . $this->db_name . ";'", $this->db_user, $this->db_password);
         }
         return $this->pdo;
     }

@@ -39,15 +39,24 @@ require_once _TEMPLATEPATH_.'/header.php';
                                 <div class="attributValue"><?php if (!is_null($targets)) {
                                     foreach ($targets as $target) { ?>
                                         <p> <?php echo($target) ?></p>
-                                    <?php } } ?></div>
+                                    <?php } } ?>
+                                </div>
                                 <h2 class="attributName">Planque(s)  (type de planque) : </h2>
                                 <p class="attributValue"><?php echo("............". "(". ".................." . ")"); ?></p>
                             </div>
                             <div class="col-12 col-md-6">
                                 <h2 class="attributName">Agent(s) : </h2>
-                                <p class="attributValue"><?php echo("....."); ?></p>
+                                <div class="attributValue"><?php if (!is_null($agents)) {
+                                    foreach ($agents as $agent) { ?>
+                                        <p> <?php echo($agent) ?></p>
+                                    <?php } } ?>
+                                </div>
                                 <h2 class="attributName">Contact(s) : </h2>
-                                <p class="attributValue"><?php echo("............"); ?></p>
+                                <div class="attributValue"><?php if (!is_null($contacts)) {
+                                    foreach ($contacts as $contact) { ?>
+                                        <p> <?php echo($contact) ?></p>
+                                    <?php } } ?>
+                                </div>
                             </div>
                         </div>
                     </div>
