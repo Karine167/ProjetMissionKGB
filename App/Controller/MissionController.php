@@ -6,8 +6,13 @@ use App\Db\Mysql;
 use App\Controller\Controller;
 use App\Repository\AgentRepository;
 use App\Repository\ContactRepository;
+use App\Repository\CountryRepository;
+use App\Repository\HideoutRepository;
 use App\Repository\MissionRepository;
+use App\Repository\SpecialityRepository;
+use App\Repository\StatusRepository;
 use App\Repository\TargetRepository;
+use App\Repository\TypeMissionRepository;
 
 class MissionController extends Controller
 {
@@ -72,13 +77,32 @@ class MissionController extends Controller
                 //recherche des agents
                 $agentRepository = new AgentRepository();
                 $agents = $agentRepository->findAllAgentsByMissionId($id);
+                //recherche du status
+                $statusRepository = new StatusRepository();
+                $status = $statusRepository->findOneStatusById($id);
+                //recherche du type de la mission
+                $typeMissionRepository = new TypeMissionRepository();
+                $typeMission = $typeMissionRepository->findOneTypeMissionById($id);
+                //recherche du pays de la mission
+                $countryRepository = new CountryRepository();
+                $country = $countryRepository->findOneCountryById($id);
+                //recherche de la spécialité nécessaire pour la mission
+                $specialityRepository = new SpecialityRepository();
+                $speciality = $specialityRepository->findOneSpecialityById($id);
+                //recherche des caches
+                $hideoutsRepository = new HideoutRepository();
+                $hideouts = $hideoutsRepository->findAllHideoutsByMissionId($id);
                 $this->render('/detailFront', [
                     'errors'=> $errors,
                     'mission' => $mission,
                     'targets' => $targets,
                     'contacts' => $contacts,
                     'agents' => $agents,
-                    
+                    'status' => $status,
+                    'typeMission' => $typeMission,
+                    'country' => $country,
+                    'speciality' => $speciality,
+                    'hideouts' => $hideouts,
                 ]);     
             }else{
                 throw new \Exception("Aucun id spécifié");

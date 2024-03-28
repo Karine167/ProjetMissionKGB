@@ -17,16 +17,16 @@ require_once _TEMPLATEPATH_.'/header.php';
                         <div class="row m-1 p-1 d-flex">
                             <div class="col-12 col-md-6 col-lg-4">
                                 <h2 class="attributName">Nom de Code : <span class="attributValue"><?php if (!is_null($mission->getCodeName())) {echo($mission->getCodeName());} ?></span></h2>
-                                <h2 class="attributName">Statut : <span class="attributValue"><?php echo("............"); ?></span></h2>
-                                <h2 class="attributName">Type : <span class="attributValue"><?php echo("............"); ?></span></h2>   
+                                <h2 class="attributName">Statut : <span class="attributValue"><?php if (!is_null($status['name'])) {echo ($status['name']);} ?></span></h2>
+                                <h2 class="attributName">Type : <span class="attributValue"><?php if (!is_null($typeMission['type_mission'])) {echo ($typeMission['type_mission']);} ?></span></h2>
                             </div>
                             <div class="col-12 col-md-6 col-lg-4">
                                 <h2 class="attributName">Début : <span class="attributValue"><?php if (!is_null($mission->getBeginDate())) { echo($mission->getBeginDate()->format("m-d-Y")); } ?></span></h2>
                                 <h2 class="attributName">Fin : <span class="attributValue"><?php if (!is_null($mission->getEndDate())) { echo($mission->getEndDate()->format("m-d-Y")); } ?></span></h2>
-                                <h2 class="attributName">Pays : <span class="attributValue"><?php echo("............"); ?></span></h2>
+                                <h2 class="attributName">Pays : <span class="attributValue"><?php if (!is_null($country['country_name'])) {echo ($country['country_name']);} ?></span></h2>
                             </div>
                             <div class="col-12 col-md-6 col-lg-4">
-                                <h2 class="attributName">Spécialité : <span class="attributValue"><?php echo("..............."); ?></span></h2>
+                                <h2 class="attributName">Spécialité : <span class="attributValue"><?php if (!is_null($speciality['name'])) {echo ($speciality['name']);} ?></span></h2>
                             </div>
                         </div>
                         <div class="row m-1 p-1 d-flex">
@@ -42,7 +42,11 @@ require_once _TEMPLATEPATH_.'/header.php';
                                     <?php } } ?>
                                 </div>
                                 <h2 class="attributName">Planque(s)  (type de planque) : </h2>
-                                <p class="attributValue"><?php echo("............". "(". ".................." . ")"); ?></p>
+                                <div class="attributValue"><?php if (!is_null($hideouts)) {
+                                    foreach ($hideouts as $hideout) { ?>
+                                        <p> <?php echo($hideout) ?></p>
+                                    <?php } } ?>
+                                </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <h2 class="attributName">Agent(s) : </h2>
