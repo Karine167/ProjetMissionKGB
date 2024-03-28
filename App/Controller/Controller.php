@@ -28,7 +28,6 @@ class Controller
                 case 'back':
                     // afficher la page d'accueil du back
                     require_once _TEMPLATEPATH_.'/homeBack.php';
-                    var_dump ("accueil Back");
                 default :
                     //erreur
                     break;
