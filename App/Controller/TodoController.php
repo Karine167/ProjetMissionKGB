@@ -62,6 +62,33 @@ class TodoController extends BackController
         $page='/partials/'.$entity.'/'.'Home.php';
         $errors = [];
         $entityMethod = 'findAll'.$entity.'s';
+        $repository = $this->newRepository($entity);
+        $allElements = $repository->$entityMethod();
+        if (!$allElements) {
+            $errors[]='Aucun élément à afficher';
+        }
+        $this->render('/homeBack', [
+            'page'=> $page,
+            'allElements' => $allElements,
+            'errors' => $errors
+        ]);
+    }
+    protected function deleteElement()
+    {
+      
+    }
+
+    protected function createElement()
+    {
+       
+    }
+    protected function editElement()
+    {
+   
+    }
+
+    public function newRepository($entity)
+    {
         switch ($entity){
             case 'Person':
                 $repository = new PersonRepository();
@@ -100,30 +127,9 @@ class TodoController extends BackController
                 $repository = new TypeMissionRepository();
                 break;
             default:
-                    throw new \Exception("Ce repository n'est pas prise en charge :" .$entity);
+                    throw new \Exception("Ce repository n'est pas pris en charge :" .$entity);
                     break;
             }
-        $allElements = $repository->$entityMethod();
-        if (!$allElements) {
-            $errors[]='Aucun élément à afficher';
-        }
-        $this->render('/homeBack', [
-            'page'=> $page,
-            'allElements' => $allElements,
-            'errors' => $errors
-        ]);
-    }
-    protected function deleteElement()
-    {
-      
-    }
-
-    protected function createElement()
-    {
-       
-    }
-    protected function editElement()
-    {
-   
+            return $repository;
     }
 }
