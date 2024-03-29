@@ -33,4 +33,24 @@ class PersonRepository extends Repository
             ]);
         }
     }
+
+    public function findAllPersons():Array|bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM persons");
+            $query->execute();
+            $allPersons = $query->fetchAll($this->pdo::FETCH_ASSOC);
+            if ($allPersons){
+                return $allPersons;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
 }

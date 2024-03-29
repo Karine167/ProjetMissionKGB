@@ -27,7 +27,8 @@ class Controller
                     break;
                 case 'back':
                     // afficher la page d'accueil du back
-                    require_once _TEMPLATEPATH_.'/homeBack.php';
+                    $controller = new BackController();
+                    $controller->route();
                 default :
                     //erreur
                     break;
