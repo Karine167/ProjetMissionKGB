@@ -65,7 +65,7 @@ td{
     color : black;
 }
 
-.menuBackMobile{
+.menuBack, .menuBackMobile{
     background-color: #EDE7DC;
     border: 1px solid black;
 }

@@ -5,8 +5,18 @@ namespace App\Controller;
 use App\Db\Mysql;
 use App\Controller\Controller;
 use App\Repository;
+use App\Repository\AdminRepository;
+use App\Repository\AgentRepository;
+use App\Repository\ContactRepository;
+use App\Repository\CountryRepository;
+use App\Repository\HideoutRepository;
+use App\Repository\MissionRepository;
 use App\Repository\PersonRepository;
+use App\Repository\SpecialityRepository;
+use App\Repository\StatusRepository;
 use App\Repository\TargetRepository;
+use App\Repository\TypeHideoutRepository;
+use App\Repository\TypeMissionRepository;
 
 class TodoController extends BackController
 {
@@ -58,6 +68,36 @@ class TodoController extends BackController
                 break;
             case 'Target': 
                 $repository = new TargetRepository();
+                break;
+            case 'Agent': 
+                $repository = new AgentRepository();
+                break;
+            case 'Contact': 
+                $repository = new ContactRepository();
+                break;
+            case 'Admin': 
+                $repository = new AdminRepository();
+                break;
+            case 'Country': 
+                $repository = new CountryRepository();
+                break;
+            case 'Speciality': 
+                $repository = new SpecialityRepository();
+                break;
+            case 'Hideout': 
+                $repository = new HideoutRepository();
+                break;
+            case 'TypeHideout': 
+                $repository = new TypeHideoutRepository();
+                break;
+            case 'Mission': 
+                $repository = new MissionRepository();
+                break;
+            case 'Status': 
+                $repository = new StatusRepository();
+                break;
+            case 'TypeMission': 
+                $repository = new TypeMissionRepository();
                 break;
             default:
                     throw new \Exception("Ce repository n'est pas prise en charge :" .$entity);

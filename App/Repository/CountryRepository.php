@@ -26,4 +26,24 @@ class CountryRepository extends Repository
             ]);
         }
     }
+
+    public function findAllCountrys():Array|bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM countries");
+            $query->execute();
+            $allCountries = $query->fetchAll($this->pdo::FETCH_ASSOC);
+            if ($allCountries){
+                return $allCountries;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
 }

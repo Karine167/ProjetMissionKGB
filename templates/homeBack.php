@@ -5,7 +5,7 @@ require_once _TEMPLATEPATH_.'/header.php';
 <?php if (array_key_exists('user', $_SESSION)) {
     //Menu BackOffice sur desktop et tablette ?>
     <div class="row d-flex justify-content-center ">
-        <div class="col-11 m-1 p-1 d-none d-md-block d-flex align-items-center justify-content-center pageTitle">
+        <div class="col-11 m-1 p-1 d-none d-md-block d-flex align-items-center justify-content-center menuBack">
             <div class="row ms-1 flex-direction-row  ">
                 <ul class="nav nav-pills align-items-start justify-content-center">
                     <div class="col">

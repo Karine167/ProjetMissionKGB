@@ -1,8 +1,8 @@
 <div class="row d-flex justify-content-center ">
         <div class="col-9 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
-            <h1 class="d-flex justify-content-center m-2"> Liste des cibles : </h1>
+            <h1 class="d-flex justify-content-center m-2"> Liste des agents : </h1>
             <div class="d-flex justify-content-end my-1 ms-2 me-1">
-                <a href="/index.php?controller=back&action=Target&todo=create" class="btn btn-primary pt-2" aria-current="page creation Personne">Ajouter</a>
+                <a href="/index.php?controller=back&action=Agent&todo=create" class="btn btn-primary pt-2" aria-current="page creation Personne">Ajouter</a>
             </div>
         </div>
         <div class="col-11 m-3 p-3 ">
@@ -23,11 +23,11 @@
                         <?php foreach ($allElements as $element) { ?>
                             <tr>
                                 <td><?php echo($element['complete_name']); ?></td>
-                                <td><?php echo($element['code_name']); ?></td>
+                                <td><?php echo($element['identify_code']); ?></td>
                                 <td><?php echo($element['id_mission']); ?></td>
                                 <td>
-                                    <a href="/index.php?controller=back&action=Target&todo=edit&id=<?php echo($element['id_target']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>
-                                    <a href="/index.php?controller=back&action=Target&todo=delete&id=<?php echo($element['id_target']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Supprimer</a>
+                                    <a href="/index.php?controller=back&action=Agent&todo=edit&id=<?php echo($element['id_agent']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>
+                                    <a href="/index.php?controller=back&action=Agent&todo=delete&id=<?php echo($element['id_agent']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Supprimer</a>
                                 </td>
                             </tr>
                         <?php } ?>

@@ -39,4 +39,25 @@ class AgentRepository extends Repository
             }
         
     }
+    
+    public function findAllAgents():Array|bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT *, CONCAT(persons.first_name,' ',persons.last_name) as complete_name FROM agents 
+            LEFT JOIN persons ON persons.id = agents.id_agent");
+            $query->execute();
+            $allAgents = $query->fetchAll($this->pdo::FETCH_ASSOC);
+            if ($allAgents){
+                return $allAgents;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
 }

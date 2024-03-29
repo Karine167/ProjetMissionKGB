@@ -26,4 +26,23 @@ class SpecialityRepository extends Repository
             ]);
         }
     }
+    public function findAllSpecialitys():Array|bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM specialities");
+            $query->execute();
+            $allSpecialities = $query->fetchAll($this->pdo::FETCH_ASSOC);
+            if ($allSpecialities){
+                return $allSpecialities;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
 }

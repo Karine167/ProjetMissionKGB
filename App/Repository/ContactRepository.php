@@ -36,7 +36,27 @@ class ContactRepository extends Repository
                 return $arrayContactsName;
             }else {
                 return false;
+            }  
+    }
+
+    public function findAllContacts():Array|bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT *, CONCAT(persons.first_name,' ',persons.last_name) as complete_name FROM contacts 
+            LEFT JOIN persons ON persons.id = contacts.id_contact");
+            $query->execute();
+            $allContacts = $query->fetchAll($this->pdo::FETCH_ASSOC);
+            if ($allContacts){
+                return $allContacts;
+            }else {
+                return false;
             }
-        
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
     }
 }

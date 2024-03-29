@@ -36,13 +36,13 @@ require_once _TEMPLATEPATH_.'/header.php';
                         <div class="row m-1 p-1 d-flex">
                             <div class="col-12 col-md-6">
                                 <h2 class="attributName">Cible(s) : </h2>
-                                <div class="attributValue"><?php if (!is_null($targets)) {
+                                <div class="attributValue"><?php if ($targets) {
                                     foreach ($targets as $target) { ?>
                                         <p> <?php echo($target) ?></p>
                                     <?php } } ?>
                                 </div>
                                 <h2 class="attributName">Planque(s)  (type de planque) : </h2>
-                                <div class="attributValue"><?php if (!is_null($hideouts)) {
+                                <div class="attributValue"><?php if ($hideouts) {
                                     foreach ($hideouts as $hideout) { ?>
                                         <p> <?php echo($hideout) ?></p>
                                     <?php } } ?>
@@ -50,13 +50,13 @@ require_once _TEMPLATEPATH_.'/header.php';
                             </div>
                             <div class="col-12 col-md-6">
                                 <h2 class="attributName">Agent(s) : </h2>
-                                <div class="attributValue"><?php if (!is_null($agents)) {
+                                <div class="attributValue"><?php if ($agents) {
                                     foreach ($agents as $agent) { ?>
                                         <p> <?php echo($agent) ?></p>
                                     <?php } } ?>
                                 </div>
                                 <h2 class="attributName">Contact(s) : </h2>
-                                <div class="attributValue"><?php if (!is_null($contacts)) {
+                                <div class="attributValue"><?php if ($contacts) {
                                     foreach ($contacts as $contact) { ?>
                                         <p> <?php echo($contact) ?></p>
                                     <?php } } ?>

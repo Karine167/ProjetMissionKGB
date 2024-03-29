@@ -32,4 +32,25 @@ class AdminRepository extends Repository
             ]);
         }
     }
+
+    public function findAllAdmins():Array|bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT *, CONCAT(persons.first_name,' ',persons.last_name) as complete_name FROM admins 
+            LEFT JOIN persons ON persons.id = admins.id_admin");
+            $query->execute();
+            $allAdmins = $query->fetchAll($this->pdo::FETCH_ASSOC);
+            if ($allAdmins){
+                return $allAdmins;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
 }
