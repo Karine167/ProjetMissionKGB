@@ -17,16 +17,12 @@ class BackController extends Controller
                         //page d'accueil du BackOffice
                         $this->home();
                         break;
-                    case 'person':
+                    case 'Person'||'Target':
                         //appel du controller pour l'entité Person
-                        $controller = new PersonController();
+                        $controller = new TodoController();
                         $controller->route();
                         break;
-                    case 'target':
-                        //appel du controller pour l'entité Target
-                        require_once _TEMPLATEPATH_.'/homeBack.php';
-                        echo ('Gérer la table targets ');
-                        break;
+                    
                     default:
                         throw new \Exception("Cette action n'est pas prise en charge.");
                         break;
