@@ -26,4 +26,24 @@ class TypeMissionRepository extends Repository
             ]);
         }
     }
+
+    public function findAllTypeMissions():Array|bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM typeMissions");
+            $query->execute();
+            $alltypeMissions = $query->fetchAll($this->pdo::FETCH_ASSOC);
+            if ($alltypeMissions){
+                return $alltypeMissions;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
 }

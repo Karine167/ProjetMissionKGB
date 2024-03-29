@@ -26,4 +26,23 @@ class StatusRepository extends Repository
             ]);
         }
     }
+    public function findAllStatuss():Array|bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM status");
+            $query->execute();
+            $allstatuts = $query->fetchAll($this->pdo::FETCH_ASSOC);
+            if ($allstatuts){
+                return $allstatuts;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
 }
