@@ -1,5 +1,5 @@
 <div class="row d-flex justify-content-center ">
-        <div class="col-9 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
+        <div class="col-10 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
             <h1 class="d-flex justify-content-center m-2"> Liste des agents : </h1>
             <div class="d-flex justify-content-end my-1 ms-2 me-1">
                 <a href="/index.php?controller=back&action=Agent&todo=create" class="btn btn-primary pt-2" aria-current="page creation Personne">Ajouter</a>

@@ -11,6 +11,11 @@ body, header{
     color : black;
 }
 
+.btn-primary:hover{
+    border: 2px solid black;
+    box-shadow: 2px 2px 2px black;
+}
+
 .formConnect input{
     background-color: #DCD2CC;
 }
