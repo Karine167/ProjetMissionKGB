@@ -84,14 +84,18 @@ class TodoController extends BackController
         $page='/partials/'.$entity.'/'.'Form.php';
         $errors = [];
         if (isset($_POST[$entity])){
-            //echo('formulaire pris en compte');
+            $entityMethod = $entity.'Validate';
+            $repository = $this->newRepository($entity);
+            $responseValidate = $repository->$entityMethod();
+            if ($responseValidate['result']==false){
+                foreach ($responseValidate as $key => $value ){
+                    $errors[$key]=$value;
+                }
+            }else{
+                echo('le formulaire est pris en compte');
+            }
         }
-        /* $entityMethod = $entity.'Create';
-        $repository = $this->newRepository($entity);
-        $allElements = $repository->$entityMethod();
-        if (!$allElements) {
-            $errors[]='Aucun élément à afficher';
-        }*/
+        
         $this->render('/homeBack', [
             'page'=> $page,
             'errors' => $errors
