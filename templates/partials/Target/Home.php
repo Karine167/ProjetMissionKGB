@@ -22,8 +22,8 @@
                     <tbody>
                     <?php foreach ($allElements as $element) { ?>
                         <tr>
-                            <td><?php echo($element['complete_name']); ?></td>
-                            <td><?php echo($element['code_name']); ?></td>
+                            <td><?php echo(htmlspecialchars($element['complete_name'])); ?></td>
+                            <td><?php echo(htmlspecialchars($element['code_name'])); ?></td>
                             <td><?php echo($element['id_mission']); ?></td>
                             <td>
                                 <a href="/index.php?controller=back&action=Target&todo=edit&id=<?php echo($element['id_target']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>

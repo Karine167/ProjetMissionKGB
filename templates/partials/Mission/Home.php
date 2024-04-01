@@ -30,9 +30,9 @@
                             <tr>
                                 
                                 <td class="d-none d-md-table-cell"><?php echo($mission['id']); ?></td>
-                                <td><?php echo($mission['title']); ?></td>
-                                <td><?php echo($mission['description']); ?></td>
-                                <td class="d-none d-md-table-cell"><?php echo($mission['code_name']); ?></td>
+                                <td><?php echo(htmlspecialchars($mission['title'])); ?></td>
+                                <td><?php echo(htmlspecialchars($mission['description'])); ?></td>
+                                <td class="d-none d-md-table-cell"><?php echo(htmlspecialchars($mission['code_name'])); ?></td>
                                 <td><?php echo($mission['begin_date']); ?></td>
                                 <td class="d-none d-md-table-cell"><?php echo($mission['end_date']); }?></td>
                                 <td>

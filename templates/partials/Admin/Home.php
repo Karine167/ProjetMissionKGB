@@ -22,8 +22,8 @@
                     <tbody>
                     <?php foreach ($allElements as $element) { ?>
                         <tr>
-                            <td><?php echo($element['complete_name']); ?></td>
-                            <td><?php echo($element['email']); ?></td>
+                            <td><?php echo(htmlspecialchars($element['complete_name'])); ?></td>
+                            <td><?php echo(htmlspecialchars($element['email'])); ?></td>
                             <td class="d-none d-md-table-cell"><?php echo($element['created_at']); ?></td>
                             <td>
                                 <a href="/index.php?controller=back&action=Admin&todo=edit&id=<?php echo($element['id_admin']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>

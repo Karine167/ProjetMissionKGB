@@ -22,7 +22,7 @@
                     <?php foreach ($allElements as $element) { ?>
                         <tr>
                             <td><?php echo($element['id']); ?></td>
-                            <td><?php echo($element['name']); ?></td>
+                            <td><?php echo(htmlspecialchars($element['name'])); ?></td>
                             <td>
                                 <a href="/index.php?controller=back&action=Status&todo=edit&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>
                                 <a href="/index.php?controller=back&action=Status&todo=delete&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Supprimer</a>

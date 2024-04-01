@@ -74,7 +74,7 @@ class StatusRepository extends Repository
             $response['name'] = 'Le champ nom ne doit pas être vide';
             return $response;
         } else{
-            $name = htmlentities($_POST['name'], ENT_QUOTES);
+            $name = $_POST['name'];
             if (strlen($name)>50){
                 $response['name'] = 'Le champ nom ne doit pas dépasser 50 caractères';
             }else{

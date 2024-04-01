@@ -23,8 +23,8 @@
                     <?php foreach ($allElements as $element) { ?>
                         <tr>
                             <td><?php echo($element['id']); ?></td>
-                            <td><?php echo($element['country_name']); ?></td>
-                            <td><?php echo($element['nationality']); ?></td>
+                            <td><?php echo(htmlspecialchars($element['country_name'])); ?></td>
+                            <td><?php echo(htmlspecialchars($element['nationality'])); ?></td>
                             <td>
                                 <a href="/index.php?controller=back&action=Country&todo=edit&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>
                                 <a href="/index.php?controller=back&action=Country&todo=delete&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Supprimer</a>
