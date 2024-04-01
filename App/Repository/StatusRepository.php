@@ -47,6 +47,7 @@ class StatusRepository extends Repository
             ]);
         }
     }
+    
     public function findAllStatuss():Array|bool
     {
         try{

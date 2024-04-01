@@ -27,6 +27,27 @@ class CountryRepository extends Repository
         }
     }
 
+    public function findOneCountryByName(string $countryName):bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM countries WHERE country_name = :country_name");
+            $query->bindParam(':country_name', $countryName, $this->pdo::PARAM_STR);
+            $query->execute();
+            $country = $query->fetch($this->pdo::FETCH_ASSOC);
+            if ($country){
+                return true;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
+
     public function findAllCountrys():Array|bool
     {
         try{
@@ -45,5 +66,62 @@ class CountryRepository extends Repository
                 'error' => $error
             ]);
         }
+    }
+
+    public function CountryValidate(): array
+    {
+        $response['result']= false;
+        if (empty($_POST['countryName'])){
+            $response['countryName'] = 'Le champ pays ne doit pas être vide';
+            return $response;
+        } else{
+            $country = $_POST['countryName'];
+            if (strlen($country)>50){
+                $response['countryName'] = 'Le champ pays ne doit pas dépasser 50 caractères';
+                return $response;
+            }else{
+                if (empty($_POST['nationality'])){
+                    $response['nationality'] = 'Le champ nationalité ne doit pas être vide';
+                    return $response;
+                } else{
+                    $nationality = $_POST['nationality'];
+                    if (strlen($nationality)>50){
+                        $response['nationality'] = 'Le champ nationalité ne doit pas dépasser 50 caractères';
+                        return $response;
+                    }else{
+                        $response['result']= true;
+                        $response['object']= ['nationality'=>$nationality, 'countryName' => $country];
+                    } 
+                }
+            }    
+        }
+        return $response;    
+    }
+
+    public function CountrySaveToDataBase(array $object): array
+    {
+        $countryName = $object['countryName'];
+        $nationality = $object['nationality']; 
+        //recherche s'il y a déjà un élément en BDD du même nom
+        if ($this->findOneCountryByName($countryName)){
+            $response['result'] = false;
+            $response['exist'] ='Il existe déjà un pays de même nom';
+            return $response;
+        }else{
+            try{
+                $pdoAdd = $this->pdo->prepare("INSERT INTO countries(country_name, nationality) VALUES (:country_name, :nationality)");
+                $pdoAdd->bindParam(':country_name', $countryName, $this->pdo::PARAM_STR);
+                $pdoAdd->bindParam(':nationality', $nationality, $this->pdo::PARAM_STR);
+                $pdoAdd->execute();
+                $response['result']= true;
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+        }
+        return $response;
     }
 }

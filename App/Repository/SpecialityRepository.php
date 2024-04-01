@@ -26,6 +26,27 @@ class SpecialityRepository extends Repository
             ]);
         }
     }
+    public function findOneSpecialityByName(string $name):bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM specialities WHERE name = :name");
+            $query->bindParam(':name', $name, $this->pdo::PARAM_STR);
+            $query->execute();
+            $speciality = $query->fetch($this->pdo::FETCH_ASSOC);
+            if ($speciality){
+                return true;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
+
     public function findAllSpecialitys():Array|bool
     {
         try{
@@ -44,5 +65,47 @@ class SpecialityRepository extends Repository
                 'error' => $error
             ]);
         }
+    }
+    public function SpecialityValidate(): array
+    {
+        $response['result']= false;
+        if (empty($_POST['name'])){
+            $response['name'] = 'Le champ spécialité ne doit pas être vide';
+            return $response;
+        } else{
+            $speciality = $_POST['name'];
+            if (strlen($speciality)>50){
+                $response['name'] = 'Le champ spécialité ne doit pas dépasser 50 caractères';
+            }else{
+                $response['result']=true;
+                $response['object']= $speciality;
+            } 
+        }
+        return $response;
+    }
+
+    public function SpecialitySaveToDataBase(string $name): array
+    {
+        
+        //recherche s'il y a déjà un élément en BDD du même nom
+        if ($this->findOneSpecialityByName($name)){
+            $response['result'] = false;
+            $response['exist'] ='Il existe déjà un statut de même nom';
+            return $response;
+        }else{
+            try{
+                $pdoAdd = $this->pdo->prepare("INSERT INTO specialities(name) VALUES (:name)");
+                $pdoAdd->bindParam(':name', $name, $this->pdo::PARAM_STR);
+                $pdoAdd->execute();
+                $response['result']= true;
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+        }
+        return $response;
     }
 }
