@@ -92,10 +92,17 @@ class TodoController extends BackController
                     $errors[$key]=$value;
                 }
             }else{
-                echo('le formulaire est pris en compte');
+                $entitySave = $entity.'SaveToDataBase';
+                $responseSave = $repository->$entitySave($responseValidate['object']);
+                if ($responseSave['result']==false){
+                    foreach ($responseSave as $key => $value ){
+                        $errors[$key]=$value;
+                    }
+                } else { 
+                $errors['save']= 'L\'enregistrement a été correctement effecué';
+                }
             }
         }
-        
         $this->render('/homeBack', [
             'page'=> $page,
             'errors' => $errors

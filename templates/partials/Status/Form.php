@@ -17,7 +17,14 @@
                         <div class="mt-3 mb-5 mx-2">
                             <input type="submit" name="Status" class="m-3 btn btn-primary" value="Enregistrer">
                         </div>
-                        
+                        <div class="mt-3 mb-5 mx-2">
+                            <?php if (!empty($errors['save'])){?>
+                                <div class="alert alert-danger"><?php echo($errors['save']) ?></div>
+                            <?php } ?>
+                            <?php if (!empty($errors['exist'])){?>
+                                <div class="alert alert-danger"><?php echo($errors['exist']) ?></div>
+                            <?php } ?>
+                        </div>
                     </form>
                 </div>
             </div>

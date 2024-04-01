@@ -26,6 +26,27 @@ class StatusRepository extends Repository
             ]);
         }
     }
+
+    public function findOneStatusByName(string $name):bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM status WHERE name = :name");
+            $query->bindParam(':name', $name, $this->pdo::PARAM_STR);
+            $query->execute();
+            $status = $query->fetch($this->pdo::FETCH_ASSOC);
+            if ($status){
+                return true;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
     public function findAllStatuss():Array|bool
     {
         try{
@@ -58,7 +79,33 @@ class StatusRepository extends Repository
                 $response['name'] = 'Le champ nom ne doit pas dépasser 50 caractères';
             }else{
                 $response['result']=true;
+                $response['object']= $name;
             } 
+        }
+        return $response;
+    }
+
+    public function StatusSaveToDataBase(string $name): array
+    {
+        
+        //recherche s'il y a déjà un élément en BDD du même nom
+        if ($this->findOneStatusByName($name)){
+            $response['result'] = false;
+            $response['exist'] ='Il existe déjà un statut de même nom';
+            return $response;
+        }else{
+            try{
+                $pdoAdd = $this->pdo->prepare("INSERT INTO status(name) VALUES (:name)");
+                $pdoAdd->bindParam(':name', $name, $this->pdo::PARAM_STR);
+                $pdoAdd->execute();
+                $response['result']= true;
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
         }
         return $response;
     }
