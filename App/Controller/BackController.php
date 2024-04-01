@@ -9,7 +9,7 @@ use App\Controller\Controller;
 class BackController extends Controller
 {
     public function route():void
-    {
+    { $Category = ['Person','Target','Agent','Contact','Admin','Country','Speciality','Hideout','TypeHideout','Mission','Status','TypeMission'];
         try{
             if (isset($_GET['action'])){
                 switch ($_GET['action']){
@@ -17,7 +17,7 @@ class BackController extends Controller
                         //page d'accueil du BackOffice
                         $this->home();
                         break;
-                    case 'Person'||'Target':
+                    case in_array($_GET['action'], $Category):
                         //appel du controller pour l'entité Person
                         $controller = new TodoController();
                         $controller->route();

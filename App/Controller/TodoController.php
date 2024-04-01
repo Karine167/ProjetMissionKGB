@@ -80,7 +80,22 @@ class TodoController extends BackController
 
     protected function createElement()
     {
-       
+        $entity = $_GET['action'];
+        $page='/partials/'.$entity.'/'.'Form.php';
+        $errors = [];
+        if (isset($_POST[$entity])){
+            //echo('formulaire pris en compte');
+        }
+        /* $entityMethod = $entity.'Create';
+        $repository = $this->newRepository($entity);
+        $allElements = $repository->$entityMethod();
+        if (!$allElements) {
+            $errors[]='Aucun élément à afficher';
+        }*/
+        $this->render('/homeBack', [
+            'page'=> $page,
+            'errors' => $errors
+        ]); 
     }
     protected function editElement()
     {

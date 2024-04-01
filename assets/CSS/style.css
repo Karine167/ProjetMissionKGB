@@ -16,11 +16,12 @@ body, header{
     box-shadow: 2px 2px 2px black;
 }
 
-.formConnect input{
+.formConnect input, .formCategory .formInput{
     background-color: #DCD2CC;
+    border: solid 1px #DCD2CC;
 }
 
-.formConnect{
+.formConnect, .formCategory {
     font-family: "Open Sans", sans-serif;
     font-size: 1.2em;
     font-style: italic;
