@@ -53,7 +53,7 @@ class MissionRepository extends Repository
     public function findAllMissions():Array|bool
     {
         try{
-            $query = $this->pdo->prepare("SELECT * FROM missions");
+            $query = $this->pdo->prepare("SELECT * FROM missions ORDER BY title");
             $query->execute();
             $allMissions = $query->fetchAll($this->pdo::FETCH_ASSOC);
             if ($allMissions){

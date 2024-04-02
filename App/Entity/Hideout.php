@@ -153,7 +153,6 @@ class Hideout
     public function setIdMission(?int $idMission): self
     {
         $this->idMission = $idMission;
-
         return $this;
     }
 }

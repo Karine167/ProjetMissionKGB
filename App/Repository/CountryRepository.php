@@ -51,7 +51,7 @@ class CountryRepository extends Repository
     public function findAllCountrys():Array|bool
     {
         try{
-            $query = $this->pdo->prepare("SELECT * FROM countries");
+            $query = $this->pdo->prepare("SELECT * FROM countries ORDER BY country_name");
             $query->execute();
             $allCountries = $query->fetchAll($this->pdo::FETCH_ASSOC);
             if ($allCountries){

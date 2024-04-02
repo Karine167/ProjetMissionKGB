@@ -29,7 +29,7 @@ class TypeHideoutRepository extends Repository
     public function findAllTypeHideouts():Array|bool
     {
         try{
-            $query = $this->pdo->prepare("SELECT * FROM typeHideouts");
+            $query = $this->pdo->prepare("SELECT * FROM typeHideouts ORDER BY type_hide");
             $query->execute();
             $alltypeHideouts = $query->fetchAll($this->pdo::FETCH_ASSOC);
             if ($alltypeHideouts){
