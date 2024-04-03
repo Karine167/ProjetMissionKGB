@@ -119,6 +119,9 @@ class HideoutRepository extends Repository
         if ($_POST['mission']=!"autre"){
             $hideout->setIdMission($_POST['mission']);
         }
+        if ($_POST['country']=!"apatride"){
+            $hideout->setIdMission($_POST['mission']);
+        }
         
         $response['result']= true;
         $response['object']= $hideout;

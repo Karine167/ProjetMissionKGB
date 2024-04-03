@@ -76,7 +76,7 @@ $missions = $missionRepository->findAllMissions();
                                     <?php foreach ($missions as $mission) { ?>
                                         <option value=<?php echo($mission['id'])?> ><?php echo(htmlspecialchars($mission['title'].'('.$mission['code_name']).')')?> </option>
                                     <?php } ?>
-                                    <option value="autre"> aucune mission </option>
+                                    <option value="autre" selected> aucune mission </option>
                                 </optgroup>
                             </select>
                             <?php if (!empty($errors['mission'])){?>

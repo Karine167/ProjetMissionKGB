@@ -48,6 +48,25 @@ class CountryRepository extends Repository
         }
     }
 
+    public function findAllNationalities():Array|bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM countries ORDER BY nationality");
+            $query->execute();
+            $allNationalities = $query->fetchAll($this->pdo::FETCH_ASSOC);
+            if ($allNationalities){
+                return $allNationalities;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
     public function findAllCountrys():Array|bool
     {
         try{
