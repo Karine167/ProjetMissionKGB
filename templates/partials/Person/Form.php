@@ -1,11 +1,16 @@
 <?php
 use App\Repository\CountryRepository;
 use App\Repository\MissionRepository;
+use App\Repository\SpecialityRepository;
+
 $countryRepository = new CountryRepository();
 $nationalities = $countryRepository->findAllNationalities();
 
 $missionRepository = new MissionRepository();
 $missions = $missionRepository->findAllMissions();
+
+$specialityRepository = new SpecialityRepository();
+$specialities= $specialityRepository->findAllSpecialitys();
 
 ?>
 <div class="row d-flex justify-content-center ">
@@ -118,17 +123,24 @@ $missions = $missionRepository->findAllMissions();
                         </div>
                         
                         <div id="formAgent" class="d-none">
+                            
                             <div class="mt-3 mb-5 mx-2">
-                                <label for="name" class=" col-4 d-inline attributName"> Nom de la spécialité :</label>
-                                <input type="text" class="col-8 d-inline attribueValue formInput" id="name" name="name">
-                                <?php if (!empty($errors['name'])){?>
-                                    <div class="alert alert-danger"><?php echo($errors['name']) ?></div>
+                                <label for="specialityName" class=" col-4 d-inline attributName"> Nom de la (ou des) spécialité(s) :</label>
+                                <select multiple name="specialityName" id="specialityName" class="col-8 d-inline attribueValue formInput" >
+                                    <optgroup label="Spécialités">
+                                        <?php foreach ($specialities as $speciality) { ?>
+                                            <option value=<?php echo($speciality['id'])?>><?php echo(htmlspecialchars($speciality['name']))?> </option>
+                                        <?php } ?>
+                                    </optgroup>
+                                </select>
+                                <?php if (!empty($errors['specialityName'])){?>
+                                    <div class="alert alert-danger"><?php echo($errors['specialityName']) ?></div>
                                 <?php } ?>
                             </div>
                         </div>
                         
                         <div class="mt-3 mb-5 mx-2">
-                            <input type="submit" name="Hideout" class="m-3 btn btn-primary" value="Enregistrer">
+                            <input type="submit" name="Person" class="m-3 btn btn-primary" value="Enregistrer">
                         </div>
                         <div class="mt-3 mb-5 mx-2">
                             <?php if (!empty($errors['save'])){?>

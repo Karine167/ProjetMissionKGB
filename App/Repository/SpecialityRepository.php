@@ -50,7 +50,7 @@ class SpecialityRepository extends Repository
     public function findAllSpecialitys():Array|bool
     {
         try{
-            $query = $this->pdo->prepare("SELECT * FROM specialities");
+            $query = $this->pdo->prepare("SELECT * FROM specialities ORDER BY name");
             $query->execute();
             $allSpecialities = $query->fetchAll($this->pdo::FETCH_ASSOC);
             if ($allSpecialities){
