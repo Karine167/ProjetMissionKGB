@@ -27,7 +27,7 @@
                             <td class="d-none d-md-table-cell"><?php echo($element['id']); ?></td>
                             <td><?php echo(htmlspecialchars($element['first_name'])); ?></td>
                             <td><?php echo(htmlspecialchars($element['last_name'])); ?></td>
-                            <td><?php echo($element['birthdate']); ?></td>
+                            <td><?php echo(substr($element['birthdate'],8,2).'-'.substr($element['birthdate'],5,2).'-'.substr($element['birthdate'],0,4)); ?></td>
                             <td>
                                 <a href="/index.php?controller=back&action=Person&todo=edit&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>
                                 <a href="/index.php?controller=back&action=Person&todo=delete&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Supprimer</a>

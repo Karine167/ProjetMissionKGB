@@ -79,8 +79,30 @@ class TodoController extends BackController
     }
 
     protected function createElement()
-    {
+    {   
+        $role ='';
         $entity = $_GET['action'];
+        switch ($entity) {
+            case 'Person' :
+                $role = 'roleAdmin';
+                break;
+            case 'Admin' :
+                $role = 'roleAdmin'; 
+                $entity = 'Person';
+                break;
+            case 'Agent' :
+                $role = 'roleAgent';
+                $entity = 'Person';
+                break;
+            case 'Target' :
+                $role = 'roleTarget';
+                $entity = 'Person';
+                break;
+            case 'Contact' :
+                $role = 'roleContact';
+                $entity = 'Person';
+                break;
+        }
         $page='/partials/'.$entity.'/'.'Form.php';
         $errors = [];
         if (isset($_POST[$entity])){
@@ -105,7 +127,9 @@ class TodoController extends BackController
         }
         $this->render('/homeBack', [
             'page'=> $page,
-            'errors' => $errors
+            'errors' => $errors,
+            'role' => $role
+            
         ]); 
     }
     protected function editElement()

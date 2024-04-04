@@ -24,22 +24,31 @@ $specialities= $specialityRepository->findAllSpecialitys();
                 <div class="row d-flex justify-content-start my-3 ms-2 me-1">
                     <form action="" method="POST">
                         <div class="mt-3 mb-5 mx-2">
-                            <label for="firstName" class=" col-4 d-inline attributName"> Prénom :</label>
-                            <input type="text" class="col-8 d-inline attribueValue formInput" id="firstName" name="firstName" >
+                            <label for="firstName" class=" col-4 d-inline attributName"> Prénom* :</label>
+                            <input type="text" class="col-8 d-inline attribueValue formInput" id="firstName" name="firstName" required
+                            <?php if (isset($_POST['Person']) && !empty($_POST['firstName'])){
+                                echo('value="'.trim(htmlspecialchars($_POST['firstName'])).'"');
+                            } ?> >
                             <?php if (!empty($errors['firstName'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['firstName']) ?></div>
                             <?php } ?>
                         </div>
                         <div class="mt-3 mb-5 mx-2">
-                            <label for="lastName" class=" col-4 d-inline attributName"> Nom :</label>
-                            <input type="text" class="col-8 d-inline attribueValue formInput" id="lastName" name="lastName">
+                            <label for="lastName" class=" col-4 d-inline attributName"> Nom* :</label>
+                            <input type="text" class="col-8 d-inline attribueValue formInput" id="lastName" name="lastName" required 
+                            <?php if (isset($_POST['Person']) && !empty($_POST['lastName'])){
+                                echo('value="'.trim(htmlspecialchars($_POST['lastName'])).'"');
+                            } ?> >
                             <?php if (!empty($errors['lastName'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['lastName']) ?></div>
                             <?php } ?>
                         </div>
                         <div class="mt-3 mb-5 mx-2">
                             <label for="birthdate" class=" col-4 d-inline attributName"> Date de naissance :</label>
-                            <input type="date" class="col-8 d-inline attribueValue formInput" id="birthdate" name="birthdate">
+                            <input type="date" class="col-8 d-inline attribueValue formInput" id="birthdate" name="birthdate" 
+                            <?php if (isset($_POST['Person']) && !empty($_POST['birthdate'])){
+                                echo('value="'.trim(htmlspecialchars($_POST['birthdate'])).'"');
+                            } ?> >
                             <?php if (!empty($errors['birthdate'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['birthdate']) ?></div>
                             <?php } ?>
@@ -67,31 +76,39 @@ $specialities= $specialityRepository->findAllSpecialitys();
                             <legend class="attributName">Sélectionner un rôle :</legend>
                             <div class="row d-flex justify-content-space-between ">
                                 <div class="col-3">
-                                    <input type="radio" id="roleAdmin" name="role" value="roleAdmin" />
+                                    <input type="radio" id="roleAdmin" name="radio" value="roleAdmin" 
+                                    <?php if ($role == 'roleAdmin') {?> checked <?php } ?>/>
                                     <label for="roleAdmin">Admin</label>
                                 </div>
 
                                 <div class="col-3">
-                                    <input type="radio" id="roleAgent" name="role" value="roleAgent" />
+                                    <input type="radio" id="roleAgent" name="radio" value="roleAgent" 
+                                    <?php if ($role == 'roleAgent') {?> checked <?php } ?>/>
                                     <label for="roleAgent">Agent</label>
                                 </div>
 
                                 <div class="col-3">
-                                    <input type="radio" id="roleTarget" name="role" value="roleTarget" />
+                                    <input type="radio" id="roleTarget" name="radio" value="roleTarget" 
+                                    <?php if ($role == 'roleTarget') {?> checked <?php } ?> />
                                     <label for="roleTarget">Cible</label>
                                 </div>
 
                                 <div class="col-3">
-                                    <input type="radio" id="roleContact" name="role" value="roleContact" />
-                                    <label for="roleContact">Contact</label>
+                                    <input type="radio" id="roleContact" name="radio" value="roleContact"
+                                    <?php if ($role == 'roleContact') {?> checked <?php } ?> />
+                                    <label for="roleContact">Contact </label>
                                 </div>
                             </div>
                         </fieldset> 
+                        
 
-                        <div id="formAdmin" class="d-none">
+                        <div id="formAdmin" class=<?php if ($role == 'roleAdmin') { echo("d-block"); } else { echo("d-none"); } ?> >
                             <div class="mt-3 mb-5 mx-2">
                                 <label for="email" class="form-label">Email :</label>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="adresse@exemple.com">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="adresse@exemple.com" required
+                                <?php if (isset($_POST['Person']) && !empty($_POST['email'])){
+                                echo('value="'.trim(htmlspecialchars($_POST['email'])).'"');
+                            } ?>>
                                 <?php if (!empty($errors['email'])){?>
                                     <div class="alert alert-danger"><?php echo($errors['email']) ?></div>
                                 <?php } ?>
@@ -105,7 +122,7 @@ $specialities= $specialityRepository->findAllSpecialitys();
                             </div>
                         </div>
 
-                        <div id="formNoAdmin" class="d-none">
+                        <div id="formNoAdmin" class=<?php if ($role != 'roleAdmin') { echo("d-block"); } else { echo("d-none"); } ?>>
                             <div class="mt-3 mb-5 mx-2">
                                 <label for="mission" class=" col-4 d-inline attributName"> Mission :</label>
                                 <select name="mission" id="mission" class="col-8 d-inline attribueValue formInput" >
@@ -122,19 +139,19 @@ $specialities= $specialityRepository->findAllSpecialitys();
                             </div>
                         </div>
                         
-                        <div id="formAgent" class="d-none">
-                            
+                        <div id="formAgent" class=<?php if ($role == 'roleAgent') { echo("d-block"); } else { echo("d-none"); } ?>>
                             <div class="mt-3 mb-5 mx-2">
-                                <label for="specialityName" class=" col-4 d-inline attributName"> Nom de la (ou des) spécialité(s) :</label>
-                                <select multiple name="specialityName" id="specialityName" class="col-8 d-inline attribueValue formInput" >
+                                <label for="specialityNames" class=" col-4 d-inline attributName"> Nom de la (ou des) spécialité(s) :</label>
+                                <select multiple name="specialityNames" id="specialityNames" class="col-8 d-inline attribueValue formInput" >
                                     <optgroup label="Spécialités">
                                         <?php foreach ($specialities as $speciality) { ?>
                                             <option value=<?php echo($speciality['id'])?>><?php echo(htmlspecialchars($speciality['name']))?> </option>
                                         <?php } ?>
                                     </optgroup>
                                 </select>
-                                <?php if (!empty($errors['specialityName'])){?>
-                                    <div class="alert alert-danger"><?php echo($errors['specialityName']) ?></div>
+                                
+                                <?php if (!empty($errors['specialityNames'])){?>
+                                    <div class="alert alert-danger"><?php echo($errors['specialityNames']) ?></div>
                                 <?php } ?>
                             </div>
                         </div>
@@ -143,6 +160,7 @@ $specialities= $specialityRepository->findAllSpecialitys();
                             <input type="submit" name="Person" class="m-3 btn btn-primary" value="Enregistrer">
                         </div>
                         <div class="mt-3 mb-5 mx-2">
+                            
                             <?php if (!empty($errors['save'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['save']) ?></div>
                             <?php } ?>
