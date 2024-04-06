@@ -86,6 +86,11 @@ class PersonRepository extends Repository
 
     public function PersonValidate(): array
     {
+        if (isset($_POST['Person'])){
+            $roleRadio=$_POST['roleRadio'];
+        } else {
+            $roleRadio = $_GET['roleRadio'];
+        }
         $response['result']= true;
         $requiredFields=['firstName', 'lastName'];
         foreach ($requiredFields as $field) {
@@ -113,7 +118,7 @@ class PersonRepository extends Repository
         $id = uniqid("person", true).date("m.d.Y.h.i.s");
         if ($response['result'] == true){
             $code = substr($_POST['firstName'],0,1). substr($_POST['lastName'],0,1).'-'. date("m.d.Y.h.i.s");
-            switch ($_POST['radio']){
+            switch ($roleRadio){
                 case 'roleAdmin':
                     if (empty($_POST['email'])){
                         $response['email']='Le champ email ne doit pas être vide';
@@ -131,19 +136,19 @@ class PersonRepository extends Repository
                             } else {
                                 $password = $_POST['password'];
                                 if (strlen($password) < 8 || strlen($password) > 20){
-                                    $response['password']='Le mot de passe doit contenir entre 8 et 20 caractères';
+                                    $response['password']='Le mot de passe doit contenir entre 8 et 20 caractères, et posséder au moins un caractère de chacune des catégories suivantes : caractère spécial, un chiffre, une majuscule et une minuscule.';
                                     $response['result']= false;
                                 }elseif (ctype_alnum($password)){
-                                    $response['password']='le mot de passe doit contenir au moins un caractère spécial.';
+                                    $response['password']='Le mot de passe doit contenir au moins un caractère spécial, et au moins un caractère de chacune des catégories suivantes : un chiffre, une majuscule et une minuscule. Il doit également avoir entre 8 et 20 caractères.';
                                     $response['result']= false;
                                 }elseif (!preg_match('/.*\d.*/', $password)){
-                                    $response['password']='le mot de passe doit contenir au moins un chiffre';
+                                    $response['password']='Le mot de passe doit contenir au moins un chiffre, et au moins un caractère de chacune des catégories suivantes : un caractère spécial, une majuscule et une minuscule. Il doit également avoir entre 8 et 20 caractères.';
                                     $response['result']= false;
                                 }elseif (!preg_match('/.*[a-z].*/', $password)){
-                                    $response['password']='le mot de passe doit contenir au moins une lettre minuscule';
+                                    $response['password']='Le mot de passe doit contenir au moins une lettre minuscule, et au moins un caractère de chacune des catégories suivantes : un chiffre, une majuscule et un caractère spécial. Il doit également avoir entre 8 et 20 caractères.';
                                     $response['result']= false;
                                 }elseif (!preg_match('/.*[A-Z].*/', $password)){
-                                    $response['password']='le mot de passe doit contenir au moins une lettre majuscule';
+                                    $response['password']='Le mot de passe doit contenir au moins une lettre majuscule et au moins un caractère de chacune des catégories suivantes : un chiffre, une minuscule et un caractère spécial. Il doit également avoir entre 8 et 20 caractères.';
                                     $response['result']= false;
                                 }
                             } 

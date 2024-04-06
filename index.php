@@ -10,7 +10,7 @@ session_start();
 
 define('_ROOTPATH_', __DIR__);
 define('_TEMPLATEPATH_', __DIR__.'/templates');
-define('role', '');
+
 
 spl_autoload_register();
 

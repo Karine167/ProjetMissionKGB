@@ -11,18 +11,22 @@ $missions = $missionRepository->findAllMissions();
 
 $specialityRepository = new SpecialityRepository();
 $specialities= $specialityRepository->findAllSpecialitys();
-
+if (isset($_POST['Person'])){
+    $roleRadio=$_POST['roleRadio'];
+} else {
+    $roleRadio = $_GET['roleRadio'];
+}
 ?>
 <div class="row d-flex justify-content-center ">
     <div class="col-9 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
-        <h1 class="d-flex justify-content-center m-2"> Personnes : </h1>
+        <h1 class="d-flex justify-content-center m-2"> Personnes :</h1>
     </div>
     <div class="col-11 m-3 p-3 d-flex justify-content-center align-items-center formCategory" >
         
             <div class="row m-3 p-3 d-flex align-items-center justify-content-center">
                 <h1 class="d-flex justify-content-center m-2 attributName formCategory fs-3"> Formulaire des personnes : </h1>
                 <div class="row d-flex justify-content-start my-3 ms-2 me-1">
-                    <form action="" method="POST">
+                    <form action="/index.php?controller=back&action=Person&todo=create&roleRadio=<?=$roleRadio?>" method="POST">
                         <div class="mt-3 mb-5 mx-2">
                             <label for="firstName" class=" col-4 d-inline attributName"> Prénom* :</label>
                             <input type="text" class="col-8 d-inline attribueValue formInput" id="firstName" name="firstName" required
@@ -76,36 +80,37 @@ $specialities= $specialityRepository->findAllSpecialitys();
                             <legend class="attributName">Sélectionner un rôle :</legend>
                             <div class="row d-flex justify-content-space-between ">
                                 <div class="col-3">
-                                    <input type="radio" id="roleAdmin" name="radio" value="roleAdmin" 
-                                    <?php if ($role == 'roleAdmin') {?> checked <?php } ?>/>
+                                    <input type="radio" id="roleAdmin" name="roleRadio" value="roleAdmin" 
+                                    <?php if ($roleRadio == 'roleAdmin') {?> checked <?php } ?>/>
                                     <label for="roleAdmin">Admin</label>
                                 </div>
 
                                 <div class="col-3">
-                                    <input type="radio" id="roleAgent" name="radio" value="roleAgent" 
-                                    <?php if ($role == 'roleAgent') {?> checked <?php } ?>/>
+                                    <input type="radio" id="roleAgent" name="roleRadio" value="roleAgent" 
+                                    <?php if ($roleRadio == 'roleAgent') {?> checked <?php } ?>/>
                                     <label for="roleAgent">Agent</label>
                                 </div>
 
                                 <div class="col-3">
-                                    <input type="radio" id="roleTarget" name="radio" value="roleTarget" 
-                                    <?php if ($role == 'roleTarget') {?> checked <?php } ?> />
+                                    <input type="radio" id="roleTarget" name="roleRadio" value="roleTarget" 
+                                    <?php if ($roleRadio == 'roleTarget') {?> checked <?php } ?> />
                                     <label for="roleTarget">Cible</label>
                                 </div>
 
                                 <div class="col-3">
-                                    <input type="radio" id="roleContact" name="radio" value="roleContact"
-                                    <?php if ($role == 'roleContact') {?> checked <?php } ?> />
+                                    <input type="radio" id="roleContact" name="roleRadio" value="roleContact"
+                                    <?php if ($roleRadio == 'roleContact') {?> checked <?php } ?> />
                                     <label for="roleContact">Contact </label>
                                 </div>
+
                             </div>
                         </fieldset> 
                         
 
-                        <div id="formAdmin" class=<?php if ($role == 'roleAdmin') { echo("d-block"); } else { echo("d-none"); } ?> >
+                        <div id="formAdmin" class=<?php if ($roleRadio == 'roleAdmin') { echo("d-block"); } else { echo("d-none"); } ?> >
                             <div class="mt-3 mb-5 mx-2">
                                 <label for="email" class="form-label">Email :</label>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="adresse@exemple.com" required
+                                <input type="email" class="form-control" id="email" name="email" placeholder="adresse@exemple.com" 
                                 <?php if (isset($_POST['Person']) && !empty($_POST['email'])){
                                 echo('value="'.trim(htmlspecialchars($_POST['email'])).'"');
                             } ?>>
@@ -122,7 +127,7 @@ $specialities= $specialityRepository->findAllSpecialitys();
                             </div>
                         </div>
 
-                        <div id="formNoAdmin" class=<?php if ($role != 'roleAdmin') { echo("d-block"); } else { echo("d-none"); } ?>>
+                        <div id="formNoAdmin" class=<?php if ($roleRadio != 'roleAdmin') { echo("d-block"); } else { echo("d-none"); } ?>>
                             <div class="mt-3 mb-5 mx-2">
                                 <label for="mission" class=" col-4 d-inline attributName"> Mission :</label>
                                 <select name="mission" id="mission" class="col-8 d-inline attribueValue formInput" >
@@ -139,7 +144,7 @@ $specialities= $specialityRepository->findAllSpecialitys();
                             </div>
                         </div>
                         
-                        <div id="formAgent" class=<?php if ($role == 'roleAgent') { echo("d-block"); } else { echo("d-none"); } ?>>
+                        <div id="formAgent" class=<?php if ($roleRadio == 'roleAgent') { echo("d-block"); } else { echo("d-none"); } ?>>
                             <div class="mt-3 mb-5 mx-2">
                                 <label for="specialityNames" class=" col-4 d-inline attributName"> Nom de la (ou des) spécialité(s) :</label>
                                 <select multiple name="specialityNames" id="specialityNames" class="col-8 d-inline attribueValue formInput" >

@@ -2,7 +2,7 @@
     <div class="col-10  col-md-9 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
         <h1 class="d-flex justify-content-center m-2"> Liste des admins : </h1>
         <div class="d-flex justify-content-end my-1 ms-2 me-1">
-            <a href="/index.php?controller=back&action=Admin&todo=create" class="btn btn-primary pt-2" aria-current="page creation Personne">Ajouter</a>
+            <a href="/index.php?controller=back&action=Person&todo=create&roleRadio=roleAdmin" class="btn btn-primary pt-2" aria-current="page creation Personne">Ajouter</a>
         </div>
     </div>
     <div class="col-11 m-3 p-3 ">
