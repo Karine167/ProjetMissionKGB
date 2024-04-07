@@ -60,7 +60,7 @@ if (isset($_POST['Person'])){
                         
                         <div class="mt-3 mb-5 mx-2">
                             <label for="nationality" class=" col-4 d-inline attributName"> Nationalité :</label>
-                            <select name="nationality" id="nationality" class="col-8 d-inline attribueValue formInput" >
+                            <select multiple="multiple" name="nationality[]" id="nationality" class="col-8 d-inline attribueValue formInput" >
                                 <optgroup label="nationalité">
                                     <?php foreach ($nationalities as $nationality) { 
                                         echo($nationality['nationality']);
@@ -135,7 +135,7 @@ if (isset($_POST['Person'])){
                                         <?php foreach ($missions as $mission) { ?>
                                             <option value=<?php echo($mission['id'])?> ><?php echo(htmlspecialchars($mission['title'].'('.$mission['code_name']).')')?> </option>
                                         <?php } ?>
-                                        <option value="autre" selected > aucune mission </option>
+                                        <option value="aucune" selected > aucune mission </option>
                                     </optgroup>
                                 </select>
                                 <?php if (!empty($errors['mission'])){?>
@@ -147,7 +147,7 @@ if (isset($_POST['Person'])){
                         <div id="formAgent" class=<?php if ($roleRadio == 'roleAgent') { echo("d-block"); } else { echo("d-none"); } ?>>
                             <div class="mt-3 mb-5 mx-2">
                                 <label for="specialityNames" class=" col-4 d-inline attributName"> Nom de la (ou des) spécialité(s) :</label>
-                                <select multiple name="specialityNames" id="specialityNames" class="col-8 d-inline attribueValue formInput" >
+                                <select multiple="multiple" name="specialityNames[]" id="specialityNames" class="col-8 d-inline attribueValue formInput" >
                                     <optgroup label="Spécialités">
                                         <?php foreach ($specialities as $speciality) { ?>
                                             <option value=<?php echo($speciality['id'])?>><?php echo(htmlspecialchars($speciality['name']))?> </option>

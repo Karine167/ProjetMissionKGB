@@ -86,11 +86,16 @@ class PersonRepository extends Repository
 
     public function PersonValidate(): array
     {
+        $contactArray=[];
+        $adminArray=[];
+        $targetArray=[];
+        $agentArray=[];
         if (isset($_POST['Person'])){
             $roleRadio=$_POST['roleRadio'];
         } else {
             $roleRadio = $_GET['roleRadio'];
         }
+        $object=[];
         $response['result']= true;
         $requiredFields=['firstName', 'lastName'];
         foreach ($requiredFields as $field) {
@@ -115,7 +120,7 @@ class PersonRepository extends Repository
             }
         }
         
-        $id = uniqid("person", true).date("m.d.Y.h.i.s");
+        $id = substr(date("m.d.Y.h.i.s").uniqid("person", true),0,36);
         if ($response['result'] == true){
             $code = substr($_POST['firstName'],0,1). substr($_POST['lastName'],0,1).'-'. date("m.d.Y.h.i.s");
             switch ($roleRadio){
@@ -158,7 +163,7 @@ class PersonRepository extends Repository
                                 $admin->setEmail($_POST['email']);
                                 $admin->setPassword($password);
                                 $admin->setCreatedAt(date_create("now"));
-                                $response['object'][] = ['admin' => $admin];
+                                $adminArray = ['admin' => $admin];
                             }
                         } else {
                         $response['email']='Cet utilisateur existe déjà !';
@@ -168,9 +173,12 @@ class PersonRepository extends Repository
                     break; 
                 case 'roleAgent':
                     $agent = new Agent();
-                    if ($_POST['mission']=!"autre"){
+                    if ($_POST['mission']=="aucune"){
+                        $agent->setIdMission(null);
+                    }else {
                         $agent->setIdMission($_POST['mission']);
                     }
+                    
                     if (empty($_POST['specialityNames'])){
                         $response['specialityNames'] = 'Vous devez avoir au moins une spécialité.';
                         $response['result']= false;
@@ -178,29 +186,34 @@ class PersonRepository extends Repository
                     if ($response['result']== true){
                         $agent->setId($id);
                         $agent->setIdentifyCode($code);
-                        $response['object'][] = ['agent' => $agent, 'specialités' => $_POST['specialityNames']];
+                        $agentArray= ['agent' => $agent, 'specialities' => $_POST['specialityNames']];
                     }
                     break;
                 case 'roleTarget':
                     $target = new Target();
-                    if ($_POST['mission']=!"autre"){
+                    if ($_POST['mission']=="aucune"){
+                        $target->setIdMission(null);
+                    }else {
                         $target->setIdMission($_POST['mission']);
                     }
+                    
                     if ($response['result']== true){
                         $target->setId($id);
                         $target->setCodeName($code);
-                        $response['object'][] = ['target' => $target];
+                        $targetArray = ['target' => $target];
                     }
                     break;
                 case 'roleContact':
                     $contact = new Contact();
-                    if ($_POST['mission']=!"autre"){
+                    if ($_POST['mission']=="aucune"){
+                        $contact->setIdMission(null);
+                    }else {
                         $contact->setIdMission($_POST['mission']);
                     }
                     if ($response['result']== true){
                         $contact->setId($id);
                         $contact->setCodeName($code);
-                        $response['object'][] = ['contact' => $contact];
+                        $contactArray = ['contact' => $contact];
                     }
                     break;
             }
@@ -210,13 +223,150 @@ class PersonRepository extends Repository
         $person->setId($id);
         $person->setFirstName($_POST['firstName']);
         $person->setLastName($_POST['lastName']);
-        
-        $country = new Country();
-        $country->setId($_POST['nationality']);
 
-        $response['object'][] = ['person'=> $person,'birthdate' => $_POST['birthdate'], 'country'=> $country];
+        $personArray = ['person'=> $person,'birthdate' => $_POST['birthdate'], 'countrys' => $_POST['nationality']];
+        $response['object'] = ['personArray' => $personArray];
+        if (key_exists('contact', $contactArray)){
+            $response['object'] [] =['contactArray' => $contactArray ];}
+        if (key_exists('admin', $adminArray)){
+            $response['object'] [] =['adminArray' => $adminArray ];}
+        if (key_exists('target', $targetArray)){
+            $response['object'] [] =['targetArray' => $targetArray];}
+        if (key_exists('agent', $agentArray)){
+            $response['object'] [] =['agentArray' => $agentArray ];}
         }
         return $response;    
     }
 
+    public function PersonSaveToDataBase(array $object): array
+    {       
+        $person =$object['personArray']['person'];
+        $id = $person->getId();
+        $firstName = $person->getFirstName();
+        $lastName = $person->getLastName();
+        $birthdate = $object['personArray']['birthdate'];
+        try{
+            $pdoAddPerson = $this->pdo->prepare("INSERT INTO persons(id, first_name, last_name, birthdate) VALUES (:id, :first_name, :last_name, :birthdate) ");
+            $pdoAddPerson->bindParam(':id', $id, $this->pdo::PARAM_STR);
+            $pdoAddPerson->bindParam(':first_name', $firstName, $this->pdo::PARAM_STR);
+            $pdoAddPerson->bindParam(':last_name', $lastName, $this->pdo::PARAM_STR);
+            $pdoAddPerson->bindParam(':birthdate', $birthdate, $this->pdo::PARAM_STR);
+            $pdoAddPerson->execute();
+        }catch (\Exception $e){
+                $error = $e->getMessage();
+                $control = new Controller();
+                $control->render('/errors', [
+                    'error' => $error
+                ]);
+        }
+        $countrys = $object['personArray']['countrys'];
+        foreach ($countrys as $idCountry){
+            try{
+                $pdoAddCountry = $this->pdo->prepare("INSERT INTO persons_countries(id_person, id_country) VALUES (:id_person, :id_country) ");
+                $pdoAddCountry->bindParam(':id_person', $id, $this->pdo::PARAM_STR);
+                $pdoAddCountry->bindParam(':id_country', $idCountry, $this->pdo::PARAM_STR);
+                $pdoAddCountry->execute();
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+        }
+        
+        if (array_key_exists('contactArray', $object[0])){
+            $contact = $object[0]['contactArray']['contact'];
+            $codeName = $contact->getCodeName();
+            $idMission = $contact->getIdMission();
+            try{
+                $pdoAddContact = $this->pdo->prepare("INSERT INTO contacts(id_contact, code_name, id_mission) VALUES (:id_contact, :code_name, :id_mission) ");
+                $pdoAddContact->bindParam(':id_contact', $id, $this->pdo::PARAM_STR);
+                $pdoAddContact->bindParam(':code_name', $codeName, $this->pdo::PARAM_STR);
+                $pdoAddContact->bindParam(':id_mission', $idMission, $this->pdo::PARAM_INT || null);
+                $pdoAddContact->execute();
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+        }
+        if (array_key_exists('targetArray', $object[0])){
+            $target = $object[0]['targetArray']['target'];
+            $codeName = $target->getCodeName();
+            $idMission = $target->getIdMission();
+            try{
+                $pdoAddTarget = $this->pdo->prepare("INSERT INTO targets(id_target, code_name, id_mission) VALUES (:id_target, :code_name, :id_mission) ");
+                $pdoAddTarget->bindParam(':id_target', $id, $this->pdo::PARAM_STR);
+                $pdoAddTarget->bindParam(':code_name', $codeName, $this->pdo::PARAM_STR);
+                $pdoAddTarget->bindParam(':id_mission', $idMission, $this->pdo::PARAM_INT || null);
+                $pdoAddTarget->execute();
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+        }
+        if (array_key_exists('agentArray', $object[0])){
+            $agent = $object[0]['agentArray']['agent'];
+            $identifyCode = $agent->getIdentifyCode();
+            $idMission = $agent->getIdMission();
+            try{
+                $pdoAddAgent = $this->pdo->prepare("INSERT INTO agents(id_agent, identify_code, id_mission) VALUES (:id_agent, :identify_code, :id_mission) ");
+                $pdoAddAgent->bindParam(':id_agent', $id, $this->pdo::PARAM_STR);
+                $pdoAddAgent->bindParam(':identify_code', $identifyCode, $this->pdo::PARAM_STR);
+                $pdoAddAgent->bindParam(':id_mission', $idMission, $this->pdo::PARAM_INT || null);
+                $pdoAddAgent->execute();
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+            $specialities = $object[0]['agentArray']['specialities'];
+            foreach ($specialities as $idSpeciality){
+                try{
+                    $pdoAddAgentSpe = $this->pdo->prepare("INSERT INTO agents_specialities(id_agent, id_speciality) VALUES (:id_agent, :id_speciality) ");
+                    $pdoAddAgentSpe->bindParam(':id_agent', $id, $this->pdo::PARAM_STR);
+                    $pdoAddAgentSpe->bindParam(':id_speciality', $idSpeciality, $this->pdo::PARAM_INT);
+                    $pdoAddAgentSpe->execute();
+                }catch (\Exception $e){
+                        $error = $e->getMessage();
+                        $control = new Controller();
+                        $control->render('/errors', [
+                            'error' => $error
+                        ]);
+                }
+            }
+        }
+        if (array_key_exists('adminArray', $object[0])){
+            $admin = $object[0]['adminArray']['admin'];
+            $email = $admin->getEmail();
+            $password = password_hash($admin->getPassword(), PASSWORD_BCRYPT);
+            $createdAt = date_format($admin->getCreatedAt(), 'Y-m-d');
+            try{
+                $pdoAddAdmin = $this->pdo->prepare("INSERT INTO admins(id_admin, email, password, created_at) VALUES (:id_admin, :email, :password, :created_at) ");
+                $pdoAddAdmin->bindParam(':id_admin', $id, $this->pdo::PARAM_STR);
+                $pdoAddAdmin->bindParam(':email', $email, $this->pdo::PARAM_STR);
+                $pdoAddAdmin->bindParam(':password', $password, $this->pdo::PARAM_STR);
+                $pdoAddAdmin->bindParam(':created_at', $createdAt, $this->pdo::PARAM_STR);
+                $pdoAddAdmin->execute();
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+        }
+
+        $response['result']= true;
+        $_POST=[];
+        return $response;
+    }
 }

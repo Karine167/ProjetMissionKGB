@@ -7,12 +7,10 @@ const formRoleAdmin = document.getElementById('formAdmin');
 const formNoAdmin = document.getElementById('formNoAdmin');
 const formRoleAgent = document.getElementById('formAgent');
 const adminAdd = document.getElementById('adminAdd');
-let roleRadio='';
 
 for (const buttonRadio of buttonRadios){
     buttonRadio.addEventListener('click', ()=> {
         if (buttonRadioAdmin.checked){
-            roleRadio = 'roleAdmin';
             formRoleAdmin.classList.remove('d-none');
             formRoleAdmin.classList.add('d-block');
             if (!("d-none" in formNoAdmin.classList)){
@@ -29,20 +27,12 @@ for (const buttonRadio of buttonRadios){
                 formRoleAdmin.classList.add('d-none');
             }
             if (buttonRadioAgent.checked) {
-                roleRadio = 'roleAgent';
                 formRoleAgent.classList.remove('d-none');
                 formRoleAgent.classList.add('d-block');
             } else {
                 if (!("d-none" in formRoleAgent.classList)){
                     formRoleAgent.classList.add('d-none');
                 } 
-                if (buttonRadioTarget.checked){
-                    roleRadio = 'roleTarget';
-                }else{
-                    if (buttonRadioContact.checked){
-                    roleRadio = 'roleContact';
-                    }
-                }
             }
         }
     })
