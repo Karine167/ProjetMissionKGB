@@ -17,6 +17,14 @@ $typeMissionRepository = new TypeMissionRepository();
 $typeMissions = $typeMissionRepository->findAllTypeMissions();
 $specialitiesRepository = new SpecialityRepository();
 $specialities =  $specialitiesRepository->findAllSpecialitys();
+if(key_exists('id',$_GET)){
+    if ($_GET['id']){
+    $missionRepository = new MissionRepository();
+    $mission = $missionRepository->findOneMissionById($_GET['id']);
+    } 
+}else {
+    $mission = null;
+}
 ?>
 <div class="row d-flex justify-content-center ">
     <div class="col-9 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
@@ -27,20 +35,25 @@ $specialities =  $specialitiesRepository->findAllSpecialitys();
             <div class="row m-3 p-3 d-flex align-items-center justify-content-center">
                 <h1 class="d-flex justify-content-center m-2 attributName formCategory fs-3"> Formulaire des missions : </h1>
                 <div class="row d-flex justify-content-start my-3 ms-2 me-1">
-                    <form action="/index.php?controller=back&action=Mission&todo=create" method="POST">
+                    <form <?php
+                    if ($_GET['todo']=='create'){ ?> action="/index.php?controller=back&action=Mission&todo=create"
+                    <?php } else { ?> action=" " <?php } ?> method="POST">
                         <div class="mt-3 mb-5 mx-2">
                             <label for="title" class=" col-4 d-inline attributName"> Titre :</label>
                             <input type="text" class="col-8 d-inline attribueValue formInput" id="title" name="title" required
                             <?php if (isset($_POST['Mission']) && !empty($_POST['title'])){
                                 echo('value="'.trim(htmlspecialchars($_POST['title'])).'"');
-                            } ?> >
+                            } elseif (!is_null($mission)) { ?> value="<?php echo(trim(htmlspecialchars($mission->getTitle())));?>" <?php } ?> >
                             <?php if (!empty($errors['title'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['title']) ?></div>
                             <?php } ?>
                         </div>
                         <div class="mt-3 mb-5 mx-2">
                             <label for="description" class=" col-4 d-inline attributName"> description :</label>
-                            <textarea class="col-8 d-inline attribueValue formInput" rows="5" id="description" name="description" ></textarea>
+                            <textarea class="col-8 d-inline attribueValue formInput" rows="5" id="description" name="description" ><?php 
+                            if (isset($_POST['Mission']) && !empty($_POST['description'])){
+                                echo(trim(htmlspecialchars($_POST['description'])));
+                            } elseif (!is_null($mission) && !is_null($mission->getDescription())) { echo(trim(htmlspecialchars($mission->getDescription()))); } ?></textarea>
                             <?php if (!empty($errors['description'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['description']) ?></div>
                             <?php } ?>
@@ -50,7 +63,7 @@ $specialities =  $specialitiesRepository->findAllSpecialitys();
                             <input type="date" class="col-8 d-inline attribueValue formInput" id="beginDate" name="beginDate" 
                             <?php if (isset($_POST['Person']) && !empty($_POST['beginDate'])){
                                 echo('value="'.trim(htmlspecialchars($_POST['beginDate'])).'"');
-                            } ?> >
+                            } elseif (!is_null($mission) && !is_null($mission->getBeginDate())) { ?> value="<?php echo(date_format($mission->getBeginDate(),'Y-m-d'));?>" <?php } ?> >
                             <?php if (!empty($errors['beginDate'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['beginDate']) ?></div>
                             <?php } ?>
@@ -60,7 +73,7 @@ $specialities =  $specialitiesRepository->findAllSpecialitys();
                             <input type="date" class="col-8 d-inline attribueValue formInput" id="endDate" name="endDate" 
                             <?php if (isset($_POST['Person']) && !empty($_POST['endDate'])){
                                 echo('value="'.trim(htmlspecialchars($_POST['endDate'])).'"');
-                            } ?> >
+                            } elseif (!is_null($mission) && !is_null($mission->getEndDate())) { ?> value="<?php echo(date_format($mission->getEndDate(),'Y-m-d'));?>" <?php } ?> >
                             <?php if (!empty($errors['endDate'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['endDate']) ?></div>
                             <?php } ?>
@@ -71,7 +84,10 @@ $specialities =  $specialitiesRepository->findAllSpecialitys();
                             <select name="idCountry" id="idCountry" class="col-8 d-inline attribueValue formInput" required>
                                 <optgroup label="pays">
                                     <?php foreach ($countries as $country) { ?>
-                                        <option value=<?php echo($country['id'])?> ><?php echo(htmlspecialchars($country['country_name']))?> </option>
+                                        <option value="<?php echo($country['id'])?>"
+                                        <?php if (!is_null($mission)) {
+                                                if ($country['id']==$mission->getIdCountry()){ ?> selected 
+                                        <?php }} ?> > <?php echo(htmlspecialchars($country['country_name']))?></option>
                                     <?php } ?>
                                 </optgroup>
                             </select>
@@ -84,7 +100,11 @@ $specialities =  $specialitiesRepository->findAllSpecialitys();
                             <select name="idStatus" id="idStatus" class="col-8 d-inline attribueValue formInput" >
                                 <optgroup label="Statut">
                                     <?php foreach ($status as $statut) { ?>
-                                        <option value=<?php echo($statut['id'])?> ><?php echo(htmlspecialchars($statut['name']))?> </option>
+                                        <option value="<?php echo($statut['id'])?>" 
+                                        <?php if (!is_null($mission)) {
+                                                if ($statut['id']==$mission->getIdStatus()){ ?> selected 
+                                        <?php }} ?>
+                                        ><?php echo(htmlspecialchars($statut['name']))?> </option>
                                     <?php } ?>
                                 </optgroup>
                             </select>
@@ -97,7 +117,11 @@ $specialities =  $specialitiesRepository->findAllSpecialitys();
                             <select name="idTypeMission" id="idTypeMission" class="col-8 d-inline attribueValue formInput" required>
                                 <optgroup label="type de mission">
                                     <?php foreach ($typeMissions as $typeMission) { ?>
-                                        <option value=<?php echo($typeMission['id'])?> ><?php echo(htmlspecialchars($typeMission['type_mission']))?> </option>
+                                        <option value="<?php echo($typeMission['id'])?>"
+                                        <?php if (!is_null($mission)) {
+                                                if ($typeMission['id']==$mission->getIdTypeMission()){ ?> selected 
+                                        <?php }} ?>
+                                        ><?php echo(htmlspecialchars($typeMission['type_mission']))?> </option>
                                     <?php } ?>
                                 </optgroup>
                             </select>
@@ -111,7 +135,10 @@ $specialities =  $specialitiesRepository->findAllSpecialitys();
                             <select name="idSpeciality" id="idSpeciality" class="col-8 d-inline attribueValue formInput" required>
                                 <optgroup label="spécialité">
                                     <?php foreach ($specialities as $speciality) { ?>
-                                        <option value=<?php echo($speciality['id'])?> ><?php echo(htmlspecialchars($speciality['name']))?> </option>
+                                        <option value="<?php echo($speciality['id'])?>"
+                                        <?php if (!is_null($mission)) {
+                                                if ($speciality['id']==$mission->getIdSpeciality()){ ?> selected 
+                                        <?php }} ?> ><?php echo(htmlspecialchars($speciality['name']))?> </option>
                                     <?php } ?>
                                 </optgroup>
                             </select>

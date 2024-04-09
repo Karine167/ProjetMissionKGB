@@ -64,7 +64,7 @@ class MissionController extends Controller
                 $id = $_GET['id'];
                 //recherche de la mission
                 $missionRepository = new MissionRepository();
-                $mission = $missionRepository->findOneById($id);
+                $mission = $missionRepository->findOneMissionById($id);
                 if (!$mission){
                     $errors['mission']='Cette mission n\'existe pas.';    
                 }

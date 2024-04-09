@@ -10,7 +10,7 @@ use DateTime;
 
 class MissionRepository extends Repository
 {
-    public function findOneById(int $id):Mission|bool
+    public function findOneMissionById(int $id):Mission|bool
     {
         try{
             $query = $this->pdo->prepare("SELECT * FROM missions WHERE id = :id");
@@ -183,6 +183,51 @@ class MissionRepository extends Repository
         }
         $response['result']=true;
         $_POST=[];
+        return $response;
+    }
+
+    function MissionUpdateToDataBase(Mission $mission):array
+    {
+        $response['result'] = false;
+        $id = $_GET['id'];
+        $title = $mission->getTitle();
+        $description = $mission->getDescription();
+        $codeName = $mission->getCodeName();
+        if ($mission->getBeginDate()){
+            $beginDate = date_format($mission->getBeginDate(), 'Y-m-d');
+        }else{ 
+            $beginDate = null;
+        }
+        if ($mission->getEndDate()){
+            $endDate = date_format($mission->getEndDate(), 'Y-m-d');
+        }else{
+            $endDate = null;
+        }
+        $idCountry = $mission->getIdCountry();
+        $idStatus = $mission->getIdStatus();
+        $idTypeMission = $mission->getIdTypeMission();
+        $idSpeciality = $mission->getIdSpeciality();
+        try{
+            $pdoEdit = $this->pdo->prepare("UPDATE missions SET title = :title , description = :description , code_name = :code_name , begin_date = :begin_date , end_date = :end_date , id_country = :id_country , id_status = :id_status , id_typeMission = :id_typeMission , id_speciality = :id_speciality WHERE id = :id ");
+            $pdoEdit->bindParam(':title', $title, $this->pdo::PARAM_STR);
+            $pdoEdit->bindParam(':description', $description, $this->pdo::PARAM_STR|null);
+            $pdoEdit->bindParam(':code_name', $codeName, $this->pdo::PARAM_STR);
+            $pdoEdit->bindParam(':begin_date', $beginDate, $this->pdo::PARAM_STR|null);
+            $pdoEdit->bindParam(':end_date', $endDate , $this->pdo::PARAM_STR|null);
+            $pdoEdit->bindParam(':id_country', $idCountry, $this->pdo::PARAM_INT);
+            $pdoEdit->bindParam(':id_status', $idStatus , $this->pdo::PARAM_INT);
+            $pdoEdit->bindParam(':id_typeMission', $idTypeMission , $this->pdo::PARAM_INT);
+            $pdoEdit->bindParam(':id_speciality', $idSpeciality , $this->pdo::PARAM_INT);
+            $pdoEdit->bindParam(':id', $id, $this->pdo::PARAM_INT);
+            $pdoEdit->execute();
+            $response['result']= true;
+        }catch (\Exception $e){
+                $error = $e->getMessage();
+                $control = new Controller();
+                $control->render('/errors', [
+                    'error' => $error
+                ]);
+        }
         return $response;
     }
     

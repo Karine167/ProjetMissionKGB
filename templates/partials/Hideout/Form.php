@@ -41,7 +41,7 @@ if(key_exists('id',$_GET)){
                         <div class="mt-3 mb-5 mx-2">
                             <label for="zipcode" class=" col-4 d-inline attributName"> Code Postal :</label>
                             <input type="text" class="col-8 d-inline attribueValue formInput" id="zipcode" name="zipcode"
-                            <?php if (!is_null($hideout)) { ?> value="<?php echo(trim(htmlspecialchars($hideout['zipcode'])));}?>">>
+                            <?php if (!is_null($hideout)) { ?> value="<?php echo(trim(htmlspecialchars($hideout['zipcode'])));}?>">
                             <?php if (!empty($errors['zipcode'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['zipcode']) ?></div>
                             <?php } ?>

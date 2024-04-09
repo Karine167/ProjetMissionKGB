@@ -183,6 +183,7 @@ class HideoutRepository extends Repository
         }
         return $response;
     }
+    
     function HideoutUpdateToDataBase(Hideout $hideout):array
     {
         $response['result']=false;
