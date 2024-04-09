@@ -63,7 +63,6 @@ if (isset($_POST['Person'])){
                             <select multiple="multiple" name="nationality[]" id="nationality" class="col-8 d-inline attribueValue formInput" >
                                 <optgroup label="nationalité">
                                     <?php foreach ($nationalities as $nationality) { 
-                                        echo($nationality['nationality']);
                                         if ($nationality['nationality']==='AAAAA - Aucune ') {?>
                                             <option value=<?php echo($nationality['id'])?> selected > Aucune </option> 
                                         <?php } else { ?>

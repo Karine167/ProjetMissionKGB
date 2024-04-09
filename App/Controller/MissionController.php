@@ -68,30 +68,32 @@ class MissionController extends Controller
                 if (!$mission){
                     $errors['mission']='Cette mission n\'existe pas.';    
                 }
-                //recherche des cibles
-                $targetRepository = new TargetRepository();
-                $targets = $targetRepository->findAllTargetsByMissionId($id);
-                //recherche des contacts
-                $contactRepository = new ContactRepository();
-                $contacts = $contactRepository->findAllContactsByMissionId($id);
-                //recherche des agents
-                $agentRepository = new AgentRepository();
-                $agents = $agentRepository->findAllAgentsByMissionId($id);
-                //recherche du status
-                $statusRepository = new StatusRepository();
-                $status = $statusRepository->findOneStatusById($id);
-                //recherche du type de la mission
-                $typeMissionRepository = new TypeMissionRepository();
-                $typeMission = $typeMissionRepository->findOneTypeMissionById($id);
-                //recherche du pays de la mission
-                $countryRepository = new CountryRepository();
-                $country = $countryRepository->findOneCountryById($id);
-                //recherche de la spécialité nécessaire pour la mission
-                $specialityRepository = new SpecialityRepository();
-                $speciality = $specialityRepository->findOneSpecialityById($id);
-                //recherche des caches
-                $hideoutsRepository = new HideoutRepository();
-                $hideouts = $hideoutsRepository->findAllHideoutsByMissionId($id);
+                    //recherche des cibles
+                    $targetRepository = new TargetRepository();
+                    $targets = $targetRepository->findAllTargetsByMissionId($id);
+                    //recherche des contacts
+                    $contactRepository = new ContactRepository();
+                    $contacts = $contactRepository->findAllContactsByMissionId($id);
+                    //recherche des agents
+                    $agentRepository = new AgentRepository();
+                    $agents = $agentRepository->findAllAgentsByMissionId($id);
+                    //recherche du status
+                    $idStatus = $mission->getIdStatus();
+                    $statusRepository = new StatusRepository();
+                    $status = $statusRepository->findOneStatusById($idStatus);
+                    //recherche du type de la mission
+                    $typeMissionRepository = new TypeMissionRepository();
+                    $typeMission = $typeMissionRepository->findOneTypeMissionById($id);
+                    //recherche du pays de la mission
+                    $countryRepository = new CountryRepository();
+                    $country = $countryRepository->findOneCountryById($id);
+                    //recherche de la spécialité nécessaire pour la mission
+                    $specialityRepository = new SpecialityRepository();
+                    $speciality = $specialityRepository->findOneSpecialityById($id);
+                    //recherche des caches
+                    $hideoutsRepository = new HideoutRepository();
+                    $hideouts = $hideoutsRepository->findAllHideoutsByMissionId($id);
+                
                 $this->render('/detailFront', [
                     'errors'=> $errors,
                     'mission' => $mission,

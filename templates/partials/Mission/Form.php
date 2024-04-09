@@ -1,14 +1,14 @@
 <?php
 use App\Repository\CountryRepository;
-use App\Repository\TypeHideoutRepository;
+use App\Repository\HideoutRepository;
 use App\Repository\MissionRepository;
 use App\Repository\StatusRepository;
 use App\Repository\TypeMissionRepository;
 use App\Repository\SpecialityRepository;
 $countryRepository = new CountryRepository();
 $countries = $countryRepository->findAllCountrys();
-$typeHideoutRepository = new TypeHideoutRepository();
-$typeHideouts = $typeHideoutRepository->findAllTypeHideouts();
+$hideoutRepository = new HideoutRepository();
+$hideouts = $hideoutRepository->findAllHideouts();
 $missionRepository = new MissionRepository();
 $missions = $missionRepository->findAllMissions();
 $statusRepository = new StatusRepository();
@@ -119,6 +119,7 @@ $specialities =  $specialitiesRepository->findAllSpecialitys();
                                 <div class="alert alert-danger"><?php echo($errors['idSpeciality']) ?></div>
                             <?php } ?>
                         </div>
+                        
                         <div class="mt-3 mb-5 mx-2">
                             <input type="submit" name="Mission" class="m-3 btn btn-primary" value="Enregistrer">
                         </div>

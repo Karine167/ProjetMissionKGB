@@ -148,13 +148,11 @@ class MissionRepository extends Repository
         $codeName = $mission->getCodeName();
         if ($mission->getBeginDate()){
             $beginDate = date_format($mission->getBeginDate(), 'Y-m-d');
-            var_dump($beginDate);
         }else{ 
             $beginDate = null;
         }
         if ($mission->getEndDate()){
             $endDate = date_format($mission->getEndDate(), 'Y-m-d');
-            var_dump($endDate);
         }else{
             $endDate = null;
         }
