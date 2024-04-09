@@ -111,8 +111,36 @@ class TodoController extends BackController
     }
     protected function editElement()
     {
-   
+        $entity = $_GET['action'];
+        $page='/partials/'.$entity.'/'.'Form.php';
+        $errors = [];
+        if (isset($_POST[$entity])){
+            $entityMethod = $entity.'Validate';
+            $repository = $this->newRepository($entity);
+            $responseValidate = $repository->$entityMethod();
+            if ($responseValidate['result']==false){
+                foreach ($responseValidate as $key => $value ){
+                    $errors[$key]=$value;
+                }
+            }else{
+                $entityUpdate = $entity.'UpdateToDataBase';
+                $responseUpdate = $repository->$entityUpdate($responseValidate['object']);
+                if ($responseUpdate['result']==false){
+                    foreach ($responseUpdate as $key => $value ){
+                        $errors[$key]=$value;
+                    }
+                } else { 
+                $errors['save']= 'L\'enregistrement a été correctement effecué';
+                }
+            }
+        }
+        $this->render('/homeBack', [
+            'page'=> $page,
+            'errors' => $errors,
+            
+        ]); 
     }
+    
 
     public function newRepository($entity)
     {

@@ -13,7 +13,7 @@ require_once _TEMPLATEPATH_.'/header.php';
                 </div>
             <?php } else {
                 if ($mission) { ?>
-                    <div class="detailMission ">
+                    <div class="detail">
                         <div class="row m-1 p-1 d-flex">
                             <div class="col-12 col-md-6 col-lg-4">
                                 <h2 class="attributName">Nom de Code : <span class="attributValue"><?php if (!is_null($mission->getCodeName())) {echo(htmlspecialchars($mission->getCodeName()));} ?></span></h2>

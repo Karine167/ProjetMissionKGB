@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Controller\Controller;
+use App\Entity\TypeHideout;
 
 class TypeHideoutRepository extends Repository
 {
@@ -26,6 +27,27 @@ class TypeHideoutRepository extends Repository
             ]);
         }
     }
+    public function findOneTypeHideoutById(int $id):array|null
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM typeHideouts WHERE id = :id");
+            $query->bindParam(':id', $id, $this->pdo::PARAM_STR);
+            $query->execute();
+            $typeHideout = $query->fetch($this->pdo::FETCH_ASSOC);
+            if ($typeHideout){
+                return $typeHideout;
+            }else {
+                return null;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
+
     public function findAllTypeHideouts():Array|bool
     {
         try{
@@ -84,6 +106,26 @@ class TypeHideoutRepository extends Repository
                         'error' => $error
                     ]);
             }
+        }
+        return $response;
+    }
+    
+    function TypeHideoutUpdateToDataBase(string $typeHide):array
+    {
+        $response['result']= false;
+        $id = $_GET['id'];
+        try{
+            $pdoAdd = $this->pdo->prepare("UPDATE typeHideouts SET type_hide = :type_hide WHERE id = :id");
+            $pdoAdd->bindParam(':type_hide', $typeHide, $this->pdo::PARAM_STR);
+            $pdoAdd->bindParam(':id', $id, $this->pdo::PARAM_INT);
+            $pdoAdd->execute();
+            $response['result']= true;
+        }catch (\Exception $e){
+                $error = $e->getMessage();
+                $control = new Controller();
+                $control->render('/errors', [
+                    'error' => $error
+                ]);
         }
         return $response;
     }

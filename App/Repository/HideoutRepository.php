@@ -62,6 +62,27 @@ class HideoutRepository extends Repository
         }
     }
 
+    public function findOneHideoutById(int $id):array|null
+    {
+        $id=$_GET['id'];
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM hideouts WHERE id = :id");
+            $query->bindParam(':id', $id, $this->pdo::PARAM_INT);
+            $query->execute();
+            $hideout = $query->fetch($this->pdo::FETCH_ASSOC);
+            if ($hideout){
+                return $hideout;
+            }else {
+                return null;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
     public function findAllHideouts():array|bool
     {
         try{
@@ -116,7 +137,7 @@ class HideoutRepository extends Repository
         $hideout->setCity($_POST['city']);
         $hideout->setIdCountry($_POST['country']);
         $hideout->setIdTypeHide($_POST['typeHide']);
-        if ($_POST['mission']=!"autre"){
+        if ($_POST['mission']!="noOne"){
             $hideout->setIdMission($_POST['mission']);
         }
                 
@@ -159,6 +180,38 @@ class HideoutRepository extends Repository
                         'error' => $error
                     ]);
             }
+        }
+        return $response;
+    }
+    function HideoutUpdateToDataBase(Hideout $hideout):array
+    {
+        $response['result']=false;
+        $id = $_GET['id'];
+        $codeHide = $codeHide = substr($hideout->getZipcode(),0,2).substr($hideout->getCity(),0,2).$hideout->getIdCountry().'-'.$hideout->getIdTypeHide();
+        $address = $hideout->getAddress();
+        $city = $hideout->getCity();
+        $zipcode = $hideout->getZipcode();
+        $idCountry = $hideout->getIdCountry();
+        $idTypeHide = $hideout->getIdTypeHide();
+        $idMission = $hideout->getIdMission();
+        try{
+            $pdoAdd = $this->pdo->prepare("UPDATE hideouts SET code_hide = :code_hide , city = :city , zipcode = :zipcode , address = :address , id_country = :id_country , id_typeHide = :id_typeHide, id_mission = :id_mission  WHERE id = :id ");
+            $pdoAdd->bindParam(':code_hide', $codeHide, $this->pdo::PARAM_STR);
+            $pdoAdd->bindParam(':city', $city, $this->pdo::PARAM_STR);
+            $pdoAdd->bindParam(':zipcode', $zipcode, $this->pdo::PARAM_STR);
+            $pdoAdd->bindParam(':address', $address, $this->pdo::PARAM_STR);
+            $pdoAdd->bindParam(':id_country', $idCountry , $this->pdo::PARAM_INT);
+            $pdoAdd->bindParam(':id_typeHide', $idTypeHide, $this->pdo::PARAM_INT);
+            $pdoAdd->bindParam(':id_mission', $idMission , $this->pdo::PARAM_INT||null);
+            $pdoAdd->bindParam(':id', $id, $this->pdo::PARAM_INT);
+            $pdoAdd->execute();
+            $response['result']= true;
+        }catch (\Exception $e){
+                $error = $e->getMessage();
+                $control = new Controller();
+                $control->render('/errors', [
+                    'error' => $error
+                ]);
         }
         return $response;
     }

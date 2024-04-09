@@ -143,4 +143,28 @@ class CountryRepository extends Repository
         }
         return $response;
     }
+
+    function CountryUpdateToDataBase(array $object):array
+    {
+        $response['result']= false;
+        $countryName = $object['countryName'];
+        $nationality = $object['nationality']; 
+        $id = $_GET['id'];
+        try{
+            $pdoAdd = $this->pdo->prepare("UPDATE countries SET country_name=:country_name , nationality=:nationality WHERE id=:id");
+            $pdoAdd->bindParam(':country_name', $countryName, $this->pdo::PARAM_STR);
+            $pdoAdd->bindParam(':nationality', $nationality, $this->pdo::PARAM_STR);
+            $pdoAdd->bindParam(':id', $id, $this->pdo::PARAM_INT);
+            $pdoAdd->execute();
+            $response['result']= true;
+        }catch (\Exception $e){
+                $error = $e->getMessage();
+                $control = new Controller();
+                $control->render('/errors', [
+                    'error' => $error
+                ]);
+        }
+        return $response;
+    }
+    
 }

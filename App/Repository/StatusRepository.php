@@ -110,4 +110,25 @@ class StatusRepository extends Repository
         }
         return $response;
     }
+
+    function StatusUpdateToDataBase(string $name):array
+    {
+        $response['result']=false;
+        $id = $_GET['id'];
+        try{
+            $pdoAdd = $this->pdo->prepare("UPDATE status SET name=:name WHERE id=:id");
+            $pdoAdd->bindParam(':name', $name, $this->pdo::PARAM_STR);
+            $pdoAdd->bindParam(':id', $id, $this->pdo::PARAM_INT);
+            $pdoAdd->execute();
+            $response['result']= true;
+        }catch (\Exception $e){
+                $error = $e->getMessage();
+                $control = new Controller();
+                $control->render('/errors', [
+                    'error' => $error
+                ]);
+        }
+        return $response;
+    }
+    
 }

@@ -1,6 +1,7 @@
 <?php
 use App\Repository\CountryRepository;
 use App\Repository\TypeHideoutRepository;
+use App\Repository\HideoutRepository;
 use App\Repository\MissionRepository;
 $countryRepository = new CountryRepository();
 $countries = $countryRepository->findAllCountrys();
@@ -8,6 +9,14 @@ $typeHideoutRepository = new TypeHideoutRepository();
 $typeHideouts = $typeHideoutRepository->findAllTypeHideouts();
 $missionRepository = new MissionRepository();
 $missions = $missionRepository->findAllMissions();
+if(key_exists('id',$_GET)){
+    if ($_GET['id']){
+    $hideoutRepository = new HideoutRepository();
+    $hideout = $hideoutRepository->findOneHideoutById($_GET['id']);
+    } 
+}else {
+    $hideout = null;
+}
 
 ?>
 <div class="row d-flex justify-content-center ">
@@ -22,21 +31,25 @@ $missions = $missionRepository->findAllMissions();
                     <form action="" method="POST">
                         <div class="mt-3 mb-5 mx-2">
                             <label for="address" class=" col-4 d-inline attributName"> Adresse :</label>
-                            <textarea class="col-8 d-inline attribueValue formInput" id="address" name="address" ></textarea>
+                            <textarea class="col-8 d-inline attribueValue formInput" id="address" name="address" ><?php 
+                                if (!is_null($hideout)) { echo(trim(htmlspecialchars($hideout['address'])));}?>
+                            </textarea>
                             <?php if (!empty($errors['address'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['address']) ?></div>
                             <?php } ?>
                         </div>
                         <div class="mt-3 mb-5 mx-2">
                             <label for="zipcode" class=" col-4 d-inline attributName"> Code Postal :</label>
-                            <input type="text" class="col-8 d-inline attribueValue formInput" id="zipcode" name="zipcode">
+                            <input type="text" class="col-8 d-inline attribueValue formInput" id="zipcode" name="zipcode"
+                            <?php if (!is_null($hideout)) { ?> value="<?php echo(trim(htmlspecialchars($hideout['zipcode'])));}?>">>
                             <?php if (!empty($errors['zipcode'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['zipcode']) ?></div>
                             <?php } ?>
                         </div>
                         <div class="mt-3 mb-5 mx-2">
                             <label for="city" class=" col-4 d-inline attributName"> Ville :</label>
-                            <input type="text" class="col-8 d-inline attribueValue formInput" id="city" name="city">
+                            <input type="text" class="col-8 d-inline attribueValue formInput" id="city" name="city"
+                            <?php if (!is_null($hideout)) { ?> value="<?php echo(trim(htmlspecialchars($hideout['city'])));}?>">>
                             <?php if (!empty($errors['city'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['city']) ?></div>
                             <?php } ?>
@@ -47,7 +60,10 @@ $missions = $missionRepository->findAllMissions();
                             <select name="country" id="country" class="col-8 d-inline attribueValue formInput" >
                                 <optgroup label="pays">
                                     <?php foreach ($countries as $country) { ?>
-                                        <option value=<?php echo($country['id'])?> ><?php echo(htmlspecialchars($country['country_name']))?> </option>
+                                        <option value="<?php echo($country['id'])?>"
+                                            <?php if (!is_null($hideout)) {
+                                                if ($country['id']==$hideout['id_country']){ ?> selected 
+                                            <?php }} ?> > <?php echo(htmlspecialchars($country['country_name']))?></option>
                                     <?php } ?>
                                 </optgroup>
                             </select>
@@ -60,7 +76,10 @@ $missions = $missionRepository->findAllMissions();
                             <select name="typeHide" id="typeHide" class="col-8 d-inline attribueValue formInput" >
                                 <optgroup label="type de planque">
                                     <?php foreach ($typeHideouts as $typeHideout) { ?>
-                                        <option value=<?php echo($typeHideout['id'])?> ><?php echo(htmlspecialchars($typeHideout['type_hide']))?> </option>
+                                        <option value="<?php echo($typeHideout['id'])?>" 
+                                        <?php if (!is_null($hideout)) {
+                                                if ($typeHideout['id']==$hideout['id_typeHide']){ ?> selected 
+                                            <?php }} ?>><?php echo(htmlspecialchars($typeHideout['type_hide']))?> </option>
                                     <?php } ?>
                                 </optgroup>
                             </select>
@@ -74,9 +93,12 @@ $missions = $missionRepository->findAllMissions();
                             <select name="mission" id="mission" class="col-8 d-inline attribueValue formInput" >
                                 <optgroup label="mission">
                                     <?php foreach ($missions as $mission) { ?>
-                                        <option value=<?php echo($mission['id'])?> ><?php echo(htmlspecialchars($mission['title'].'('.$mission['code_name']).')')?> </option>
+                                        <option value="<?php echo($mission['id'])?>" 
+                                        <?php if (!is_null($hideout)) {
+                                                if (!is_null($hideout['id_mission']) && $mission['id']==$hideout['id_mission']){ ?> selected 
+                                            <?php }} ?>><?php echo(trim(htmlspecialchars($mission['title'].'('.$mission['code_name']).')'))?> </option>
                                     <?php } ?>
-                                    <option value="autre" selected> aucune mission </option>
+                                    <option value="noOne" <?php if (is_null($hideout) || is_null($hideout['id_mission']) ) {?>selected <?php } ?>> aucune mission </option>
                                 </optgroup>
                             </select>
                             <?php if (!empty($errors['mission'])){?>
