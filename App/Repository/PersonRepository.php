@@ -13,7 +13,7 @@ use App\Entity\Target;
 
 class PersonRepository extends Repository
 {
-    public function findOneById(string $id):Person|bool
+    public function findOnePersonById(string $id):Person|bool
     {
         try{
             $query = $this->pdo->prepare("SELECT * FROM persons WHERE id = :id");
@@ -25,7 +25,7 @@ class PersonRepository extends Repository
                 $personBDD->setId($person['id']);
                 $personBDD->setFirstName($person['first_name']);
                 $personBDD->setLastName($person['last_name']);
-                $personBDD->setBirthdate($person['birthdate']);
+                $personBDD->setBirthdate(date_create($person['birthdate']));
                 return $personBDD;
             }else {
                 return false;
@@ -38,6 +38,7 @@ class PersonRepository extends Repository
             ]);
         }
     }
+
     public function findOnePersonByName(Person $person):bool
     {
         $firstName = $person->getFirstName();
@@ -72,6 +73,31 @@ class PersonRepository extends Repository
             $allPersons = $query->fetchAll($this->pdo::FETCH_ASSOC);
             if ($allPersons){
                 return $allPersons;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
+
+    public function findAllIdCountryByIdPerson($idPerson):array|bool
+    {
+        $countries=[];
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM persons_countries WHERE id_person = :id_person");
+            $query->bindParam(':id_person', $idPerson, $this->pdo::PARAM_STR);
+            $query->execute();
+            $personCountries = $query->fetchAll($this->pdo::FETCH_ASSOC);
+            if ($personCountries){
+                foreach ($personCountries as $personCountry){
+                    $countries[]=$personCountry['id_country'];
+                }
+                return $countries;
             }else {
                 return false;
             }
@@ -133,7 +159,7 @@ class PersonRepository extends Repository
                             $response['result']= false;
                     }else{
                         $adminRepository = new AdminRepository();
-                        $admin = $adminRepository->findOneByEmail($_POST['email']);
+                        $admin = $adminRepository->findOneAdminByEmail($_POST['email']);
                         if (!$admin){
                             if (empty($_POST['password'])){
                                 $response['password']='Le mot de passe ne doit pas être vide. ';

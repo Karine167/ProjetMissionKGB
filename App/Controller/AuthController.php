@@ -44,7 +44,7 @@ class AuthController extends Controller
                     $errors['email']='L\'email n\'est pas valide';
                 } else {
                     $adminRepository = new AdminRepository();
-                    $admin = $adminRepository->findOneByEmail($_POST['email']);
+                    $admin = $adminRepository->findOneAdminByEmail($_POST['email']);
                     if ($admin){
                         if (empty($_POST['password'])){
                             $errors['password']='Le mot de passe ne doit pas être vide';

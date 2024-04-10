@@ -1,3 +1,37 @@
+<?php
+use App\Repository\AdminRepository;
+use App\Repository\AgentRepository;
+use App\Repository\ContactRepository;
+use App\Repository\TargetRepository;
+if(key_exists('id',$_GET)){
+    if ($_GET['id']){
+    $adminRepository = new AdminRepository();
+    $admin = $adminRepository->findOneAdminById($_GET['id']);
+    if ($admin) {
+        $roleRadio='roleAdmin';
+    }
+    $agentRepository = new AgentRepository();
+    $agent = $agentRepository->findOneAgentById($_GET['id']);
+    if ($agent) {
+        $roleRadio='roleAgent';
+    }
+    $contactRepository = new ContactRepository();
+    $contact = $contactRepository->findOneContactById($_GET['id']);
+    if ($contact) {
+        $roleRadio='roleContact';
+    }
+    $targetRepository = new TargetRepository();
+    $target = $targetRepository->findOneTargetById($_GET['id']);
+    if ($target) {
+        $roleRadio='roleTarget';
+    }
+    } 
+}else {
+    $roleRadio = 'roleAgent';
+}
+
+?>
+
 <div class="row d-flex justify-content-center ">
     <div class="col-9 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
         <h1 class="d-flex justify-content-center m-2"> Liste des personnnes : </h1>
@@ -28,7 +62,7 @@
                             <td><?php echo(htmlspecialchars($element['last_name'])); ?></td>
                             <td><?php echo(substr($element['birthdate'],8,2).'-'.substr($element['birthdate'],5,2).'-'.substr($element['birthdate'],0,4)); ?></td>
                             <td>
-                                <a href="/index.php?controller=back&action=Person&todo=edit&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>
+                                <a href="/index.php?controller=back&action=Person&todo=edit&roleRadio=<?php echo($roleRadio)?>&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>
                                 <a href="/index.php?controller=back&action=Person&todo=delete&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Supprimer</a>
                             </td>
                         </tr>

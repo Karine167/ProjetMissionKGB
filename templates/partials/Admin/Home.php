@@ -26,7 +26,7 @@
                             <td><?php echo(htmlspecialchars($element['email'])); ?></td>
                             <td class="d-none d-md-table-cell"><?php echo(substr($element['created_at'],8,2).'-'.substr($element['created_at'],5,2).'-'.substr($element['created_at'],0,4)); ?></td>
                             <td>
-                                <a href="/index.php?controller=back&action=Admin&todo=edit&id=<?php echo($element['id_admin']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>
+                                <a href="/index.php?controller=back&action=Person&roleRadio=roleAdmin&todo=edit&id=<?php echo($element['id_admin']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>
                                 <a href="/index.php?controller=back&action=Admin&todo=delete&id=<?php echo($element['id_admin']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Supprimer</a>
                             </td>
                         </tr>

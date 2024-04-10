@@ -8,7 +8,32 @@ use App\Controller\Controller;
 
 class AdminRepository extends Repository
 {
-    public function findOneByEmail(string $email):Admin|bool
+    public function findOneAdminById(string $id):Admin|bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM admins WHERE id_admin = :id_admin");
+            $query->bindParam(':id_admin', $id, $this->pdo::PARAM_STR);
+            $query->execute();
+            $admin = $query->fetch($this->pdo::FETCH_ASSOC);
+            if ($admin){
+                $adminBDD = new Admin();
+                $adminBDD->setEmail($admin['email']);
+                $adminBDD->setPassword($admin['password']);
+                $adminBDD->setIdAdmin($admin['id_admin']);
+                return $adminBDD;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
+    
+    public function findOneAdminByEmail(string $email):Admin|bool
     {
         try{
             $query = $this->pdo->prepare("SELECT * FROM admins WHERE email = :email");

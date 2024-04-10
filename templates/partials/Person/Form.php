@@ -2,6 +2,11 @@
 use App\Repository\CountryRepository;
 use App\Repository\MissionRepository;
 use App\Repository\SpecialityRepository;
+use App\Repository\PersonRepository;
+use App\Repository\AdminRepository;
+use App\Repository\AgentRepository;
+use App\Repository\ContactRepository;
+use App\Repository\TargetRepository;
 
 $countryRepository = new CountryRepository();
 $nationalities = $countryRepository->findAllNationalities();
@@ -16,6 +21,44 @@ if (isset($_POST['Person'])){
 } else {
     $roleRadio = $_GET['roleRadio'];
 }
+$adminDB = null;
+$agentDB = null;
+$contactDB = null;
+$targetDB = null;
+$idmission = null;
+if(key_exists('id',$_GET)){
+    if ($_GET['id']){
+        $idPerson = $_GET['id'];
+        $personRepository = new PersonRepository();
+        $person = $personRepository->findOnePersonById($idPerson);
+        $IdpersonCountrys = $personRepository->findAllIdCountryByIdPerson($idPerson);
+        switch ($roleRadio) {
+            case 'roleAdmin':
+                $adminRepository = new AdminRepository();
+                $adminDB = $adminRepository->findOneAdminById($idPerson);
+                break;
+            case 'roleAgent':
+                $agentRepository = new AgentRepository();
+                $agentDB = $agentRepository->findOneAgentById($idPerson);
+                $idmission = $agentDB->getIdMission();
+                $IdpersonSpecialitys = $agentRepository->findAllIdSpecialityByIdPerson($idPerson);
+                break; 
+            case 'roleContact':
+                $contactRepository = new ContactRepository();
+                $contactDB = $contactRepository->findOneContactById($idPerson);
+                $idmission = $contactDB->getIdMission();
+                break;
+            case 'roleTarget':
+                $targetRepository = new TargetRepository();
+                $targetDB = $targetRepository->findOneTargetById($idPerson);
+                $idmission = $targetDB->getIdMission();
+                break;
+        }
+    } 
+}else {
+    $person = null;
+}
+
 ?>
 <div class="row d-flex justify-content-center ">
     <div class="col-9 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
@@ -32,7 +75,7 @@ if (isset($_POST['Person'])){
                             <input type="text" class="col-8 d-inline attribueValue formInput" id="firstName" name="firstName" required
                             <?php if (isset($_POST['Person']) && !empty($_POST['firstName'])){
                                 echo('value="'.trim(htmlspecialchars($_POST['firstName'])).'"');
-                            } ?> >
+                            } elseif (!is_null($person)) {echo('value="'.trim(htmlspecialchars($person->getFirstName())).'"');} ?> >
                             <?php if (!empty($errors['firstName'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['firstName']) ?></div>
                             <?php } ?>
@@ -42,7 +85,7 @@ if (isset($_POST['Person'])){
                             <input type="text" class="col-8 d-inline attribueValue formInput" id="lastName" name="lastName" required 
                             <?php if (isset($_POST['Person']) && !empty($_POST['lastName'])){
                                 echo('value="'.trim(htmlspecialchars($_POST['lastName'])).'"');
-                            } ?> >
+                            } elseif (!is_null($person)) {echo('value="'.trim(htmlspecialchars($person->getLastName())).'"');} ?> >
                             <?php if (!empty($errors['lastName'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['lastName']) ?></div>
                             <?php } ?>
@@ -52,7 +95,7 @@ if (isset($_POST['Person'])){
                             <input type="date" class="col-8 d-inline attribueValue formInput" id="birthdate" name="birthdate" 
                             <?php if (isset($_POST['Person']) && !empty($_POST['birthdate'])){
                                 echo('value="'.trim(htmlspecialchars($_POST['birthdate'])).'"');
-                            } ?> >
+                            } elseif (!is_null($person) && !is_null($person->getBirthdate())) {echo('value="'.date_format($person->getBirthdate(), 'Y-m-d').'"');} ?> >
                             <?php if (!empty($errors['birthdate'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['birthdate']) ?></div>
                             <?php } ?>
@@ -62,12 +105,14 @@ if (isset($_POST['Person'])){
                             <label for="nationality" class=" col-4 d-inline attributName"> Nationalité :</label>
                             <select multiple="multiple" name="nationality[]" id="nationality" class="col-8 d-inline attribueValue formInput" >
                                 <optgroup label="nationalité">
-                                    <?php foreach ($nationalities as $nationality) { 
-                                        if ($nationality['nationality']==='AAAAA - Aucune ') {?>
-                                            <option value=<?php echo($nationality['id'])?> selected > Aucune </option> 
-                                        <?php } else { ?>
-                                        <option value=<?php echo($nationality['id'])?> ><?php echo(htmlspecialchars($nationality['nationality']))?> </option>
-                                    <?php }} ?>
+                                    <?php foreach ($nationalities as $nationality) { ?>
+                                        <option value="<?php echo($nationality['id'])?>" 
+                                        <?php 
+                                        if (is_null($person) && !$IdpersonCountrys && !isset($_POST['Person']) && $nationality['nationality']==='AAAAA - Aucune '){ ?> selected
+                                        <?php } elseif (!is_null($person) && $IdpersonCountrys && in_array($nationality['id'],$IdpersonCountrys)){ ?> selected 
+                                        <?php } elseif (isset($_POST['Person']) && !empty($_POST['nationality']) && in_array($nationality['id'],$_POST['nationality'])) { ?> selected 
+                                        <?php } ?> ><?php echo(htmlspecialchars($nationality['nationality']))?> </option>
+                                    <?php } ?>
                                 </optgroup>
                             </select>
                             <?php if (!empty($errors['nationality'])){?>
@@ -112,7 +157,7 @@ if (isset($_POST['Person'])){
                                 <input type="email" class="form-control" id="email" name="email" placeholder="adresse@exemple.com" 
                                 <?php if (isset($_POST['Person']) && !empty($_POST['email'])){
                                 echo('value="'.trim(htmlspecialchars($_POST['email'])).'"');
-                            } ?>>
+                                } elseif (!is_null($adminDB)) {echo('value="'.trim(htmlspecialchars($adminDB->getEmail())).'"');} ?>>
                                 <?php if (!empty($errors['email'])){?>
                                     <div class="alert alert-danger"><?php echo($errors['email']) ?></div>
                                 <?php } ?>
@@ -131,10 +176,17 @@ if (isset($_POST['Person'])){
                                 <label for="mission" class=" col-4 d-inline attributName"> Mission :</label>
                                 <select name="mission" id="mission" class="col-8 d-inline attribueValue formInput" >
                                     <optgroup label="mission">
+                                        <option value="aucune" 
+                                        <?php if (is_null($idmission)) { ?>selected <?php } ?>> aucune mission </option>
                                         <?php foreach ($missions as $mission) { ?>
-                                            <option value=<?php echo($mission['id'])?> ><?php echo(htmlspecialchars($mission['title'].'('.$mission['code_name']).')')?> </option>
-                                        <?php } ?>
-                                        <option value="aucune" selected > aucune mission </option>
+                                            <option value="<?php echo($mission['id'])?>" 
+                                            <?php 
+                                                if (isset($_POST['Person']) && !empty($_POST['mission']) && $mission['id'] == $_POST['mission'] ){ ?>
+                                                selected
+                                            <?php
+                                            }elseif (!is_null($person) && !is_null($idmission) && $mission['id'] == $idmission){ ?> selected 
+                                        <?php } ?>><?php echo(htmlspecialchars($mission['title'].'('.$mission['code_name']).')')?> </option>
+                                        <?php }  ?>
                                     </optgroup>
                                 </select>
                                 <?php if (!empty($errors['mission'])){?>
@@ -149,7 +201,11 @@ if (isset($_POST['Person'])){
                                 <select multiple="multiple" name="specialityNames[]" id="specialityNames" class="col-8 d-inline attribueValue formInput" >
                                     <optgroup label="Spécialités">
                                         <?php foreach ($specialities as $speciality) { ?>
-                                            <option value=<?php echo($speciality['id'])?>><?php echo(htmlspecialchars($speciality['name']))?> </option>
+                                            <option value="<?php echo($speciality['id'])?>"
+                                            <?php 
+                                                if (!is_null($person) && $IdpersonSpecialitys && in_array($speciality['id'],$IdpersonSpecialitys)){ ?> selected 
+                                                <?php } elseif (isset($_POST['Person']) && !empty($_POST['specialityNames']) && in_array($speciality['id'],$_POST['specialityNames'])) { ?> selected 
+                                        <?php } ?> ><?php echo(htmlspecialchars($speciality['name']))?> </option>
                                         <?php } ?>
                                     </optgroup>
                                 </select>

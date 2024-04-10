@@ -10,6 +10,31 @@ use App\Controller\Controller;
 
 class TargetRepository extends Repository
 {
+    public function findOneTargetById(string $id):Target|bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM targets WHERE id_target = :id_target");
+            $query->bindParam(':id_target', $id, $this->pdo::PARAM_STR);
+            $query->execute();
+            $target = $query->fetch($this->pdo::FETCH_ASSOC);
+            if ($target){
+                $targetBDD = new Target();
+                $targetBDD->setIdTarget($target['id_target']);
+                $targetBDD->setCodeName($target['code_name']);
+                $targetBDD->setIdMission($target['id_mission']);
+                return $targetBDD;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
+
     public function findAllTargetsByMissionId(int $idMission):array|bool
     {
         try{

@@ -4,7 +4,7 @@ namespace App\Entity;
 
 class Agent extends Person
 {
-    private string $idAgentt;
+    private string $idAgent;
     private ?string $identifyCode = '';
     private ?int $idMission = null;
 
@@ -13,17 +13,17 @@ class Agent extends Person
     /**
      * Get the value of idAgentt
      */
-    public function getIdAgentt(): string
+    public function getIdAgent(): string
     {
-        return $this->idAgentt;
+        return $this->idAgent;
     }
 
     /**
      * Set the value of idAgentt
      */
-    public function setIdAgentt(string $idAgentt): self
+    public function setIdAgent(string $idAgent): self
     {
-        $this->idAgentt = $idAgentt;
+        $this->idAgent = $idAgent;
 
         return $this;
     }

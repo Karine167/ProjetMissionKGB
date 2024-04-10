@@ -5,11 +5,37 @@ namespace App\Repository;
 use App\Entity\Person;
 use App\Entity\Target;
 use App\Entity\Mission;
+use App\Entity\Contact;
 use App\Db\Mysql;
 use App\Controller\Controller;
 
 class ContactRepository extends Repository
 {
+    public function findOneContactById(string $id):Contact|bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT * FROM contacts WHERE id_contact = :id_contact");
+            $query->bindParam(':id_contact', $id, $this->pdo::PARAM_STR);
+            $query->execute();
+            $contact = $query->fetch($this->pdo::FETCH_ASSOC);
+            if ($contact){
+                $contactBDD = new Contact();
+                $contactBDD->setIdContact($contact['id_contact']);
+                $contactBDD->setCodeName($contact['code_name']);
+                $contactBDD->setIdMission($contact['id_mission']);
+                return $contactBDD;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
+
     public function findAllContactsByMissionId(int $idMission):array|bool
     {
         try{
