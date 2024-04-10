@@ -40,8 +40,30 @@ if(key_exists('id',$_GET)){
             case 'roleAgent':
                 $agentRepository = new AgentRepository();
                 $agentDB = $agentRepository->findOneAgentById($idPerson);
-                $idmission = $agentDB->getIdMission();
-                $IdpersonSpecialitys = $agentRepository->findAllIdSpecialityByIdPerson($idPerson);
+                if ($agentDB){
+                    $idmission = $agentDB->getIdMission();
+                    $IdpersonSpecialitys = $agentRepository->findAllIdSpecialityByIdPerson($idPerson);
+                } else {
+                    $adminRepository = new AdminRepository();
+                    $adminDB = $adminRepository->findOneAdminById($idPerson);
+                    if ($adminDB){
+                        $roleRadio = 'roleAdmin';
+                    }else{
+                        $contactRepository = new ContactRepository();
+                        $contactDB = $contactRepository->findOneContactById($idPerson);
+                        if ($contactDB){
+                            $roleRadio = 'roleContact';
+                            $idmission = $contactDB->getIdMission();
+                        }else{
+                            $targetRepository = new TargetRepository();
+                            $targetDB = $targetRepository->findOneTargetById($idPerson);
+                            if ($targetDB){
+                                $roleRadio = 'roleTarget';
+                                $idmission = $targetDB->getIdMission();
+                            }
+                        }
+                    }
+                }
                 break; 
             case 'roleContact':
                 $contactRepository = new ContactRepository();
@@ -69,7 +91,12 @@ if(key_exists('id',$_GET)){
             <div class="row m-3 p-3 d-flex align-items-center justify-content-center">
                 <h1 class="d-flex justify-content-center m-2 attributName formCategory fs-3"> Formulaire des personnes : </h1>
                 <div class="row d-flex justify-content-start my-3 ms-2 me-1">
-                    <form action="/index.php?controller=back&action=Person&todo=create&roleRadio=<?=$roleRadio?>" method="POST">
+                    <form action="<?php
+                        if ($_GET['todo']=='create') { 
+                            echo('/index.php?controller=back&action=Person&todo=create&roleRadio='.$roleRadio);
+                        } else {
+                            echo('/index.php?controller=back&action=Person&roleRadio='.$roleRadio.'&todo=edit&id='.$_GET['id']);
+                        } ?>" method="POST">
                         <div class="mt-3 mb-5 mx-2">
                             <label for="firstName" class=" col-4 d-inline attributName"> Prénom* :</label>
                             <input type="text" class="col-8 d-inline attribueValue formInput" id="firstName" name="firstName" required

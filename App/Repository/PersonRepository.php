@@ -395,4 +395,136 @@ class PersonRepository extends Repository
         $_POST=[];
         return $response;
     }
+    public function PersonUpdateToDataBase(array $object): array
+    {       
+        $response['result']=false;
+        $id = $_GET['id'];
+        $person =$object['personArray']['person'];
+        $firstName = $person->getFirstName();
+        $lastName = $person->getLastName();
+        $birthdate = $object['personArray']['birthdate'];
+        try{
+            $pdoEditPerson = $this->pdo->prepare("UPDATE persons SET first_name = :first_name , last_name = :last_name , birthdate = :birthdate WHERE id = :id ");
+            $pdoEditPerson->bindParam(':id', $id, $this->pdo::PARAM_STR);
+            $pdoEditPerson->bindParam(':first_name', $firstName, $this->pdo::PARAM_STR);
+            $pdoEditPerson->bindParam(':last_name', $lastName, $this->pdo::PARAM_STR);
+            $pdoEditPerson->bindParam(':birthdate', $birthdate, $this->pdo::PARAM_STR);
+            $pdoEditPerson->execute();
+        }catch (\Exception $e){
+                $error = $e->getMessage();
+                $control = new Controller();
+                $control->render('/errors', [
+                    'error' => $error
+                ]);
+        }
+        try {
+            $pdoRemoveCountry = $this->pdo->prepare("DELETE FROM persons_countries WHERE id_person = :id_person");
+            $pdoRemoveCountry->bindParam(':id_person', $id, $this->pdo::PARAM_STR);
+            $pdoRemoveCountry->execute();
+            $countrys = $object['personArray']['countrys'];
+            foreach ($countrys as $idCountry){
+            $pdoEditCountry = $this->pdo->prepare("INSERT INTO persons_countries(id_person, id_country) VALUES (:id_person, :id_country) ");
+            $pdoEditCountry->bindParam(':id_person', $id, $this->pdo::PARAM_STR);
+            $pdoEditCountry->bindParam(':id_country', $idCountry, $this->pdo::PARAM_STR);
+            $pdoEditCountry->execute();
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+        
+        
+        if (array_key_exists('contactArray', $object[0])){
+            $contact = $object[0]['contactArray']['contact'];
+            $idMission = $contact->getIdMission();
+            try{
+                $pdoEditContact = $this->pdo->prepare("UPDATE contacts SET id_mission = :id_mission WHERE id_contact = :id_contact ");
+                $pdoEditContact->bindParam(':id_contact', $id, $this->pdo::PARAM_STR);
+                $pdoEditContact->bindParam(':id_mission', $idMission, $this->pdo::PARAM_INT || null);
+                $pdoEditContact->execute();
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+        }
+        if (array_key_exists('targetArray', $object[0])){
+            $target = $object[0]['targetArray']['target'];
+            $idMission = $target->getIdMission();
+            try{
+                $pdoEditTarget = $this->pdo->prepare("UPDATE targets SET id_mission = :id_mission WHERE id_target = :id_target ");
+                $pdoEditTarget->bindParam(':id_target', $id, $this->pdo::PARAM_STR);
+                $pdoEditTarget->bindParam(':id_mission', $idMission, $this->pdo::PARAM_INT || null);
+                $pdoEditTarget->execute();
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+        }
+        if (array_key_exists('agentArray', $object[0])){
+            $agent = $object[0]['agentArray']['agent'];
+            $idMission = $agent->getIdMission();
+            try{
+                $pdoEditAgent = $this->pdo->prepare("UPDATE agents SET id_mission = :id_mission WHERE id_agent = :id_agent ");
+                $pdoEditAgent->bindParam(':id_agent', $id, $this->pdo::PARAM_STR);
+                $pdoEditAgent->bindParam(':id_mission', $idMission, $this->pdo::PARAM_INT || null);
+                $pdoEditAgent->execute();
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+            try{
+                $pdoRemoveSpeciality = $this->pdo->prepare("DELETE FROM agents_specialities WHERE id_agent = :id_agent");
+                $pdoRemoveSpeciality->bindParam(':id_agent', $id, $this->pdo::PARAM_STR);
+                $pdoRemoveSpeciality->execute();
+                $specialities = $object[0]['agentArray']['specialities'];
+                foreach ($specialities as $idSpeciality){
+                        $pdoEditAgentSpe = $this->pdo->prepare("INSERT INTO agents_specialities(id_agent, id_speciality) VALUES (:id_agent, :id_speciality) ");
+                        $pdoEditAgentSpe->bindParam(':id_agent', $id, $this->pdo::PARAM_STR);
+                        $pdoEditAgentSpe->bindParam(':id_speciality', $idSpeciality, $this->pdo::PARAM_INT);
+                        $pdoEditAgentSpe->execute();
+                    }
+            }catch (\Exception $e){
+                $error = $e->getMessage();
+                $control = new Controller();
+                $control->render('/errors', [
+                    'error' => $error
+                ]);
+            }
+            
+        }
+        if (array_key_exists('adminArray', $object[0])){
+            $admin = $object[0]['adminArray']['admin'];
+            $email = $admin->getEmail();
+            $password = password_hash($admin->getPassword(), PASSWORD_BCRYPT);
+            try{
+                $pdoEditAdmin = $this->pdo->prepare("UPDATE admins SET email = :email , password = :password WHERE id_admin = :id_admin ");
+                $pdoEditAdmin->bindParam(':id_admin', $id, $this->pdo::PARAM_STR);
+                $pdoEditAdmin->bindParam(':email', $email, $this->pdo::PARAM_STR);
+                $pdoEditAdmin->bindParam(':password', $password, $this->pdo::PARAM_STR);
+                $pdoEditAdmin->execute();
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+        }
+
+        $response['result']= true;
+        $_POST=[];
+        return $response;
+    }
 }
