@@ -5,26 +5,31 @@ use App\Repository\ContactRepository;
 use App\Repository\TargetRepository;
 if(key_exists('id',$_GET)){
     if ($_GET['id']){
-    $adminRepository = new AdminRepository();
-    $admin = $adminRepository->findOneAdminById($_GET['id']);
-    if ($admin) {
-        $roleRadio='roleAdmin';
-    }
-    $agentRepository = new AgentRepository();
-    $agent = $agentRepository->findOneAgentById($_GET['id']);
-    if ($agent) {
-        $roleRadio='roleAgent';
-    }
-    $contactRepository = new ContactRepository();
-    $contact = $contactRepository->findOneContactById($_GET['id']);
-    if ($contact) {
-        $roleRadio='roleContact';
-    }
-    $targetRepository = new TargetRepository();
-    $target = $targetRepository->findOneTargetById($_GET['id']);
-    if ($target) {
-        $roleRadio='roleTarget';
-    }
+        $adminRepository = new AdminRepository();
+        $admin = $adminRepository->findOneAdminById($_GET['id']);
+        if ($admin) {
+            $roleRadio='roleAdmin';
+        }else{
+            $agentRepository = new AgentRepository();
+            $agent = $agentRepository->findOneAgentById($_GET['id']);
+            if ($agent) {
+                $roleRadio='roleAgent';
+            }else{
+                $contactRepository = new ContactRepository();
+                $contact = $contactRepository->findOneContactById($_GET['id']);
+                if ($contact) {
+                    $roleRadio='roleContact';
+                }else{
+                    $targetRepository = new TargetRepository();
+                    $target = $targetRepository->findOneTargetById($_GET['id']);
+                    if ($target) {
+                        $roleRadio='roleTarget';
+                    } else {
+                        $roleRadio='roleAgent';
+                    }
+                }
+            }
+        }
     } 
 }else {
     $roleRadio = 'roleAgent';
@@ -59,7 +64,14 @@ if(key_exists('id',$_GET)){
                         <tr>
                             <td class="d-none d-md-table-cell"><?php echo($element['id']); ?></td>
                             <td><?php echo(htmlspecialchars($element['first_name'])); ?></td>
-                            <td><?php echo(htmlspecialchars($element['last_name'])); ?></td>
+                            <td><?php echo(htmlspecialchars($element['last_name'])); 
+                                if ($_GET['todo']=='delete'){ 
+                                    if ($element['id'] == $_GET['id'] ){ ?>
+                                    <p class="alert alert-danger"><?php echo('Supprimez cet élément ?'); ?>
+                                    <a href="/index.php?controller=back&action=Person&todo=delete&rep=oui&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="OUI">OUI</a>
+                                    <a href="/index.php?controller=back&action=Person&todo=home" class="btn btn-primary pt-2" aria-current="NON">NON</a></p>
+                                <?php } } ?>
+                            </td>
                             <td><?php echo(substr($element['birthdate'],8,2).'-'.substr($element['birthdate'],5,2).'-'.substr($element['birthdate'],0,4)); ?></td>
                             <td>
                                 <a href="/index.php?controller=back&action=Person&todo=edit&roleRadio=<?php echo($roleRadio)?>&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>

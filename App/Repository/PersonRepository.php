@@ -144,6 +144,9 @@ class PersonRepository extends Repository
                 $response['birthdate'] = 'Cette date n\'existe pas !';
                 $response['result']= false;
             }
+        } else {
+            $response['birthdate'] = 'Vous devez entrer une date de naissance !';
+            $response['result']= false;
         }
         if (empty($_POST['nationality'])){
             $response['nationality'] = 'Vous devez sélectionner au moins une des possibilités proposées.';
@@ -280,7 +283,7 @@ class PersonRepository extends Repository
             $pdoAddPerson->bindParam(':id', $id, $this->pdo::PARAM_STR);
             $pdoAddPerson->bindParam(':first_name', $firstName, $this->pdo::PARAM_STR);
             $pdoAddPerson->bindParam(':last_name', $lastName, $this->pdo::PARAM_STR);
-            $pdoAddPerson->bindParam(':birthdate', $birthdate, $this->pdo::PARAM_STR);
+            $pdoAddPerson->bindParam(':birthdate', $birthdate, $this->pdo::PARAM_STR|null);
             $pdoAddPerson->execute();
         }catch (\Exception $e){
                 $error = $e->getMessage();
@@ -530,5 +533,98 @@ class PersonRepository extends Repository
         $response['result']= true;
         $_POST=[];
         return $response;
+    }
+
+    public function PersonDelete(string $id):void
+    {
+        if ($_GET['rep'] == 'oui'){
+            try{
+                $pdoDeletePerson = $this->pdo->prepare("DELETE FROM persons  WHERE id = :id");
+                $pdoDeletePerson->bindParam(':id', $id, $this->pdo::PARAM_STR);
+                $pdoDeletePerson->execute();
+                //suppression des associations dans la table persons_countries liées à cette personne
+                $pdoDeletePersonCountry = $this->pdo->prepare("DELETE FROM persons_countries  WHERE id_person = :id_person");
+                $pdoDeletePersonCountry->bindParam(':id_person', $id, $this->pdo::PARAM_STR);
+                $pdoDeletePersonCountry->execute();
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+            
+            //vérification si cette personne est un agent puis si c'est le cas, suppression de la personne dans la table des agents
+            //Si c'est un agent, suppression des associations liées à cet agent dans la table des agents_specialities
+            $agentRepository = new AgentRepository();
+            $agent = $agentRepository->findOneAgentById($id);
+            if ($agent){
+                try{
+                    $pdoDeleteAgent = $this->pdo->prepare("DELETE FROM agents WHERE id_agent = :id_agent");
+                    $pdoDeleteAgent->bindParam(':id_agent', $id, $this->pdo::PARAM_STR);
+                    $pdoDeleteAgent->execute();
+                    $pdoDeleteAgentSpeciality = $this->pdo->prepare("DELETE FROM agents_specialities  WHERE id_agent = :id_agent");
+                    $pdoDeleteAgentSpeciality->bindParam(':id_agent', $id, $this->pdo::PARAM_STR);
+                    $pdoDeleteAgentSpeciality->execute();
+                }catch (\Exception $e){
+                        $error = $e->getMessage();
+                        $control = new Controller();
+                        $control->render('/errors', [
+                            'error' => $error
+                        ]);
+                }   
+            } else {
+                //vérification si cette personne est un contact puis si c'est le cas, suppression de la personne dans la table des contacts
+                $contactRepository = new ContactRepository();
+                $contact = $contactRepository->findOneContactById($id);
+                if ($contact){
+                    try{
+                        $pdoDeleteContact = $this->pdo->prepare("DELETE FROM contacts WHERE id_contact = :id_contact");
+                        $pdoDeleteContact->bindParam(':id_contact', $id, $this->pdo::PARAM_STR);
+                        $pdoDeleteContact->execute();
+                    }catch (\Exception $e){
+                            $error = $e->getMessage();
+                            $control = new Controller();
+                            $control->render('/errors', [
+                                'error' => $error
+                            ]);
+                    }   
+                } else {
+                    //vérification si cette personne est une cible puis si c'est le cas, suppression de la personne dans la table des cibles
+                    $targetRepository = new TargetRepository();
+                    $target = $targetRepository->findOneTargetById($id);
+                    if ($target){
+                        try{
+                            $pdoDeleteTarget = $this->pdo->prepare("DELETE FROM targets WHERE id_target = :id_target");
+                            $pdoDeleteTarget->bindParam(':id_target', $id, $this->pdo::PARAM_STR);
+                            $pdoDeleteTarget->execute();
+                        }catch (\Exception $e){
+                                $error = $e->getMessage();
+                                $control = new Controller();
+                                $control->render('/errors', [
+                                    'error' => $error
+                                ]);
+                        }   
+                    } else {
+                        //vérification si cette personne est un admin puis si c'est le cas, suppression de la personne dans la table des admins
+                        $adminRepository = new AdminRepository();
+                        $admin = $adminRepository->findOneAdminById($id);
+                        if ($admin){
+                            try{
+                                $pdoDeleteAdmin = $this->pdo->prepare("DELETE FROM admins WHERE id_admin = :id_admin");
+                                $pdoDeleteAdmin->bindParam(':id_admin', $id, $this->pdo::PARAM_STR);
+                                $pdoDeleteAdmin->execute();
+                            }catch (\Exception $e){
+                                    $error = $e->getMessage();
+                                    $control = new Controller();
+                                    $control->render('/errors', [
+                                        'error' => $error
+                                    ]);
+                            }   
+                        }
+                    }
+                }
+            }
+        }
     }
 }

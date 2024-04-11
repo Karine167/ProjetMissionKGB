@@ -22,12 +22,18 @@
                     <tbody>
                     <?php foreach ($allElements as $element) { ?>
                         <tr>
-                            <td><?php echo(htmlspecialchars($element['complete_name'])); ?></td>
+                            <td><?php echo(htmlspecialchars($element['complete_name'])); 
+                                if ($_GET['todo']=='delete'){ 
+                                    if ($element['id'] == $_GET['id'] ){ ?>
+                                    <p class="alert alert-danger"><?php echo('Supprimez cet élément ?'); ?>
+                                    <a href="/index.php?controller=back&action=Person&todo=delete&rep=oui&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="OUI">OUI</a>
+                                    <a href="/index.php?controller=back&action=Person&todo=home" class="btn btn-primary pt-2" aria-current="NON">NON</a></p>
+                                <?php } } ?></td>
                             <td><?php echo(htmlspecialchars($element['code_name'])); ?></td>
                             <td><?php echo($element['id_mission']); ?></td>
                             <td>
                                 <a href="/index.php?controller=back&action=Person&roleRadio=roleTarget&todo=edit&id=<?php echo($element['id_target']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>
-                                <a href="/index.php?controller=back&action=Target&todo=delete&id=<?php echo($element['id_target']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Supprimer</a>
+                                <a href="/index.php?controller=back&action=Person&todo=delete&id=<?php echo($element['id_target']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Supprimer</a>
                             </td>
                         </tr>
                     <?php } ?>
