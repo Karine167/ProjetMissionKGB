@@ -67,7 +67,7 @@ class MissionController extends Controller
                 $mission = $missionRepository->findOneMissionById($id);
                 if (!$mission){
                     $errors['mission']='Cette mission n\'existe pas.';    
-                }
+                }else {
                     //recherche des cibles
                     $targetRepository = new TargetRepository();
                     $targets = $targetRepository->findAllTargetsByMissionId($id);
@@ -82,18 +82,21 @@ class MissionController extends Controller
                     $statusRepository = new StatusRepository();
                     $status = $statusRepository->findOneStatusById($idStatus);
                     //recherche du type de la mission
+                    $idTypeMission = $mission->getIdTypeMission();
                     $typeMissionRepository = new TypeMissionRepository();
-                    $typeMission = $typeMissionRepository->findOneTypeMissionById($id);
+                    $typeMission = $typeMissionRepository->findOneTypeMissionById($idTypeMission);
                     //recherche du pays de la mission
+                    $idCountry = $mission->getIdCountry();
                     $countryRepository = new CountryRepository();
-                    $country = $countryRepository->findOneCountryById($id);
+                    $country = $countryRepository->findOneCountryById($idCountry);
                     //recherche de la spécialité nécessaire pour la mission
+                    $idSpeciality = $mission->getIdSpeciality();
                     $specialityRepository = new SpecialityRepository();
-                    $speciality = $specialityRepository->findOneSpecialityById($id);
+                    $speciality = $specialityRepository->findOneSpecialityById($idSpeciality);
                     //recherche des caches
                     $hideoutsRepository = new HideoutRepository();
                     $hideouts = $hideoutsRepository->findAllHideoutsByMissionId($id);
-                
+                }
                 $this->render('/detailFront', [
                     'errors'=> $errors,
                     'mission' => $mission,

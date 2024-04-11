@@ -26,7 +26,7 @@
                         <tr>
                             <td class="d-none d-md-table-cell"><?php echo($element['id']); ?></td>
                             <td class="d-none d-md-table-cell"><?php echo(htmlspecialchars($element['code_hide'])); ?></td>
-                            <td><?php echo(htmlspecialchars($element['type_hide'])); ?></td>
+                            <td><?php if(!is_null($element['type_hide'])) echo(htmlspecialchars($element['type_hide'])); ?></td>
                             <td><?php echo(htmlspecialchars($element['address'] . ", " . $element['zipcode'] . ", " . $element['city'] . ", " . $element['country_name'])); ?></td>
                             <td><?php echo($element['id_mission']); ?></td>
                             <td>

@@ -25,6 +25,10 @@ if(key_exists('id',$_GET)){
 }else {
     $mission = null;
 }
+$idStatusArray=[];
+$idSpecialityArray=[];
+$idCountryArray=[];
+$idTypeMissionArray=[];
 ?>
 <div class="row d-flex justify-content-center ">
     <div class="col-9 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
@@ -83,7 +87,8 @@ if(key_exists('id',$_GET)){
                             <label for="idCountry" class=" col-4 d-inline attributName"> Pays de la mission :</label>
                             <select name="idCountry" id="idCountry" class="col-8 d-inline attribueValue formInput" required>
                                 <optgroup label="pays">
-                                    <?php foreach ($countries as $country) { ?>
+                                    <?php foreach ($countries as $country) {
+                                        $idCountryArray[] = $country['id'] ?>
                                         <option value="<?php echo($country['id'])?>"
                                         <?php if (!is_null($mission)) {
                                                 if ($country['id']==$mission->getIdCountry()){ ?> selected 
@@ -91,32 +96,42 @@ if(key_exists('id',$_GET)){
                                     <?php } ?>
                                 </optgroup>
                             </select>
-                            <?php if (!empty($errors['idCountry'])){?>
-                                <div class="alert alert-danger"><?php echo($errors['idCountry']) ?></div>
+                            <?php 
+                                if (!is_null($mission) && !in_array($mission->getIdCountry(),$idCountryArray)){?>
+                                    <div class="alert alert-danger"><?php echo('A définir !') ?></div>
+                            <?php }
+                                if (!empty($errors['idCountry'])){?>
+                                    <div class="alert alert-danger"><?php echo($errors['idCountry']) ?></div>
                             <?php } ?>
                         </div>
                         <div class="mt-3 mb-5 mx-2">
                             <label for="idStatus" class=" col-4 d-inline attributName"> Statut de la mission :</label>
                             <select name="idStatus" id="idStatus" class="col-8 d-inline attribueValue formInput" >
                                 <optgroup label="Statut">
-                                    <?php foreach ($status as $statut) { ?>
+                                    <?php foreach ($status as $statut) {
+                                        $idStatusArray[] = $statut['id'] ; ?>
                                         <option value="<?php echo($statut['id'])?>" 
                                         <?php if (!is_null($mission)) {
                                                 if ($statut['id']==$mission->getIdStatus()){ ?> selected 
                                         <?php }} ?>
                                         ><?php echo(htmlspecialchars($statut['name']))?> </option>
-                                    <?php } ?>
+                                        <?php } ?>
                                 </optgroup>
                             </select>
-                            <?php if (!empty($errors['idStatus'])){?>
-                                <div class="alert alert-danger"><?php echo($errors['idStatus']) ?></div>
+                            <?php
+                                if (!is_null($mission) && !in_array($mission->getIdStatus(),$idStatusArray)){?>
+                                    <div class="alert alert-danger"><?php echo('A définir !') ?></div>
+                            <?php }
+                                if (!empty($errors['idStatus'])){?>
+                                    <div class="alert alert-danger"><?php echo($errors['idStatus']) ?></div>
                             <?php } ?>
                         </div>
                         <div class="mt-3 mb-5 mx-2">
                             <label for="idTypeMission" class=" col-4 d-inline attributName"> Type de mission :</label>
                             <select name="idTypeMission" id="idTypeMission" class="col-8 d-inline attribueValue formInput" required>
                                 <optgroup label="type de mission">
-                                    <?php foreach ($typeMissions as $typeMission) { ?>
+                                    <?php foreach ($typeMissions as $typeMission) {
+                                        $idTypeMissionArray[] = $typeMission['id']; ?>
                                         <option value="<?php echo($typeMission['id'])?>"
                                         <?php if (!is_null($mission)) {
                                                 if ($typeMission['id']==$mission->getIdTypeMission()){ ?> selected 
@@ -125,7 +140,11 @@ if(key_exists('id',$_GET)){
                                     <?php } ?>
                                 </optgroup>
                             </select>
-                            <?php if (!empty($errors['idTypeMission'])){?>
+                            <?php
+                                if (!is_null($mission) && !in_array($mission->getIdTypeMission(),$idTypeMissionArray)){?>
+                                    <div class="alert alert-danger"><?php echo('A définir !') ?></div>
+                            <?php }
+                                if (!empty($errors['idTypeMission'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['idTypeMission']) ?></div>
                             <?php } ?>
                         </div>
@@ -134,7 +153,8 @@ if(key_exists('id',$_GET)){
                             <label for="idSpeciality" class=" col-4 d-inline attributName"> Spécialité requise :</label>
                             <select name="idSpeciality" id="idSpeciality" class="col-8 d-inline attribueValue formInput" required>
                                 <optgroup label="spécialité">
-                                    <?php foreach ($specialities as $speciality) { ?>
+                                    <?php foreach ($specialities as $speciality) { 
+                                        $idSpecialityArray[] = $speciality['id']; ?>
                                         <option value="<?php echo($speciality['id'])?>"
                                         <?php if (!is_null($mission)) {
                                                 if ($speciality['id']==$mission->getIdSpeciality()){ ?> selected 
@@ -142,8 +162,12 @@ if(key_exists('id',$_GET)){
                                     <?php } ?>
                                 </optgroup>
                             </select>
-                            <?php if (!empty($errors['idSpeciality'])){?>
-                                <div class="alert alert-danger"><?php echo($errors['idSpeciality']) ?></div>
+                            <?php
+                                if (!is_null($mission) && !in_array($mission->getIdSpeciality(), $idSpecialityArray)){?>
+                                    <div class="alert alert-danger"><?php echo('A définir !') ?></div>
+                            <?php }
+                                if (!empty($errors['idSpeciality'])){?>
+                                    <div class="alert alert-danger"><?php echo($errors['idSpeciality']) ?></div>
                             <?php } ?>
                         </div>
                         

@@ -23,7 +23,13 @@
                     <?php foreach ($allElements as $element) { ?>
                         <tr>
                             <td><?php echo($element['id']); ?></td>
-                            <td><?php echo(htmlspecialchars($element['country_name'])); ?></td>
+                            <td><?php echo(htmlspecialchars($element['country_name']));
+                                if ($_GET['todo']=='delete'){ 
+                                    if ($element['id'] == $_GET['id'] ){ ?>
+                                    <p class="alert alert-danger"><?php echo('Supprimez cet élément ?'); ?>
+                                    <a href="/index.php?controller=back&action=Country&todo=delete&rep=oui&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="OUI">OUI</a>
+                                    <a href="/index.php?controller=back&action=Country&todo=home" class="btn btn-primary pt-2" aria-current="NON">NON</a></p>
+                                <?php } } ?></td>
                             <td><?php echo(htmlspecialchars($element['nationality'])); ?></td>
                             <td>
                                 <a href="/index.php?controller=back&action=Country&todo=edit&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>

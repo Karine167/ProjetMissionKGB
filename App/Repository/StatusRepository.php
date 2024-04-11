@@ -131,4 +131,21 @@ class StatusRepository extends Repository
         return $response;
     }
     
+    public function StatusDelete(int $id):void
+    {
+        if ($_GET['rep'] == 'oui'){
+            try{
+                $pdoDelete = $this->pdo->prepare("DELETE FROM status  WHERE id = :id");
+                $pdoDelete->bindParam(':id', $id, $this->pdo::PARAM_INT);
+                $pdoDelete->execute();
+                $response['result']= true;
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+        }
+    }
 }

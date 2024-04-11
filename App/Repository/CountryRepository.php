@@ -167,4 +167,24 @@ class CountryRepository extends Repository
         return $response;
     }
     
+    public function CountryDelete(int $id):void
+    {
+        if ($_GET['rep'] == 'oui'){
+            try{
+                $pdoDelete = $this->pdo->prepare("DELETE FROM countries  WHERE id = :id");
+                $pdoDelete->bindParam(':id', $id, $this->pdo::PARAM_INT);
+                $pdoDelete->execute();
+                $pdoDeletepersonCountry = $this->pdo->prepare("DELETE FROM persons_countries  WHERE id_country = :id_country");
+                $pdoDeletepersonCountry->bindParam(':id_country', $id, $this->pdo::PARAM_INT);
+                $pdoDeletepersonCountry->execute();
+                $response['result']= true;
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+        }
+    }
 }

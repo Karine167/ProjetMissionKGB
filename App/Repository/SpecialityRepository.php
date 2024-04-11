@@ -128,4 +128,24 @@ class SpecialityRepository extends Repository
         return $response;
     }
     
+    public function SpecialityDelete(int $id):void
+    {
+        if ($_GET['rep'] == 'oui'){
+            try{
+                $pdoDelete = $this->pdo->prepare("DELETE FROM specialities  WHERE id = :id");
+                $pdoDelete->bindParam(':id', $id, $this->pdo::PARAM_INT);
+                $pdoDelete->execute();
+                $pdoDeleteAgentSpeciality = $this->pdo->prepare("DELETE FROM agents_specialities  WHERE id_speciality = :id_speciality");
+                $pdoDeleteAgentSpeciality->bindParam(':id_speciality', $id, $this->pdo::PARAM_INT);
+                $pdoDeleteAgentSpeciality->execute();
+                $response['result']= true;
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+        }
+    }
 }

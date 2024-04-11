@@ -17,16 +17,16 @@ require_once _TEMPLATEPATH_.'/header.php';
                         <div class="row m-1 p-1 d-flex">
                             <div class="col-12 col-md-6 col-lg-4">
                                 <h2 class="attributName">Nom de Code : <span class="attributValue"><?php if (!is_null($mission->getCodeName())) {echo(htmlspecialchars($mission->getCodeName()));} ?></span></h2>
-                                <h2 class="attributName">Statut : <span class="attributValue"><?php if (!is_null($status['name'])) {echo(htmlspecialchars($status['name']));} ?></span></h2>
-                                <h2 class="attributName">Type : <span class="attributValue"><?php if (!is_null($typeMission['type_mission'])) {echo(htmlspecialchars($typeMission['type_mission']));} ?></span></h2>
+                                <h2 class="attributName">Statut : <span class="attributValue"><?php if ($status && key_exists('name',$status)) {echo(htmlspecialchars($status['name']));} ?></span></h2>
+                                <h2 class="attributName">Type : <span class="attributValue"><?php if ($typeMission && key_exists('type_mission',$typeMission)) {echo(htmlspecialchars($typeMission['type_mission']));} ?></span></h2>
                             </div>
                             <div class="col-12 col-md-6 col-lg-4">
                                 <h2 class="attributName">Début : <span class="attributValue"><?php if (!is_null($mission->getBeginDate())) { echo($mission->getBeginDate()->format("m-d-Y")); } ?></span></h2>
                                 <h2 class="attributName">Fin : <span class="attributValue"><?php if (!is_null($mission->getEndDate())) { echo($mission->getEndDate()->format("m-d-Y")); } ?></span></h2>
-                                <h2 class="attributName">Pays : <span class="attributValue"><?php if (!is_null($country['country_name'])) {echo(htmlspecialchars($country['country_name']));} ?></span></h2>
+                                <h2 class="attributName">Pays : <span class="attributValue"><?php if ($country && key_exists('country_name',$country)) {echo(htmlspecialchars($country['country_name']));} ?></span></h2>
                             </div>
                             <div class="col-12 col-md-6 col-lg-4">
-                                <h2 class="attributName">Spécialité : <span class="attributValue"><?php if (!is_null($speciality['name'])) {echo(htmlspecialchars($speciality['name']));} ?></span></h2>
+                                <h2 class="attributName">Spécialité : <span class="attributValue"><?php if ($speciality && key_exists('name',$speciality)) {echo(htmlspecialchars($speciality['name']));} ?></span></h2>
                             </div>
                         </div>
                         <div class="row m-1 p-1 d-flex">

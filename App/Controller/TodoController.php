@@ -75,7 +75,29 @@ class TodoController extends BackController
     }
     protected function deleteElement()
     {
-      
+        $entity = $_GET['action'];
+        $page='/partials/'.$entity.'/'.'Home.php';
+        $errors = "";
+        $entityMethod = 'findAll'.$entity.'s';
+        $repository = $this->newRepository($entity);
+        $allElements = $repository->$entityMethod();
+        if (!$allElements) {
+            $errors='Aucun élément à afficher';
+        }
+        $entity = $_GET['action'];
+        $page='/partials/'.$entity.'/'.'Home.php';
+        $errors = [];
+        if (isset($_GET['rep']) && $_GET['rep'] == 'oui'){
+            $entityMethod = $entity.'Delete';
+            $repository = $this->newRepository($entity);
+            $responseValidate = $repository->$entityMethod($_GET['id']);
+            $this->home();
+        }
+        $this->render('/homeBack', [
+            'page'=> $page,
+            'errors' => $errors,
+            'allElements' => $allElements,
+        ]); 
     }
 
     protected function createElement()

@@ -17,7 +17,8 @@ if(key_exists('id',$_GET)){
 }else {
     $hideout = null;
 }
-
+$idCountryArray=[];
+$idTypeHideoutArray=[];
 ?>
 <div class="row d-flex justify-content-center ">
     <div class="col-9 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
@@ -49,7 +50,7 @@ if(key_exists('id',$_GET)){
                         <div class="mt-3 mb-5 mx-2">
                             <label for="city" class=" col-4 d-inline attributName"> Ville :</label>
                             <input type="text" class="col-8 d-inline attribueValue formInput" id="city" name="city"
-                            <?php if (!is_null($hideout)) { ?> value="<?php echo(trim(htmlspecialchars($hideout['city'])));}?>">>
+                            <?php if (!is_null($hideout)) { ?> value="<?php echo(trim(htmlspecialchars($hideout['city'])));}?>">
                             <?php if (!empty($errors['city'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['city']) ?></div>
                             <?php } ?>
@@ -59,7 +60,8 @@ if(key_exists('id',$_GET)){
                             <label for="country" class=" col-4 d-inline attributName"> Pays :</label>
                             <select name="country" id="country" class="col-8 d-inline attribueValue formInput" >
                                 <optgroup label="pays">
-                                    <?php foreach ($countries as $country) { ?>
+                                    <?php foreach ($countries as $country) { 
+                                        $idCountryArray[] = $country['id']; ?>
                                         <option value="<?php echo($country['id'])?>"
                                             <?php if (!is_null($hideout)) {
                                                 if ($country['id']==$hideout['id_country']){ ?> selected 
@@ -67,7 +69,11 @@ if(key_exists('id',$_GET)){
                                     <?php } ?>
                                 </optgroup>
                             </select>
-                            <?php if (!empty($errors['country'])){?>
+                            <?php 
+                                if (!is_null($hideout) && !in_array($hideout['id_country'],$idCountryArray)){?>
+                                    <div class="alert alert-danger"><?php echo('A définir !') ?></div>
+                            <?php }
+                                if (!empty($errors['country'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['country']) ?></div>
                             <?php } ?>
                         </div>
@@ -75,7 +81,8 @@ if(key_exists('id',$_GET)){
                             <label for="typeHide" class=" col-4 d-inline attributName"> Type de planque :</label>
                             <select name="typeHide" id="typeHide" class="col-8 d-inline attribueValue formInput" >
                                 <optgroup label="type de planque">
-                                    <?php foreach ($typeHideouts as $typeHideout) { ?>
+                                    <?php foreach ($typeHideouts as $typeHideout) {
+                                        $idTypeHideoutArray[] = $typeHideout['id'];  ?>
                                         <option value="<?php echo($typeHideout['id'])?>" 
                                         <?php if (!is_null($hideout)) {
                                                 if ($typeHideout['id']==$hideout['id_typeHide']){ ?> selected 
@@ -83,8 +90,12 @@ if(key_exists('id',$_GET)){
                                     <?php } ?>
                                 </optgroup>
                             </select>
-                            <?php if (!empty($errors['typeHide'])){?>
-                                <div class="alert alert-danger"><?php echo($errors['typeHide']) ?></div>
+                            <?php 
+                                if (!is_null($hideout) && !in_array($hideout['id_typeHide'],$idTypeHideoutArray)){?>
+                                    <div class="alert alert-danger"><?php echo('A définir !') ?></div>
+                            <?php }
+                                if (!empty($errors['typeHide'])){?>
+                                    <div class="alert alert-danger"><?php echo($errors['typeHide']) ?></div>
                             <?php } ?>
                         </div>
                         
