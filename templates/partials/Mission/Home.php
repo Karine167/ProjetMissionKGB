@@ -35,7 +35,12 @@
                                         if ($mission['description']){
                                             echo(htmlspecialchars($mission['description'])); 
                                         }
-                                    ?>
+                                        if ($_GET['todo']=='delete'){ 
+                                            if ($mission['id'] == $_GET['id'] ){ ?>
+                                            <p class="alert alert-danger"><?php echo('Supprimez cet élément ?'); ?>
+                                            <a href="/index.php?controller=back&action=Mission&todo=delete&rep=oui&id=<?php echo($mission['id']) ?>" class="btn btn-primary pt-2" aria-current="OUI">OUI</a>
+                                            <a href="/index.php?controller=back&action=Mission&todo=home" class="btn btn-primary pt-2" aria-current="NON">NON</a></p>
+                                    <?php } } ?>
                                 </td>
                                 <td class="d-none d-md-table-cell"><?php echo(htmlspecialchars($mission['code_name'])); ?></td>
                                 <td><?php echo($mission['begin_date']); ?></td>

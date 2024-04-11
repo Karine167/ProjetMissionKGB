@@ -27,7 +27,13 @@
                             <td class="d-none d-md-table-cell"><?php echo($element['id']); ?></td>
                             <td class="d-none d-md-table-cell"><?php echo(htmlspecialchars($element['code_hide'])); ?></td>
                             <td><?php if(!is_null($element['type_hide'])) echo(htmlspecialchars($element['type_hide'])); ?></td>
-                            <td><?php echo(htmlspecialchars($element['address'] . ", " . $element['zipcode'] . ", " . $element['city'] . ", " . $element['country_name'])); ?></td>
+                            <td><?php echo(htmlspecialchars($element['address'] . ", " . $element['zipcode'] . ", " . $element['city'] . ", " . $element['country_name'])); 
+                            if ($_GET['todo']=='delete'){ 
+                                if ($element['id'] == $_GET['id'] ){ ?>
+                                <p class="alert alert-danger"><?php echo('Supprimez cet élément ?'); ?>
+                                <a href="/index.php?controller=back&action=Hideout&todo=delete&rep=oui&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="OUI">OUI</a>
+                                <a href="/index.php?controller=back&action=Hideout&todo=home" class="btn btn-primary pt-2" aria-current="NON">NON</a></p>
+                            <?php } } ?></td>
                             <td><?php echo($element['id_mission']); ?></td>
                             <td>
                                 <a href="/index.php?controller=back&action=Hideout&todo=edit&id=<?php echo($element['id']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>

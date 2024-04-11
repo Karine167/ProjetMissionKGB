@@ -64,6 +64,27 @@ class TargetRepository extends Repository
             }   
     }
 
+    public function findAllIdTargetsByMissionId(int $idMission):array|bool
+    {
+        try{
+            $queryTargets = $this->pdo->prepare("SELECT id_target FROM targets WHERE targets.id_mission = :idMission");
+            $queryTargets->bindParam(':idMission', $idMission, $this->pdo::PARAM_INT);
+            $queryTargets->execute();
+            $targets = $queryTargets->fetchAll($this->pdo::FETCH_ASSOC);
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+            if ($targets){
+                return $targets;
+            }else {
+                return false;
+            }
+    }
+
     public function findAllTargets():Array|bool
     {
         try{

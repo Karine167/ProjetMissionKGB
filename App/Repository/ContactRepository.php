@@ -65,6 +65,27 @@ class ContactRepository extends Repository
             }  
     }
 
+    public function findAllIdContactsByMissionId(int $idMission):array|bool
+    {
+        try{
+            $queryContacts = $this->pdo->prepare("SELECT id_contact FROM contacts WHERE contacts.id_mission = :idMission");
+            $queryContacts->bindParam(':idMission', $idMission, $this->pdo::PARAM_INT);
+            $queryContacts->execute();
+            $contacts = $queryContacts->fetchAll($this->pdo::FETCH_ASSOC);
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+            if ($contacts){
+                return $contacts;
+            }else {
+                return false;
+            }
+    }
+
     public function findAllContacts():Array|bool
     {
         try{

@@ -145,7 +145,10 @@ class PersonRepository extends Repository
                 $response['result']= false;
             }
         }
-        
+        if (empty($_POST['nationality'])){
+            $response['nationality'] = 'Vous devez sélectionner au moins une des possibilités proposées.';
+            $response['result']= false;
+        }
         $id = substr(date("m.d.Y.h.i.s").uniqid("person", true),0,36);
         if ($response['result'] == true){
             $code = substr($_POST['firstName'],0,1). substr($_POST['lastName'],0,1).'-'. date("m.d.Y.h.i.s");
@@ -209,6 +212,7 @@ class PersonRepository extends Repository
                         $response['specialityNames'] = 'Vous devez avoir au moins une spécialité.';
                         $response['result']= false;
                     }
+                    
                     if ($response['result']== true){
                         $agent->setId($id);
                         $agent->setIdentifyCode($code);

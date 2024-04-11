@@ -17,8 +17,9 @@ if(key_exists('id',$_GET)){
 }else {
     $hideout = null;
 }
-$idCountryArray=[];
-$idTypeHideoutArray=[];
+$idCountryArray = [];
+$idTypeHideoutArray = [];
+$idMissionArray = [];
 ?>
 <div class="row d-flex justify-content-center ">
     <div class="col-9 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
@@ -103,17 +104,19 @@ $idTypeHideoutArray=[];
                             <label for="mission" class=" col-4 d-inline attributName"> Mission :</label>
                             <select name="mission" id="mission" class="col-8 d-inline attribueValue formInput" >
                                 <optgroup label="mission">
-                                    <?php foreach ($missions as $mission) { ?>
+                                    <?php foreach ($missions as $mission) { 
+                                        $idMissionArray[] = $mission['id']; ?>
                                         <option value="<?php echo($mission['id'])?>" 
                                         <?php if (!is_null($hideout)) {
                                                 if (!is_null($hideout['id_mission']) && $mission['id']==$hideout['id_mission']){ ?> selected 
                                             <?php }} ?>><?php echo(trim(htmlspecialchars($mission['title'].'('.$mission['code_name']).')'))?> </option>
                                     <?php } ?>
-                                    <option value="noOne" <?php if (is_null($hideout) || is_null($hideout['id_mission']) ) {?>selected <?php } ?>> aucune mission </option>
+                                    <option value="noOne" <?php if (is_null($hideout) || is_null($hideout['id_mission']) || (!is_null($hideout) && !in_array($hideout['id_mission'],$idMissionArray)) ) {?>selected <?php } ?>> aucune mission </option>
                                 </optgroup>
                             </select>
-                            <?php if (!empty($errors['mission'])){?>
-                                <div class="alert alert-danger"><?php echo($errors['mission']) ?></div>
+                            <?php 
+                                if (!empty($errors['mission'])){ ?>
+                                    <div class="alert alert-danger"><?php echo($errors['mission']) ?></div>
                             <?php } ?>
                         </div>
                         <div class="mt-3 mb-5 mx-2">

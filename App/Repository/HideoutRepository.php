@@ -36,6 +36,28 @@ class HideoutRepository extends Repository
                 return false;
             }
     }
+
+    public function findAllIdHideoutsByMissionId(int $idMission):array|bool
+    {
+        try{
+            $queryHideoutsId = $this->pdo->prepare("SELECT id  FROM hideouts WHERE id_mission = :idMission");
+            $queryHideoutsId->bindParam(':idMission', $idMission, $this->pdo::PARAM_INT);
+            $queryHideoutsId->execute();
+            $idHideouts = $queryHideoutsId->fetchAll($this->pdo::FETCH_ASSOC);
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+        if ($idHideouts){
+            return $idHideouts;
+        }else {
+            return false;
+        }
+    }
+
     public function findOneHideoutByAddress(Hideout $hideout):bool
     {
         $address = $hideout->getAddress();
@@ -131,6 +153,7 @@ class HideoutRepository extends Repository
             $response['city'] = 'Le champ ville ne doit pas dépasser 50 caractères';
             return $response;
         }
+
         $hideout = new Hideout(); 
         $hideout->setAddress($_POST['address']);
         $hideout->setZipcode($_POST['zipcode']);
@@ -215,5 +238,23 @@ class HideoutRepository extends Repository
                 ]);
         }
         return $response;
+    }
+
+    public function HideoutDelete(int $id):void
+    {
+        if ($_GET['rep'] == 'oui'){
+            try{
+                $pdoDelete = $this->pdo->prepare("DELETE FROM hideouts  WHERE id = :id");
+                $pdoDelete->bindParam(':id', $id, $this->pdo::PARAM_INT);
+                $pdoDelete->execute();
+                $response['result']= true;
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+        }
     }
 }

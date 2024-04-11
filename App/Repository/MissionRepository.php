@@ -231,4 +231,93 @@ class MissionRepository extends Repository
         return $response;
     }
     
+    public function MissionDelete(int $id):void
+    {
+        if ($_GET['rep'] == 'oui'){
+            try{
+                $pdoDelete = $this->pdo->prepare("DELETE FROM missions  WHERE id = :id");
+                $pdoDelete->bindParam(':id', $id, $this->pdo::PARAM_INT);
+                $pdoDelete->execute();
+            }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+            }
+            //recherche de la planque associée évetuellement à cette mission
+            $hideoutRepository = new HideoutRepository();
+            $hideouts = $hideoutRepository->findAllIdHideoutsByMissionId($id);
+            if ($hideouts){
+                foreach ($hideouts as $idHideout){
+                    try{
+                        $pdoUpdateIdMissionHideout = $this->pdo->prepare("UPDATE hideouts SET id_mission = null  WHERE id = :id");
+                        $pdoUpdateIdMissionHideout->bindParam(':id', $idHideout['id'], $this->pdo::PARAM_INT);
+                        $pdoUpdateIdMissionHideout->execute();
+                    }catch (\Exception $e){
+                            $error = $e->getMessage();
+                            $control = new Controller();
+                            $control->render('/errors', [
+                                'error' => $error
+                            ]);
+                    }
+                }
+            }
+            //recherche des agents associés évetuellement à cette mission
+            $agentRepository = new AgentRepository();
+            $agents = $agentRepository->findAllIdAgentsByMissionId($id);
+            if ($agents){
+                foreach ($agents as $idAgent){
+                    try{
+                        $pdoUpdateIdMissionAgent = $this->pdo->prepare("UPDATE agents SET id_mission = null  WHERE id_agent = :id_agent");
+                        $pdoUpdateIdMissionAgent->bindParam(':id_agent', $idAgent['id_agent'], $this->pdo::PARAM_STR);
+                        $pdoUpdateIdMissionAgent->execute();
+                    }catch (\Exception $e){
+                            $error = $e->getMessage();
+                            $control = new Controller();
+                            $control->render('/errors', [
+                                'error' => $error
+                            ]);
+                    }
+                }
+            }
+            //recherche des contacts associés évetuellement à cette mission
+            $contactRepository = new ContactRepository();
+            $contacts = $contactRepository->findAllIdContactsByMissionId($id);
+            if ($contacts){
+                foreach ($contacts as $idContact){
+                    try{
+                        $pdoUpdateIdMissionContact = $this->pdo->prepare("UPDATE contacts SET id_mission = null  WHERE id_contact = :id_contact ");
+                        $pdoUpdateIdMissionContact->bindParam(':id_contact', $idContact['id_contact'], $this->pdo::PARAM_STR);
+                        $pdoUpdateIdMissionContact->execute();
+                    }catch (\Exception $e){
+                            $error = $e->getMessage();
+                            $control = new Controller();
+                            $control->render('/errors', [
+                                'error' => $error
+                            ]);
+                    }
+                }
+            }
+            //recherche des cibles associés évetuellement à cette mission
+            $targetRepository = new TargetRepository();
+            $targets = $targetRepository->findAllIdTargetsByMissionId($id);
+            if ($targets){
+                foreach ($targets as $idTarget){
+                    try{
+                        $pdoUpdateIdMissionTarget = $this->pdo->prepare("UPDATE targets SET id_mission = null  WHERE id_target = :id_target ");
+                        $pdoUpdateIdMissionTarget->bindParam(':id_target', $idTarget['id_target'], $this->pdo::PARAM_STR);
+                        $pdoUpdateIdMissionTarget->execute();
+                    }catch (\Exception $e){
+                            $error = $e->getMessage();
+                            $control = new Controller();
+                            $control->render('/errors', [
+                                'error' => $error
+                            ]);
+                    }
+                }
+            }
+
+        }
+    }
 }
