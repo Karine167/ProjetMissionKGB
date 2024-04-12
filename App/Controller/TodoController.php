@@ -94,7 +94,7 @@ class TodoController extends BackController
         if (isset($_GET['rep']) && $_GET['rep'] == 'oui'){
             $entityMethod = $entity.'Delete';
             $repository = $this->newRepository($entity);
-            $responseValidate = $repository->$entityMethod($_GET['id']);
+            $repository->$entityMethod($_GET['id']);
             $this->home();
         }
         $this->render('/homeBack', [
@@ -227,6 +227,8 @@ class TodoController extends BackController
                 if (!$mission){
                     $errors['mission']='Cette mission n\'existe pas.';    
                 }else {
+                    $hideoutRepository = new HideoutRepository;
+                    $idHideoutsArray = $hideoutRepository->findAllIdHideoutsByMissionId($id);
                     $response = $missionRepository->findAllInformationsOnOneMissionByID($id);
                     $targets = $response['targets'];
                     $contacts = $response['contacts'];
@@ -238,6 +240,11 @@ class TodoController extends BackController
                     $hideoutsMission = $response['hideouts'];
                     $hideoutsRepository = new HideoutRepository;
                     $hideoutsDB = $hideoutsRepository->findAllHideouts();
+                    //Ajout et suppression des planques
+                    if (isset($_POST['hideouts'])){
+                        $hideoutRepository->UpdateIdMission($idHideoutsArray, $id, $_POST['hideouts'] );
+                        $this->home();
+                    }
                 }
                 $this->render('/homeBack', [
                     'page' => $page,
@@ -252,6 +259,7 @@ class TodoController extends BackController
                     'speciality' => $speciality,
                     'hideouts' => $hideoutsMission,
                     'hideoutsDB' => $hideoutsDB,
+                    'idHideoutsArray' =>$idHideoutsArray,
                 ]);     
             }else{
                 throw new \Exception("Aucun id spécifié");

@@ -1,12 +1,4 @@
-<?php
-use App\Repository\HideoutRepository;
 
-$hideoutRepository = new HideoutRepository;
-$idHideoutsArray = $hideoutRepository->findAllIdHideoutsByMissionId($_GET['id']);
-
-
-
-?>
 <div class="row d-flex justify-content-center ">
     <div class="col-9 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
         <h1> Mission <?php if ($mission){ echo($mission->getId(). ' : '. $mission->getTitle()); } ?></h1>
@@ -79,18 +71,19 @@ if ($country && key_exists('id',$country)) {
 }?>
 <div class="row d-flex justify-content-center ">
     <div class="col-7 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
-        <h4> Ajouter des planques : </h4>
+        <h4> Ajouter ou supprimer des planques : </h4>
     </div>
     <div class="col-11 m-3 p-3 formCategory">
         <form action="/index.php?controller=back&action=Mission&todo=complete&id=<?php echo($_GET['id']);?>" method="POST" name="hideouts">
             <div class="mt-3 mb-5 mx-2">
-                <label for="hideouts" class=" col-4 d-inline attributName"> Les planques de la mission :</label>
+                <p class=" col-4 d-inline attributName"> Sélectionner toutes les planques associées à la mission :</p>
                 <select multiple="multiple" name="hideouts[]" id="hideouts" class="col-8 d-inline attribueValue formInput" >
                     <optgroup label="planque">
                         <option value=null > Aucune </option>
                         <?php if ($hideoutsDB){
                             foreach ($hideoutsDB as $hideout) { 
-                                if($hideout['id_country']==$idCountry){ ?> 
+                                //vérification que la planque est situé dans le pays de la mission, et qu'elle n'est pas déjà occupé par une autre mission que celle concernée par l'id de l'url
+                                if($hideout['id_country']==$idCountry && (is_null($hideout['id_mission']) || ($idHideoutsArray && in_array($hideout['id'],$idHideoutsArray)))) { ?> 
                                     <option value="<?php echo($hideout['id'])?>" 
                                     <?php  
                                     if ($idHideoutsArray && in_array($hideout['id'],$idHideoutsArray)){ ?> selected <?php }
@@ -102,7 +95,7 @@ if ($country && key_exists('id',$country)) {
                     <div class="alert alert-danger"><?php echo($errors['hideouts']) ?></div>
                 <?php } ?>
                 <div class="mt-3 mb-5 mx-2">
-                    <input type="submit" name="hideouts" class="m-3 btn btn-primary" value="Enregistrer">
+                    <input type="submit" name="hideouts[]" class="m-3 btn btn-primary" value="Enregistrer">
                 </div>
             </div>
         </form>

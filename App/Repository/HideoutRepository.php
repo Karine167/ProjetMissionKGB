@@ -52,7 +52,11 @@ class HideoutRepository extends Repository
             ]);
         }
         if ($idHideouts){
-            return $idHideouts;
+            $idHideoutsArray=[];
+            foreach ($idHideouts as $idHideout){
+                $idHideoutsArray[] = $idHideout['id'];
+            }
+            return $idHideoutsArray;
         }else {
             return false;
         }
@@ -254,6 +258,41 @@ class HideoutRepository extends Repository
                     $control->render('/errors', [
                         'error' => $error
                     ]);
+            }
+        }
+    }
+
+    public function UpdateIdMission(array|bool $idHideoutsArray, int $id_mission, array $newIdHideouts ): void
+    {
+        if ($idHideoutsArray){
+            foreach ($idHideoutsArray as $idHideout){
+                try{
+                    $pdoRemoveIdMission = $this->pdo->prepare("UPDATE hideouts SET id_mission = null  WHERE id = :id ");
+                    $pdoRemoveIdMission->bindParam(':id', $idHideout, $this->pdo::PARAM_INT);
+                    $pdoRemoveIdMission->execute();
+                }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+                }
+            }
+        }
+        if (!is_null($newIdHideouts)){
+            foreach ($newIdHideouts as $newIdHideout){
+                try{
+                    $pdoUpdateIdMission = $this->pdo->prepare("UPDATE hideouts SET id_mission = :id_mission  WHERE id = :id ");
+                    $pdoUpdateIdMission->bindParam(':id', $newIdHideout, $this->pdo::PARAM_INT);
+                    $pdoUpdateIdMission->bindParam(':id_mission', $_GET['id'], $this->pdo::PARAM_INT);
+                    $pdoUpdateIdMission->execute();
+                }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+                }
             }
         }
     }
