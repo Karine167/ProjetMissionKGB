@@ -41,6 +41,10 @@ class TodoController extends BackController
                         //ajout d'un élément
                         $this->editElement();
                         break;
+                    case 'complete':
+                        //ajout d'un élément
+                        $this->completeMission();
+                        break;
                     default:
                         throw new \Exception("Cette tâche n'est pas prise en charge.");
                         break;
@@ -208,5 +212,55 @@ class TodoController extends BackController
                     break;
             }
             return $repository;
+    }
+
+    protected function completeMission()
+    {
+        $errors = [];
+        $page='/partials/Mission/FormComplete.php';
+        try{
+            if (isset($_GET['id'])){
+                $id = $_GET['id'];
+                //recherche de la mission
+                $missionRepository = new MissionRepository();
+                $mission = $missionRepository->findOneMissionById($id);
+                if (!$mission){
+                    $errors['mission']='Cette mission n\'existe pas.';    
+                }else {
+                    $response = $missionRepository->findAllInformationsOnOneMissionByID($id);
+                    $targets = $response['targets'];
+                    $contacts = $response['contacts'];
+                    $agents = $response['agents'];
+                    $status = $response['status'];
+                    $typeMission = $response['typeMission'];
+                    $country = $response['country'];
+                    $speciality = $response['speciality'];
+                    $hideoutsMission = $response['hideouts'];
+                    $hideoutsRepository = new HideoutRepository;
+                    $hideoutsDB = $hideoutsRepository->findAllHideouts();
+                }
+                $this->render('/homeBack', [
+                    'page' => $page,
+                    'errors'=> $errors,
+                    'mission' => $mission,
+                    'targets' => $targets,
+                    'contacts' => $contacts,
+                    'agents' => $agents,
+                    'status' => $status,
+                    'typeMission' => $typeMission,
+                    'country' => $country,
+                    'speciality' => $speciality,
+                    'hideouts' => $hideoutsMission,
+                    'hideoutsDB' => $hideoutsDB,
+                ]);     
+            }else{
+                throw new \Exception("Aucun id spécifié");
+            }
+        } catch (\Exception $e) {
+            $error = $e->getMessage();
+            $this->render('/errors', [
+                'error' => $error
+            ]);
+        }
     }
 }

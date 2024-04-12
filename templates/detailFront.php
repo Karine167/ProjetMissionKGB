@@ -66,7 +66,6 @@ require_once _TEMPLATEPATH_.'/header.php';
                     </div>
             <?php } } ?>
 
-
 </main>
 <?php
 require_once _TEMPLATEPATH_.'/footer.php';

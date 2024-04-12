@@ -56,7 +56,7 @@ class MissionController extends Controller
         ]);
     }
 
-    protected function knowMore()
+    protected function knowMore():void
     {
         $errors = [];
         try{
@@ -68,34 +68,15 @@ class MissionController extends Controller
                 if (!$mission){
                     $errors['mission']='Cette mission n\'existe pas.';    
                 }else {
-                    //recherche des cibles
-                    $targetRepository = new TargetRepository();
-                    $targets = $targetRepository->findAllTargetsByMissionId($id);
-                    //recherche des contacts
-                    $contactRepository = new ContactRepository();
-                    $contacts = $contactRepository->findAllContactsByMissionId($id);
-                    //recherche des agents
-                    $agentRepository = new AgentRepository();
-                    $agents = $agentRepository->findAllAgentsByMissionId($id);
-                    //recherche du status
-                    $idStatus = $mission->getIdStatus();
-                    $statusRepository = new StatusRepository();
-                    $status = $statusRepository->findOneStatusById($idStatus);
-                    //recherche du type de la mission
-                    $idTypeMission = $mission->getIdTypeMission();
-                    $typeMissionRepository = new TypeMissionRepository();
-                    $typeMission = $typeMissionRepository->findOneTypeMissionById($idTypeMission);
-                    //recherche du pays de la mission
-                    $idCountry = $mission->getIdCountry();
-                    $countryRepository = new CountryRepository();
-                    $country = $countryRepository->findOneCountryById($idCountry);
-                    //recherche de la spécialité nécessaire pour la mission
-                    $idSpeciality = $mission->getIdSpeciality();
-                    $specialityRepository = new SpecialityRepository();
-                    $speciality = $specialityRepository->findOneSpecialityById($idSpeciality);
-                    //recherche des caches
-                    $hideoutsRepository = new HideoutRepository();
-                    $hideouts = $hideoutsRepository->findAllHideoutsByMissionId($id);
+                    $response = $missionRepository->findAllInformationsOnOneMissionByID($id);
+                    $targets = $response['targets'];
+                    $contacts = $response['contacts'];
+                    $agents = $response['agents'];
+                    $status = $response['status'];
+                    $typeMission = $response['typeMission'];
+                    $country = $response['country'];
+                    $speciality = $response['speciality'];
+                    $hideouts = $response['hideouts'];
                 }
                 $this->render('/detailFront', [
                     'errors'=> $errors,

@@ -48,6 +48,8 @@
                                 <td>
                                     <a href="/index.php?controller=back&action=Mission&todo=edit&id=<?php echo($mission['id']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Editer</a>
                                     <a href="/index.php?controller=back&action=Mission&todo=delete&id=<?php echo($mission['id']) ?>" class="btn btn-primary pt-2" aria-current="pageEdit">Supprimer</a>
+                                    <a href="/index.php?controller=back&action=Mission&todo=complete&id=<?php echo($mission['id']) ?>" class="btn btn-primary pt-2" aria-current="pageComplete">Acteurs/planques</a>
+                                    
                                 </td>
                             </tr>
                         <?php } ?>

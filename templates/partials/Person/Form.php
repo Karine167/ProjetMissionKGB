@@ -162,19 +162,19 @@ if(key_exists('id',$_GET)){
                             </div>
                         </fieldset> 
                         
-                        <div id="formAdmin" class="<?php if ($roleRadio == 'roleAdmin') { echo("d-block"); } else { echo("d-none"); } ?>" >
+                        <div id="formAdmin" class="<?php if ($roleRadio == 'roleAdmin') { echo("d-block"); } else { echo("d-none"); } ?> formCategory" >
                             <div class="mt-3 mb-5 mx-2">
                                 <label for="email" class="form-label">Email :</label>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="adresse@exemple.com" 
+                                <input type="email" class="form-control formInput" id="email" name="email" placeholder="adresse@exemple.com" 
                                 <?php if (isset($_POST['Person']) && !empty($_POST['email'])){ ?> value="<?php echo(trim(htmlspecialchars($_POST['email'])));?>"
-                                <?php } elseif ($adminDB && !(is_null($admin))) { ?> value="<?php echo(trim(htmlspecialchars($adminDB->getEmail())));?>" <?php } ?>/>
+                                <?php } elseif ($adminDB && !(is_null($adminDB))) { ?> value="<?php echo(trim(htmlspecialchars($adminDB->getEmail())));?>" <?php } ?>/>
                                 <?php if (!empty($errors['email'])){?>
                                     <div class="alert alert-danger"><?php echo($errors['email']); ?></div>
                                 <?php } ?>
                             </div>
                             <div class="mt-3 mb-5 mx-2">
                                 <label for="password" class="form-label">Mot de passe :</label>
-                                <input type="password" class="form-control" id="password" name="password" placeholder="password"/>
+                                <input type="password" class="form-control formInput" id="password" name="password" placeholder="password"/>
                                 <?php if (!empty($errors['password'])){?>
                                     <div class="alert alert-danger"><?php echo($errors['password']); ?></div>
                                 <?php } ?>

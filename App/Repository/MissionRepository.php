@@ -317,7 +317,56 @@ class MissionRepository extends Repository
                     }
                 }
             }
-
         }
+    }
+
+    public function findAllInformationsOnOneMissionByID (int $id): array
+    {
+        $response = [];
+        //recherche de la mission
+        $missionRepository = new MissionRepository();
+        $mission = $missionRepository->findOneMissionById($id);
+        if (!$mission){
+            $errors['mission']='Cette mission n\'existe pas.';    
+        }else {
+            $response['mission'] = $mission;
+            //recherche des cibles
+            $targetRepository = new TargetRepository();
+            $targets = $targetRepository->findAllTargetsByMissionId($id);
+            $response['targets'] = $targets;
+            //recherche des contacts
+            $contactRepository = new ContactRepository();
+            $contacts = $contactRepository->findAllContactsByMissionId($id);
+            $response['contacts'] = $contacts;
+            //recherche des agents
+            $agentRepository = new AgentRepository();
+            $agents = $agentRepository->findAllAgentsByMissionId($id);
+            $response['agents'] = $agents;
+            //recherche du status
+            $idStatus = $mission->getIdStatus();
+            $statusRepository = new StatusRepository();
+            $status = $statusRepository->findOneStatusById($idStatus);
+            $response['status'] = $status;
+            //recherche du type de la mission
+            $idTypeMission = $mission->getIdTypeMission();
+            $typeMissionRepository = new TypeMissionRepository();
+            $typeMission = $typeMissionRepository->findOneTypeMissionById($idTypeMission);
+            $response['typeMission'] = $typeMission;
+            //recherche du pays de la mission
+            $idCountry = $mission->getIdCountry();
+            $countryRepository = new CountryRepository();
+            $country = $countryRepository->findOneCountryById($idCountry);
+            $response['country'] = $country;
+            //recherche de la spécialité nécessaire pour la mission
+            $idSpeciality = $mission->getIdSpeciality();
+            $specialityRepository = new SpecialityRepository();
+            $speciality = $specialityRepository->findOneSpecialityById($idSpeciality);
+            $response['speciality'] = $speciality;
+            //recherche des caches
+            $hideoutsRepository = new HideoutRepository();
+            $hideouts = $hideoutsRepository->findAllHideoutsByMissionId($id);
+            $response['hideouts'] = $hideouts;
+        }
+        return $response;
     }
 }
