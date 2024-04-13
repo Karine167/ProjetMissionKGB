@@ -242,13 +242,15 @@ class PersonRepository extends Repository
                         $contact->setIdMission(null);
                     }else {
                         $contact->setIdMission($_POST['mission']);
-                    
-                        if (key_exists('id', $_GET)){
-                            $contactRepository = new ContactRepository();
-                            if (!$contactRepository->contactMissionValidate($_GET['id'], $_POST['mission'])){
+                        $missionRepository = new MissionRepository();
+                        $mission = $missionRepository->findOneMissionById($_POST['mission']);
+                        if ($mission){
+                            $missionIdCountry = $mission->getIdCountry();
+                            if (!(in_array( $missionIdCountry, $_POST['nationality'] ))) {
                                 $response['mission'] = 'Vous devez choisir une mission qui a lieu dans le pays du contact !';
                                 $response['result'] = false;
                             }
+                        
                         }
                     }
                     

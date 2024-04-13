@@ -146,25 +146,4 @@ class ContactRepository extends Repository
         }
     }
 
-    public function contactMissionValidate(string $idContact, int $idMission):bool
-    {
-        $reponse = false;
-        $missionIdCountry = null;
-        $personRepository = new PersonRepository();
-        $contactIdsCountry = $personRepository->findAllIdCountryByIdPerson($idContact);
-        $missionRepository = new MissionRepository();
-        $mission = $missionRepository->findOneMissionById($idMission);
-        if ($mission){
-            $missionIdCountry = $mission->getIdCountry();
-        }
-        if ($contactIdsCountry && !is_null($missionIdCountry)) {
-            if (in_array($missionIdCountry, $contactIdsCountry)){
-                return true;
-            }else {
-                return false;
-            }
-        } else {
-            return true;
-        }
-    }
 }
