@@ -157,7 +157,16 @@ class HideoutRepository extends Repository
             $response['city'] = 'Le champ ville ne doit pas dépasser 50 caractères';
             return $response;
         }
-
+        if (isset($_POST['country']) && isset($_POST['mission']) ) {
+            if ($_POST['mission']!="noOne"){
+                $missionRepository = new MissionRepository();
+                $missionIdCountry = $missionRepository->findAllInformationsOnOneMissionByID($_POST['mission'])['mission']->getIdCountry();
+                if (!($missionIdCountry == $_POST['country'])){
+                    $response['mission']='Vous devez choisir une mission qui aura lieu dans le pays de la planque !';
+                    return $response;
+                }
+            }
+        }
         $hideout = new Hideout(); 
         $hideout->setAddress($_POST['address']);
         $hideout->setZipcode($_POST['zipcode']);
