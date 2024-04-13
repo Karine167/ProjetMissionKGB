@@ -104,6 +104,7 @@ $idMissionArray = [];
                             <label for="mission" class=" col-4 d-inline attributName"> Mission :</label>
                             <select name="mission" id="mission" class="col-8 d-inline attribueValue formInput" >
                                 <optgroup label="mission">
+                                    <option value="noOne" <?php if (is_null($hideout) || is_null($hideout['id_mission']) || (!is_null($hideout) && !in_array($hideout['id_mission'],$idMissionArray)) ) {?>selected <?php } ?>> aucune mission </option>
                                     <?php foreach ($missions as $mission) { 
                                         $idMissionArray[] = $mission['id']; ?>
                                         <option value="<?php echo($mission['id'])?>" 
@@ -111,7 +112,6 @@ $idMissionArray = [];
                                                 if (!is_null($hideout['id_mission']) && $mission['id']==$hideout['id_mission']){ ?> selected 
                                             <?php }} ?>><?php echo(trim(htmlspecialchars($mission['title'].'('.$mission['code_name']).')'))?> </option>
                                     <?php } ?>
-                                    <option value="noOne" <?php if (is_null($hideout) || is_null($hideout['id_mission']) || (!is_null($hideout) && !in_array($hideout['id_mission'],$idMissionArray)) ) {?>selected <?php } ?>> aucune mission </option>
                                 </optgroup>
                             </select>
                             <?php 

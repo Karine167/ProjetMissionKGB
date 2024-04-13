@@ -293,7 +293,7 @@ class HideoutRepository extends Repository
                 try{
                     $pdoUpdateIdMission = $this->pdo->prepare("UPDATE hideouts SET id_mission = :id_mission  WHERE id = :id ");
                     $pdoUpdateIdMission->bindParam(':id', $newIdHideout, $this->pdo::PARAM_INT);
-                    $pdoUpdateIdMission->bindParam(':id_mission', $_GET['id'], $this->pdo::PARAM_INT);
+                    $pdoUpdateIdMission->bindParam(':id_mission', $id_mission, $this->pdo::PARAM_INT);
                     $pdoUpdateIdMission->execute();
                 }catch (\Exception $e){
                     $error = $e->getMessage();

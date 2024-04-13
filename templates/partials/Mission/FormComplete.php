@@ -1,4 +1,9 @@
+<?php 
+use App\Repository\PersonRepository;
 
+$personRepository = new PersonRepository();
+
+?>
 <div class="row d-flex justify-content-center ">
     <div class="col-9 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
         <h1> Mission <?php if ($mission){ echo($mission->getId(). ' : '. $mission->getTitle()); } ?></h1>
@@ -65,21 +70,21 @@
     </div>
 </div>
 <?php 
-// Ajout des planques de la mission :
+// Ajout des planques et des contacts de la mission :
 if ($country && key_exists('id',$country)) { 
     $idCountry = $country['id'];
 }?>
 <div class="row d-flex justify-content-center ">
-    <div class="col-7 m-3 p-3 d-flex align-items-center justify-content-center pageTitle">
-        <h4> Ajouter ou supprimer des planques : </h4>
+    <div class="col-8 mx-3 my-2 p-2  d-flex align-items-center justify-content-center pageTitle">
+        <h4 class="fw-bold"> Ajouter ou supprimer des planques et des contacts : </h4>
     </div>
-    <div class="col-11 m-3 p-3 formCategory">
+    <div class="col-11 mx-3 my-1 p-3 justify-content-center formCategory">
         <form action="/index.php?controller=back&action=Mission&todo=complete&id=<?php echo($_GET['id']);?>" method="POST" name="hideouts">
-            <div class="mt-3 mb-5 mx-2">
-                <p class=" col-4 d-inline attributName"> Sélectionner toutes les planques associées à la mission :</p>
-                <select multiple="multiple" name="hideouts[]" id="hideouts" class="col-8 d-inline attribueValue formInput" >
-                    <optgroup label="planque">
-                        <option value=null > Aucune </option>
+            <div class="mt-3 mb-2 mx-2">
+                <p class="col-12 mb-2  attributName"> Sélectionner toutes les planques associées à la mission :</p>
+                <select multiple="multiple" name="hideouts[]" id="hideouts" class="col-12  attribueValue formInput" >
+                    <optgroup label="planques">
+                        <option value=null > Aucune Planque </option>
                         <?php if ($hideoutsDB){
                             foreach ($hideoutsDB as $hideout) { 
                                 //vérification que la planque est situé dans le pays de la mission, et qu'elle n'est pas déjà occupé par une autre mission que celle concernée par l'id de l'url
@@ -94,10 +99,32 @@ if ($country && key_exists('id',$country)) {
                 <?php if (!empty($errors['hideouts'])){?>
                     <div class="alert alert-danger"><?php echo($errors['hideouts']) ?></div>
                 <?php } ?>
-                <div class="mt-3 mb-5 mx-2">
-                    <input type="submit" name="hideouts[]" class="m-3 btn btn-primary" value="Enregistrer">
+                <br>
+                <p class=" col-12 mt-2 attributName"> Sélectionner touts les contacts associées à la mission :</p>
+                <select multiple="multiple" name="contacts[]" id="contacts" class="col-12 attribueValue formInput" >
+                    <optgroup label="contacts">
+                        <option value=null > Aucun contact </option>
+                        <?php if ($contactsDB){
+                            foreach ($contactsDB as $contactDB) { 
+                                $personIdsCountry = $personRepository->findAllIdCountryByIdPerson($contactDB['id']);
+                                //vérification que le contact habite dans le pays de la mission, et qu'il n'est pas déjà occupé par une autre mission que celle concernée par l'id de l'url
+                                if (($personIdsCountry && in_array($idCountry, $personIdsCountry)) && (is_null($contactDB['id_mission']) || ($idContactsArray && in_array($contactDB['id'],$idContactsArray)))) { ?> 
+                                    <option value="<?php echo($contactDB['id'])?>" 
+                                    <?php  
+                                    if ($idContactsArray && in_array($contactDB['id'],$idContactsArray)){ ?> selected <?php }
+                                    ?> ><?php echo(htmlspecialchars($contactDB['complete_name']))?> </option>
+                            <?php } }}?>
+                    </optgroup>
+                </select>
+                <?php if (!empty($errors['contacts'])){?>
+                    <div class="alert alert-danger"><?php echo($errors['contacts']) ?></div>
+                <?php } ?>
+                <div class="mt-3 mb-2 mx-3">
+                    <input type="submit" name="hideouts-contacts" class="mx-3 mt-2 mb-1 btn btn-primary" value="Enregistrer">
                 </div>
             </div>
         </form>
     </div>
+
+    
 </div>

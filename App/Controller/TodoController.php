@@ -227,8 +227,7 @@ class TodoController extends BackController
                 if (!$mission){
                     $errors['mission']='Cette mission n\'existe pas.';    
                 }else {
-                    $hideoutRepository = new HideoutRepository;
-                    $idHideoutsArray = $hideoutRepository->findAllIdHideoutsByMissionId($id);
+                    
                     $response = $missionRepository->findAllInformationsOnOneMissionByID($id);
                     $targets = $response['targets'];
                     $contacts = $response['contacts'];
@@ -238,11 +237,21 @@ class TodoController extends BackController
                     $country = $response['country'];
                     $speciality = $response['speciality'];
                     $hideoutsMission = $response['hideouts'];
-                    $hideoutsRepository = new HideoutRepository;
-                    $hideoutsDB = $hideoutsRepository->findAllHideouts();
                     //Ajout et suppression des planques
-                    if (isset($_POST['hideouts'])){
-                        $hideoutRepository->UpdateIdMission($idHideoutsArray, $id, $_POST['hideouts'] );
+                    $hideoutRepository = new HideoutRepository();
+                    $idHideoutsArray = $hideoutRepository->findAllIdHideoutsByMissionId($id);
+                    $hideoutsDB = $hideoutRepository->findAllHideouts();
+                    //Ajout et suppression des contacts
+                    $contactRepository = new ContactRepository();
+                    $idContactsArray = $contactRepository->findAllIdContactsByMissionId($id);
+                    $contactsDB = $contactRepository->findAllContacts();
+                    if (isset($_POST['hideouts-contacts'])){
+                        if (!is_null($_POST['hideouts'])){
+                            $hideoutRepository->UpdateIdMission($idHideoutsArray, $id, $_POST['hideouts'] );
+                        }
+                        if (!is_null($_POST['contacts'])){
+                            $contactRepository->UpdateIdMission($idContactsArray, $id, $_POST['contacts'] );
+                        } 
                         $this->home();
                     }
                 }
@@ -260,6 +269,8 @@ class TodoController extends BackController
                     'hideouts' => $hideoutsMission,
                     'hideoutsDB' => $hideoutsDB,
                     'idHideoutsArray' =>$idHideoutsArray,
+                    'contactsDB' => $contactsDB,
+                    'idContactsArray' => $idContactsArray,
                 ]);     
             }else{
                 throw new \Exception("Aucun id spécifié");

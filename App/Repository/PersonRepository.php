@@ -238,11 +238,20 @@ class PersonRepository extends Repository
                     break;
                 case 'roleContact':
                     $contact = new Contact();
-                    if ($_POST['mission']=="aucune"){
+                    if ($_POST['mission']=="noOne"){
                         $contact->setIdMission(null);
                     }else {
                         $contact->setIdMission($_POST['mission']);
+                    
+                        if (key_exists('id', $_GET)){
+                            $contactRepository = new ContactRepository();
+                            if (!$contactRepository->contactMissionValidate($_GET['id'], $_POST['mission'])){
+                                $response['mission'] = 'Vous devez choisir une mission qui a lieu dans le pays du contact !';
+                                $response['result'] = false;
+                            }
+                        }
                     }
+                    
                     if ($response['result']== true){
                         $contact->setId($id);
                         $contact->setCodeName($code);
@@ -627,4 +636,5 @@ class PersonRepository extends Repository
             }
         }
     }
+
 }

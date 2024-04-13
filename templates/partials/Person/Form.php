@@ -186,7 +186,7 @@ if(key_exists('id',$_GET)){
                                 <label for="mission" class="col-4 d-inline attributName"> Mission :</label>
                                 <select name="mission" id="mission" class="col-8 d-inline attribueValue formInput" >
                                     <optgroup label="mission">
-                                        <option value="aucune" 
+                                        <option value="noOne" 
                                         <?php if (is_null($idmission)) { ?>selected <?php } ?>> aucune mission </option>
                                         <?php foreach ($missions as $mission) { ?>
                                             <option value="<?php echo($mission['id']); ?>" 

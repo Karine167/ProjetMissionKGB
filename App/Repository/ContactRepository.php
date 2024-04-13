@@ -71,7 +71,7 @@ class ContactRepository extends Repository
             $queryContacts = $this->pdo->prepare("SELECT id_contact FROM contacts WHERE contacts.id_mission = :idMission");
             $queryContacts->bindParam(':idMission', $idMission, $this->pdo::PARAM_INT);
             $queryContacts->execute();
-            $contacts = $queryContacts->fetchAll($this->pdo::FETCH_ASSOC);
+            $idContacts = $queryContacts->fetchAll($this->pdo::FETCH_ASSOC);
         }catch (\Exception $e){
             $error = $e->getMessage();
             $control = new Controller();
@@ -79,11 +79,15 @@ class ContactRepository extends Repository
                 'error' => $error
             ]);
         }
-            if ($contacts){
-                return $contacts;
-            }else {
-                return false;
+        if ($idContacts){
+            $idContactsArray=[];
+            foreach ($idContacts as $idContact){
+                $idContactsArray[] = $idContact['id_contact'];
             }
+            return $idContactsArray;
+        }else {
+            return false;
+        }
     }
 
     public function findAllContacts():Array|bool
@@ -104,6 +108,63 @@ class ContactRepository extends Repository
             $control->render('/errors', [
                 'error' => $error
             ]);
+        }
+    }
+    
+    public function UpdateIdMission(array|bool $idContactsArray, int $id_mission, array $newIdContacts ): void
+    {
+        if ($idContactsArray){
+            foreach ($idContactsArray as $idContact){
+                try{
+                    $pdoRemoveIdMission = $this->pdo->prepare("UPDATE contacts SET id_mission = null  WHERE id_contact = :id_contact ");
+                    $pdoRemoveIdMission->bindParam(':id_contact', $idContact, $this->pdo::PARAM_STR);
+                    $pdoRemoveIdMission->execute();
+                }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+                }
+            }
+        }
+        if (!is_null($newIdContacts)){
+            foreach ($newIdContacts as $newIdContact){
+                try{
+                    $pdoUpdateIdMission = $this->pdo->prepare("UPDATE contacts SET id_mission = :id_mission  WHERE id_contact = :id_contact ");
+                    $pdoUpdateIdMission->bindParam(':id_contact', $newIdContact, $this->pdo::PARAM_STR);
+                    $pdoUpdateIdMission->bindParam(':id_mission', $id_mission, $this->pdo::PARAM_INT);
+                    $pdoUpdateIdMission->execute();
+                }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+                }
+            }
+        }
+    }
+
+    public function contactMissionValidate(string $idContact, int $idMission):bool
+    {
+        $reponse = false;
+        $missionIdCountry = null;
+        $personRepository = new PersonRepository();
+        $contactIdsCountry = $personRepository->findAllIdCountryByIdPerson($idContact);
+        $missionRepository = new MissionRepository();
+        $mission = $missionRepository->findOneMissionById($idMission);
+        if ($mission){
+            $missionIdCountry = $mission->getIdCountry();
+        }
+        if ($contactIdsCountry && !is_null($missionIdCountry)) {
+            if (in_array($missionIdCountry, $contactIdsCountry)){
+                return true;
+            }else {
+                return false;
+            }
+        } else {
+            return true;
         }
     }
 }
