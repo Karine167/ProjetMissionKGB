@@ -100,7 +100,7 @@ if ($country && key_exists('id',$country)) {
                     <div class="alert alert-danger"><?php echo($errors['hideouts']) ?></div>
                 <?php } ?>
                 <br>
-                <p class=" col-12 mt-2 attributName"> Sélectionner touts les contacts associées à la mission :</p>
+                <p class=" col-12 mt-2 attributName"> Sélectionner tous les contacts associées à la mission :</p>
                 <select multiple="multiple" name="contacts[]" id="contacts" class="col-12 attribueValue formInput" >
                     <optgroup label="contacts">
                         <option value=null > Aucun contact </option>
@@ -119,8 +119,31 @@ if ($country && key_exists('id',$country)) {
                 <?php if (!empty($errors['contacts'])){?>
                     <div class="alert alert-danger"><?php echo($errors['contacts']) ?></div>
                 <?php } ?>
+                <br>
+                <p class=" col-12 mt-2 attributName"> Sélectionner toutes les cibles de cette mission :</p>
+                <select multiple="multiple" name="targets[]" id="targets" class="col-12 attribueValue formInput" >
+                    <optgroup label="cibles">
+                        <option value=null > Aucune cible </option>
+                        <?php if ($targetsDB){
+                            foreach ($targetsDB as $targetDB) { 
+                                //vérification que la cible n'est pas déjà associée une autre mission que celle concernée par l'id de l'url
+                                if (is_null($targetDB['id_mission']) || ($idTargetsArray && in_array($targetDB['id'],$idTargetsArray))) { ?> 
+                                    <option value="<?php echo($targetDB['id'])?>" 
+                                    <?php  
+                                    if ($idTargetsArray && in_array($targetDB['id'],$idTargetsArray)){ ?> selected <?php }
+                                    ?> ><?php echo(htmlspecialchars($targetDB['complete_name']))?> </option>
+                            <?php } }}?>
+                    </optgroup>
+                </select>
+                <?php if (!empty($errors['targets'])){?>
+                    <div class="alert alert-danger"><?php echo($errors['targets']) ?></div>
+                <?php } ?>
+                <br>
+                
+
+                
                 <div class="mt-3 mb-2 mx-3">
-                    <input type="submit" name="hideouts-contacts" class="mx-3 mt-2 mb-1 btn btn-primary" value="Enregistrer">
+                    <input type="submit" name="completeMission" class="mx-3 mt-2 mb-1 btn btn-primary" value="Enregistrer">
                 </div>
             </div>
         </form>

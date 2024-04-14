@@ -36,6 +36,28 @@ class AgentRepository extends Repository
         }
     }
 
+    public function findAllIdAgentsByIdSpeciality(int $idSpeciality):array|bool
+    {
+        try{
+            $query = $this->pdo->prepare("SELECT id_agent FROM agents WHERE agents.id_agent = agents_spacialities.id_agent
+            LEFT JOIN agents_specialities ON id_speciality = :id_speciality");
+            $query->bindParam(':id_speciality', $idSpeciality, $this->pdo::PARAM_INT);
+            $query->execute();
+            $idAgents = $query->fetchAll($this->pdo::FETCH_ASSOC);
+            if ($idAgents){
+                return $idAgents;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
+
     public function findAllAgentsByMissionId(int $idMission):array|bool
     {
         try{

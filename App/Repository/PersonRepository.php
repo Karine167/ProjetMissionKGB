@@ -205,7 +205,7 @@ class PersonRepository extends Repository
                     break; 
                 case 'roleAgent':
                     $agent = new Agent();
-                    if ($_POST['mission']=="aucune"){
+                    if ($_POST['mission']=="noOne"){
                         $agent->setIdMission(null);
                     }else {
                         $agent->setIdMission($_POST['mission']);
@@ -224,7 +224,7 @@ class PersonRepository extends Repository
                     break;
                 case 'roleTarget':
                     $target = new Target();
-                    if ($_POST['mission']=="aucune"){
+                    if ($_POST['mission']=="noOne"){
                         $target->setIdMission(null);
                     }else {
                         $target->setIdMission($_POST['mission']);

@@ -70,7 +70,7 @@ class TargetRepository extends Repository
             $queryTargets = $this->pdo->prepare("SELECT id_target FROM targets WHERE targets.id_mission = :idMission");
             $queryTargets->bindParam(':idMission', $idMission, $this->pdo::PARAM_INT);
             $queryTargets->execute();
-            $targets = $queryTargets->fetchAll($this->pdo::FETCH_ASSOC);
+            $idTargets = $queryTargets->fetchAll($this->pdo::FETCH_ASSOC);
         }catch (\Exception $e){
             $error = $e->getMessage();
             $control = new Controller();
@@ -78,11 +78,15 @@ class TargetRepository extends Repository
                 'error' => $error
             ]);
         }
-            if ($targets){
-                return $targets;
-            }else {
-                return false;
+        if ($idTargets){
+            $idTargetsArray=[];
+            foreach ($idTargets as $idTarget){
+                $idTargetsArray[] = $idTarget['id_target'];
             }
+            return $idTargetsArray;
+        }else {
+            return false;
+        }
     }
 
     public function findAllTargets():Array|bool
@@ -103,6 +107,41 @@ class TargetRepository extends Repository
             $control->render('/errors', [
                 'error' => $error
             ]);
+        }
+    }
+
+    public function UpdateIdMission(array|bool $idTargetsArray, int $id_mission, array $newIdTargets ): void
+    {
+        if ($idTargetsArray){
+            foreach ($idTargetsArray as $idTarget){
+                try{
+                    $pdoRemoveIdMission = $this->pdo->prepare("UPDATE targets SET id_mission = null  WHERE id_target = :id_target ");
+                    $pdoRemoveIdMission->bindParam(':id_target', $idTarget, $this->pdo::PARAM_STR);
+                    $pdoRemoveIdMission->execute();
+                }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+                }
+            }
+        }
+        if (!is_null($newIdTargets)){
+            foreach ($newIdTargets as $newIdTarget){
+                try{
+                    $pdoUpdateIdMission = $this->pdo->prepare("UPDATE targets SET id_mission = :id_mission  WHERE id_target = :id_target ");
+                    $pdoUpdateIdMission->bindParam(':id_target', $newIdTarget, $this->pdo::PARAM_STR);
+                    $pdoUpdateIdMission->bindParam(':id_mission', $id_mission, $this->pdo::PARAM_INT);
+                    $pdoUpdateIdMission->execute();
+                }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+                }
+            }
         }
     }
 }
