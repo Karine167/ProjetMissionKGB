@@ -208,7 +208,40 @@ class PersonRepository extends Repository
                     if ($_POST['mission']=="noOne"){
                         $agent->setIdMission(null);
                     }else {
-                        $agent->setIdMission($_POST['mission']);
+                        $idMission = $_POST['mission'];
+                        //tableau des cibles de la mission
+                        $targetsRepository = new TargetRepository();
+                        $idTargets = $targetsRepository->findAllIdTargetsByMissionId($idMission);
+                        //Définition de l'id de l'agent
+                        if (key_exists('id', $_GET)){
+                            $idAgent = $_GET['id'];
+                        }else {
+                            if (key_exists('todo', $_GET) && $_GET['todo'] = 'create') {
+                                $idAgent = $id;
+                            }else{
+                                $idAgent = null;
+                            }
+                        }
+                        // Vérification des nationalités agents-cibles
+                        if (!is_null($idAgent)  && !is_null($idTargets) && !is_bool($idTargets)){
+                            foreach ($idTargets as $idTarget) {
+                                if (!is_null($idTarget)){
+                                    $personRepository = new PersonRepository();
+                                    $idsCountryTarget = $personRepository->findAllIdCountryByIdPerson($idTarget);
+                                    $idsCountryAgent = $_POST['nationality'];
+                                    if ($idsCountryTarget && $idsCountryAgent){
+                                        $intersect = array_intersect($idsCountryTarget, $idsCountryAgent);
+                                        if (!empty($intersect)){
+                                            $response['mission']="Vous ne pouvez pas choisir cette mission, car l'agent a la même nationalité qu'une des cibles."; 
+                                            $response['result']= false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if ($response['result']== true){
+                            $agent->setIdMission($idMission);
+                        }
                     }
                     
                     if (empty($_POST['specialityNames'])){
