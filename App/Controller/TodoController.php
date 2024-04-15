@@ -221,6 +221,7 @@ class TodoController extends BackController
         try{
             if (isset($_GET['id'])){
                 $idMission = $_GET['id'];
+                $personRepository = new PersonRepository();
                 //recherche de la mission
                 $missionRepository = new MissionRepository();
                 $mission = $missionRepository->findOneMissionById($idMission);
@@ -256,16 +257,60 @@ class TodoController extends BackController
                     $agentsDB = $agentRepository->findAllAgents();
                     $idAgentsArray = $agentRepository->findAllIdAgentsByMissionId($idMission);
                     if (isset($_POST['completeMission'])){
-                        if (isset($_POST['hideouts']) && !is_null($_POST['hideouts'])){
-                            $hideoutRepository->UpdateIdMission($idHideoutsArray, $idMission, $_POST['hideouts'] );
-                        }
-                        if (isset($_POST['contacts']) && !is_null($_POST['contacts'])){
-                            $contactRepository->UpdateIdMission($idContactsArray, $idMission, $_POST['contacts'] );
-                        } 
+                        //tableau des nouvelles cibles
                         if (isset($_POST['targets']) && !is_null($_POST['targets'])){
-                            $targetRepository->UpdateIdMission($idTargetsArray, $idMission, $_POST['targets'] );
-                        } 
-                        $this->home();
+                            $newTargets = $_POST['targets'];
+                        } else {
+                            $newTargets = null;
+                        }
+                        //tableau des nouveaux agents
+                        if (isset($_POST['agentsSpeciality'])){
+                            if (isset($_POST['agentsNoSpeciality'])) {
+                                $newAgents = array_merge($_POST['agentsSpeciality'], $_POST['agentsNoSpeciality']);
+                            } else {
+                                $newAgents = $_POST['agentsSpeciality'];
+                            }
+                        }else{
+                            if (isset($_POST['agentsNoSpeciality'])) {
+                                $newAgents = $_POST['agentsNoSpeciality'];
+                            } else {
+                                $newAgents = null;
+                            }
+                        }
+                        // Vérification des nationalités agents-cibles
+                        if (!is_null($newAgents)  && !is_null($newTargets)){
+                            foreach ($newAgents as $newAgent){
+                                if (!is_null($newAgent)){
+                                    foreach ($newTargets as $newTarget) {
+                                        if (!is_null($newTarget)){
+                                            $idsCountryTarget = $personRepository->findAllIdCountryByIdPerson($newTarget);
+                                            $idsCountryAgent = $personRepository->findAllIdCountryByIdPerson($newAgent);
+                                            if ($idsCountryTarget && $idsCountryAgent){
+                                                $intersect = array_intersect($idsCountryTarget, $idsCountryAgent);
+                                                if (!empty($intersect)){
+                                                    $agentNoCorrect = $personRepository->findOnePersonById($newAgent);
+                                                    $errors['agents']="Vous ne pouvez pas choisir l'agent : " . $agentNoCorrect->getLastName() . " " . $agentNoCorrect->getFirstName() . ", car il a la même nationalité qu'une des cibles."; 
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                            
+                        if (empty($errors)){
+                            $agentRepository->UpdateIdMission($idAgentsArray, $idMission, $newAgents);
+                            $targetRepository->UpdateIdMission($idTargetsArray, $idMission, $newTargets );
+
+                            if (isset($_POST['hideouts']) && !is_null($_POST['hideouts'])){
+                                $hideoutRepository->UpdateIdMission($idHideoutsArray, $idMission, $_POST['hideouts'] );
+                            }
+                            if (isset($_POST['contacts']) && !is_null($_POST['contacts'])){
+                                $contactRepository->UpdateIdMission($idContactsArray, $idMission, $_POST['contacts'] );
+                            } 
+                            $this->home();
+                        }
+                        
                     }
                 }
                 $this->render('/homeBack', [

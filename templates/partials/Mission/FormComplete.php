@@ -21,7 +21,9 @@ var_dump($idAgentsArray);  */
     <div class="col-11 m-3 p-3 ">
         <?php if ($errors) { ?>
             <div class="alert alert-danger">
-                <?php echo($errors) ?>
+                <?php foreach ($errors as $error){ ?>
+                    <?php echo($error) ?>
+                <?php }?>
             </div>
         <?php } else {
             if ($mission) { ?>
@@ -158,7 +160,7 @@ if ($country && key_exists('id',$country)) {
                         $speAgent = $agentRepository->findOneAgentById($idAgentSpeciality);
                         if (!is_bool($speAgent)){
                             $idMissionSpeAgent = $speAgent->getIdMission();
-                            if ($idMissionSpeAgent && $idMissionSpeAgent == $_GET['id']){
+                            if (is_null($idMissionSpeAgent) || ($idMissionSpeAgent && $idMissionSpeAgent == $_GET['id'])){
                                 $dispo +=1 ;
                             }
                         }
@@ -176,7 +178,7 @@ if ($country && key_exists('id',$country)) {
                                         <option value="<?php echo($agentDB['id'])?>" 
                                         <?php  
                                         if ($idAgentsArray && in_array($agentDB['id'],$idAgentsArray)){ ?> selected <?php }
-                                        ?> ><?php echo(htmlspecialchars($agentDB['complete_name']."(".$speAgent.")"));?> </option>
+                                        ?> ><?php echo(htmlspecialchars($agentDB['complete_name']." (".$speAgent.")"));?> </option>
                                 <?php } }}?>
                         </optgroup>
                     </select>
@@ -194,7 +196,7 @@ if ($country && key_exists('id',$country)) {
                                     <option value="<?php echo($agentDB['id'])?>" 
                                     <?php  
                                     if ($idAgentsArray && in_array($agentDB['id'],$idAgentsArray)){ ?> selected <?php }
-                                    ?> ><?php echo(htmlspecialchars($agentDB['complete_name']."(".$speAgent.")"));?> </option>
+                                    ?> ><?php echo(htmlspecialchars($agentDB['complete_name']." (".$speAgent.")"));?> </option>
                             <?php } }}?>
                     </optgroup>
                 </select>

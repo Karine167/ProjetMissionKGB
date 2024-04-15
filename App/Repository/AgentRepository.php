@@ -188,5 +188,40 @@ class AgentRepository extends Repository
         }
     }
 
-
+    public function UpdateIdMission(array|bool $idAgentsArray, int $id_mission, array $newIdAgents ): void
+    {
+        if ($idAgentsArray){
+            foreach ($idAgentsArray as $idAgent){
+                try{
+                    $pdoRemoveIdMission = $this->pdo->prepare("UPDATE agents SET id_mission = null  WHERE id_agent = :id_agent ");
+                    $pdoRemoveIdMission->bindParam(':id_agent', $idAgent, $this->pdo::PARAM_STR);
+                    $pdoRemoveIdMission->execute();
+                }catch (\Exception $e){
+                    $error = $e->getMessage();
+                    $control = new Controller();
+                    $control->render('/errors', [
+                        'error' => $error
+                    ]);
+                }
+            }
+        }
+        if (!is_null($newIdAgents)){
+            foreach ($newIdAgents as $newIdAgent){
+                if (!is_null($newIdAgent)){
+                    try{
+                        $pdoUpdateIdMission = $this->pdo->prepare("UPDATE agents SET id_mission = :id_mission  WHERE id_agent = :id_agent ");
+                        $pdoUpdateIdMission->bindParam(':id_agent', $newIdAgent, $this->pdo::PARAM_STR);
+                        $pdoUpdateIdMission->bindParam(':id_mission', $id_mission, $this->pdo::PARAM_INT);
+                        $pdoUpdateIdMission->execute();
+                    }catch (\Exception $e){
+                        $error = $e->getMessage();
+                        $control = new Controller();
+                        $control->render('/errors', [
+                            'error' => $error
+                        ]);
+                    }
+                }
+            }
+        }
+    }
 }
