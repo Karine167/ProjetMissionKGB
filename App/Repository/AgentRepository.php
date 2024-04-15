@@ -39,13 +39,16 @@ class AgentRepository extends Repository
     public function findAllIdAgentsByIdSpeciality(int $idSpeciality):array|bool
     {
         try{
-            $query = $this->pdo->prepare("SELECT id_agent FROM agents WHERE agents.id_agent = agents_spacialities.id_agent
-            LEFT JOIN agents_specialities ON id_speciality = :id_speciality");
+            $query = $this->pdo->prepare("SELECT id_agent FROM agents_specialities WHERE id_speciality = :id_speciality");
             $query->bindParam(':id_speciality', $idSpeciality, $this->pdo::PARAM_INT);
             $query->execute();
             $idAgents = $query->fetchAll($this->pdo::FETCH_ASSOC);
             if ($idAgents){
-                return $idAgents;
+                $idAgentsArray=[];
+                foreach ($idAgents as $idAgent){
+                    $idAgentsArray[]= $idAgent['id_agent'];
+                }
+                return $idAgentsArray;
             }else {
                 return false;
             }
@@ -102,7 +105,11 @@ class AgentRepository extends Repository
             ]);
         }
             if ($agents){
-                return $agents;
+                $agentsArray = [];
+                foreach ($agents as $agent){
+                    $agentsArray[] = $agent['id_agent'];
+                }
+                return $agentsArray;
             }else {
                 return false;
             }
@@ -111,7 +118,7 @@ class AgentRepository extends Repository
     public function findAllIdSpecialityByIdPerson($idPerson):array|bool{
         $specialities=[];
         try{
-            $query = $this->pdo->prepare("SELECT * FROM agents_specialities WHERE id_agent = :id_agent");
+            $query = $this->pdo->prepare("SELECT id_speciality FROM agents_specialities WHERE id_agent = :id_agent");
             $query->bindParam(':id_agent', $idPerson, $this->pdo::PARAM_STR);
             $query->execute();
             $agentSpecialities = $query->fetchAll($this->pdo::FETCH_ASSOC);
@@ -131,6 +138,35 @@ class AgentRepository extends Repository
             ]);
         }
     }
+
+    public function findAllSpecialitiesByIdAgent (string $idAgent): string|bool
+    {
+        $specialities=" ";
+        try{
+            $query = $this->pdo->prepare("SELECT agents.id_agent, specialities.name FROM agents 
+            LEFT JOIN agents_specialities ON agents_specialities.id_agent = agents.id_agent
+            LEFT JOIN specialities ON specialities.id = agents_specialities.id_speciality 
+            WHERE agents.id_agent = :id_agent");
+            $query->bindParam(':id_agent', $idAgent, $this->pdo::PARAM_STR);
+            $query->execute();
+            $agentSpecialities = $query->fetchAll($this->pdo::FETCH_ASSOC);
+            if ($agentSpecialities){
+                foreach ($agentSpecialities as $agentSpeciality){
+                    $specialities .= $agentSpeciality['name']. "; ";
+                }
+                return $specialities;
+            }else {
+                return false;
+            }
+        }catch (\Exception $e){
+            $error = $e->getMessage();
+            $control = new Controller();
+            $control->render('/errors', [
+                'error' => $error
+            ]);
+        }
+    }
+
     public function findAllAgents():Array|bool
     {
         try{
@@ -151,4 +187,6 @@ class AgentRepository extends Repository
             ]);
         }
     }
+
+
 }

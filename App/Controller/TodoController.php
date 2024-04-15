@@ -220,15 +220,15 @@ class TodoController extends BackController
         $page='/partials/Mission/FormComplete.php';
         try{
             if (isset($_GET['id'])){
-                $id = $_GET['id'];
+                $idMission = $_GET['id'];
                 //recherche de la mission
                 $missionRepository = new MissionRepository();
-                $mission = $missionRepository->findOneMissionById($id);
+                $mission = $missionRepository->findOneMissionById($idMission);
                 if (!$mission){
                     $errors['mission']='Cette mission n\'existe pas.';    
                 }else {
                     
-                    $response = $missionRepository->findAllInformationsOnOneMissionByID($id);
+                    $response = $missionRepository->findAllInformationsOnOneMissionByID($idMission);
                     $targets = $response['targets'];
                     $contacts = $response['contacts'];
                     $agents = $response['agents'];
@@ -239,25 +239,31 @@ class TodoController extends BackController
                     $hideoutsMission = $response['hideouts'];
                     //Ajout et suppression des planques
                     $hideoutRepository = new HideoutRepository();
-                    $idHideoutsArray = $hideoutRepository->findAllIdHideoutsByMissionId($id);
+                    $idHideoutsArray = $hideoutRepository->findAllIdHideoutsByMissionId($idMission);
                     $hideoutsDB = $hideoutRepository->findAllHideouts();
                     //Ajout et suppression des contacts
                     $contactRepository = new ContactRepository();
-                    $idContactsArray = $contactRepository->findAllIdContactsByMissionId($id);
+                    $idContactsArray = $contactRepository->findAllIdContactsByMissionId($idMission);
                     $contactsDB = $contactRepository->findAllContacts();
                     //Ajout et suppression des cibles
                     $targetRepository = new TargetRepository();
-                    $idTargetsArray = $targetRepository->findAllIdTargetsByMissionId($id);
+                    $idTargetsArray = $targetRepository->findAllIdTargetsByMissionId($idMission);
                     $targetsDB = $targetRepository->findAllTargets();
+                    //Ajout et suppression des Agents ayant la spécialité requise
+                    $agentRepository = new AgentRepository();
+                    $idSpeciality = $mission->getIdSpeciality();
+                    $idAgentsSpecialityArray = $agentRepository->findAllIdAgentsByIdSpeciality($idSpeciality);
+                    $agentsDB = $agentRepository->findAllAgents();
+                    $idAgentsArray = $agentRepository->findAllIdAgentsByMissionId($idMission);
                     if (isset($_POST['completeMission'])){
                         if (isset($_POST['hideouts']) && !is_null($_POST['hideouts'])){
-                            $hideoutRepository->UpdateIdMission($idHideoutsArray, $id, $_POST['hideouts'] );
+                            $hideoutRepository->UpdateIdMission($idHideoutsArray, $idMission, $_POST['hideouts'] );
                         }
                         if (isset($_POST['contacts']) && !is_null($_POST['contacts'])){
-                            $contactRepository->UpdateIdMission($idContactsArray, $id, $_POST['contacts'] );
+                            $contactRepository->UpdateIdMission($idContactsArray, $idMission, $_POST['contacts'] );
                         } 
                         if (isset($_POST['targets']) && !is_null($_POST['targets'])){
-                            $targetRepository->UpdateIdMission($idTargetsArray, $id, $_POST['targets'] );
+                            $targetRepository->UpdateIdMission($idTargetsArray, $idMission, $_POST['targets'] );
                         } 
                         $this->home();
                     }
@@ -280,6 +286,9 @@ class TodoController extends BackController
                     'idContactsArray' => $idContactsArray,
                     'targetsDB' => $targetsDB,
                     'idTargetsArray' => $idTargetsArray,
+                    'idAgentsSpecialityArray' => $idAgentsSpecialityArray,
+                    'agentsDB' => $agentsDB,
+                    'idAgentsArray' => $idAgentsArray,
                 ]);     
             }else{
                 throw new \Exception("Aucun id spécifié");

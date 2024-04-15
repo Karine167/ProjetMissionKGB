@@ -1,7 +1,15 @@
 <?php 
 use App\Repository\PersonRepository;
+use App\Repository\AgentRepository;
 
 $personRepository = new PersonRepository();
+$agentRepository = new AgentRepository();
+/* var_dump('avec la spe :');
+var_dump($idAgentsSpecialityArray);
+var_dump('en BDD :');
+var_dump($agentsDB);
+var_dump('sur la mission :');
+var_dump($idAgentsArray); */
 
 ?>
 <div class="row d-flex justify-content-center ">
@@ -92,7 +100,7 @@ if ($country && key_exists('id',$country)) {
                                     <option value="<?php echo($hideout['id'])?>" 
                                     <?php  
                                     if ($idHideoutsArray && in_array($hideout['id'],$idHideoutsArray)){ ?> selected <?php }
-                                    ?> ><?php echo(htmlspecialchars($hideout['type_hide']." : ".$hideout['address'] . ", " . $hideout['zipcode'] . ", " . $hideout['city'] . ", " . $hideout['country_name']))?> </option>
+                                    ?> ><?php echo(htmlspecialchars($hideout['type_hide']." : ".$hideout['address'] . ", " . $hideout['zipcode'] . ", " . $hideout['city'] . ", " . $hideout['country_name'])); ?> </option>
                             <?php } }}?>
                     </optgroup>
                 </select>
@@ -112,7 +120,7 @@ if ($country && key_exists('id',$country)) {
                                     <option value="<?php echo($contactDB['id'])?>" 
                                     <?php  
                                     if ($idContactsArray && in_array($contactDB['id'],$idContactsArray)){ ?> selected <?php }
-                                    ?> ><?php echo(htmlspecialchars($contactDB['complete_name']))?> </option>
+                                    ?> ><?php echo(htmlspecialchars($contactDB['complete_name'])); ?> </option>
                             <?php } }}?>
                     </optgroup>
                 </select>
@@ -131,7 +139,7 @@ if ($country && key_exists('id',$country)) {
                                     <option value="<?php echo($targetDB['id'])?>" 
                                     <?php  
                                     if ($idTargetsArray && in_array($targetDB['id'],$idTargetsArray)){ ?> selected <?php }
-                                    ?> ><?php echo(htmlspecialchars($targetDB['complete_name']))?> </option>
+                                    ?> ><?php echo(htmlspecialchars($targetDB['complete_name'])); ?> </option>
                             <?php } }}?>
                     </optgroup>
                 </select>
@@ -139,9 +147,47 @@ if ($country && key_exists('id',$country)) {
                     <div class="alert alert-danger"><?php echo($errors['targets']) ?></div>
                 <?php } ?>
                 <br>
-                
+                <p class=" col-12 mt-2 attributName"> Sélectionner tous les agents ayant la spécialité requise pour cette mission :</p>
+                <?php if (!$idAgentsSpecialityArray) { ?>
+                    <div class="alert alert-danger">Aucun agent disponible, il faut recruter !!</div>
+                <?php } else {  ?>
+                    <select multiple="multiple" name="agentsSpeciality[]" id="agentsSpeciality" class="col-12 attribueValue formInput" >
+                        <optgroup label="Agents spécialistes">
+                            <?php if ($agentsDB){
+                                foreach ($agentsDB as $agentDB) { 
+                                    //vérification que l'agent a la spécialité et qu'il n'est pas déjà associé une autre mission que celle concernée par l'id de l'url
+                                    if ((is_null($agentDB['id_mission']) || ($idAgentsArray && in_array($agentDB['id'],$idAgentsArray))) && (in_array($agentDB['id'], $idAgentsSpecialityArray))) { 
+                                        $speAgent = $agentRepository->findAllSpecialitiesByIdAgent($agentDB['id']);?> 
+                                        <option value="<?php echo($agentDB['id'])?>" 
+                                        <?php  
+                                        if ($idAgentsArray && in_array($agentDB['id'],$idAgentsArray)){ ?> selected <?php }
+                                        ?> ><?php echo(htmlspecialchars($agentDB['complete_name']."(".$speAgent.")"));?> </option>
+                                <?php } }}?>
+                        </optgroup>
+                    </select>
+                <?php } ?>
+                <br>
+                <p class=" col-12 mt-2 attributName"> Sélectionner éventuellement d'autres agents pour cette mission :</p>
+                <select multiple="multiple" name="agentsNoSpeciality[]" id="agentsNoSpeciality" class="col-12 attribueValue formInput" >
+                    <optgroup label="Agents non spécialistes">
+                        <option value="null"> Aucun agent </option>
+                        <?php if ($agentsDB){
+                            foreach ($agentsDB as $agentDB) { 
+                                //vérification que l'agent n'a pas la spécialité et qu'il n'est pas déjà associé une autre mission que celle concernée par l'id de l'url
+                                if ((is_null($agentDB['id_mission']) || ($idAgentsArray && in_array($agentDB['id'],$idAgentsArray))) && (!in_array($agentDB['id'], $idAgentsSpecialityArray))) { 
+                                    $speAgent = $agentRepository->findAllSpecialitiesByIdAgent($agentDB['id']);?> 
+                                    <option value="<?php echo($agentDB['id'])?>" 
+                                    <?php  
+                                    if ($idAgentsArray && in_array($agentDB['id'],$idAgentsArray)){ ?> selected <?php }
+                                    ?> ><?php echo(htmlspecialchars($agentDB['complete_name']."(".$speAgent.")"));?> </option>
+                            <?php } }}?>
+                    </optgroup>
+                </select>
+                <?php if (!empty($errors['agents'])){?>
+                    <div class="alert alert-danger"><?php echo($errors['agents']) ?></div>
+                <?php } ?>
 
-                
+
                 <div class="mt-3 mb-2 mx-3">
                     <input type="submit" name="completeMission" class="mx-3 mt-2 mb-1 btn btn-primary" value="Enregistrer">
                 </div>

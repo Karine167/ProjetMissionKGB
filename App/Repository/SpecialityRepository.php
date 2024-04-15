@@ -66,6 +66,7 @@ class SpecialityRepository extends Repository
             ]);
         }
     }
+    
     public function SpecialityValidate(): array
     {
         $response['result']= false;
