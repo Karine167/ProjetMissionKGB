@@ -1,4 +1,6 @@
-<?php 
+<?php
+
+use App\Entity\Agent;
 use App\Repository\PersonRepository;
 use App\Repository\AgentRepository;
 
@@ -9,7 +11,7 @@ var_dump($idAgentsSpecialityArray);
 var_dump('en BDD :');
 var_dump($agentsDB);
 var_dump('sur la mission :');
-var_dump($idAgentsArray); */
+var_dump($idAgentsArray);  */
 
 ?>
 <div class="row d-flex justify-content-center ">
@@ -148,9 +150,22 @@ if ($country && key_exists('id',$country)) {
                 <?php } ?>
                 <br>
                 <p class=" col-12 mt-2 attributName"> Sélectionner tous les agents ayant la spécialité requise pour cette mission :</p>
-                <?php if (!$idAgentsSpecialityArray) { ?>
+                <?php if (!($idAgentsSpecialityArray) ) { ?>
                     <div class="alert alert-danger">Aucun agent disponible, il faut recruter !!</div>
-                <?php } else {  ?>
+                <?php } else {  
+                    $dispo = 0;
+                    foreach ($idAgentsSpecialityArray as $idAgentSpeciality){
+                        $speAgent = $agentRepository->findOneAgentById($idAgentSpeciality);
+                        if (!is_bool($speAgent)){
+                            $idMissionSpeAgent = $speAgent->getIdMission();
+                            if ($idMissionSpeAgent && $idMissionSpeAgent == $_GET['id']){
+                                $dispo +=1 ;
+                            }
+                        }
+                    }
+                    if ($dispo == 0) { ?>
+                        <div class="alert alert-danger">Aucun agent disponible, il faut recruter !!</div>
+                <?php } else { ?>
                     <select multiple="multiple" name="agentsSpeciality[]" id="agentsSpeciality" class="col-12 attribueValue formInput" >
                         <optgroup label="Agents spécialistes">
                             <?php if ($agentsDB){
@@ -165,7 +180,7 @@ if ($country && key_exists('id',$country)) {
                                 <?php } }}?>
                         </optgroup>
                     </select>
-                <?php } ?>
+                <?php }} ?>
                 <br>
                 <p class=" col-12 mt-2 attributName"> Sélectionner éventuellement d'autres agents pour cette mission :</p>
                 <select multiple="multiple" name="agentsNoSpeciality[]" id="agentsNoSpeciality" class="col-12 attribueValue formInput" >

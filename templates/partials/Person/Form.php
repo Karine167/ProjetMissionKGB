@@ -131,37 +131,41 @@ if(key_exists('id',$_GET)){
                                 <div class="alert alert-danger"><?php echo($errors['nationality']); ?></div>
                             <?php } ?>
                         </div>
-                        
-                        <fieldset>
-                            <legend class="attributName">Sélectionner un rôle :</legend>
-                            <div class="row d-flex justify-content-space-between ">
-                                <div class="col-3">
-                                    <input type="radio" id="roleAdmin" name="roleRadio" value="roleAdmin" 
-                                    <?php if ($roleRadio == 'roleAdmin') {?> checked <?php } ?>/>
-                                    <label for="roleAdmin">Admin</label>
-                                </div>
+                        <div class= "
+                        <?php if ($_GET['todo']=='edit'){
+                            echo('d-none');
+                        }
+                        ?>">
+                            <fieldset>
+                                <legend class="attributName">Sélectionner un rôle :</legend>
+                                <div class="row d-flex justify-content-space-between ">
+                                    <div class="col-3">
+                                        <input type="radio" id="roleAdmin" name="roleRadio" value="roleAdmin" 
+                                        <?php if ($roleRadio == 'roleAdmin') {?> checked <?php } ?>/>
+                                        <label for="roleAdmin">Admin</label>
+                                    </div>
 
-                                <div class="col-3">
-                                    <input type="radio" id="roleAgent" name="roleRadio" value="roleAgent" 
-                                    <?php if ($roleRadio == 'roleAgent') {?> checked <?php } ?>/>
-                                    <label for="roleAgent">Agent</label>
-                                </div>
+                                    <div class="col-3">
+                                        <input type="radio" id="roleAgent" name="roleRadio" value="roleAgent" 
+                                        <?php if ($roleRadio == 'roleAgent') {?> checked <?php } ?>/>
+                                        <label for="roleAgent">Agent</label>
+                                    </div>
 
-                                <div class="col-3">
-                                    <input type="radio" id="roleTarget" name="roleRadio" value="roleTarget" 
-                                    <?php if ($roleRadio == 'roleTarget') {?> checked <?php } ?>/>
-                                    <label for="roleTarget">Cible</label>
-                                </div>
+                                    <div class="col-3">
+                                        <input type="radio" id="roleTarget" name="roleRadio" value="roleTarget" 
+                                        <?php if ($roleRadio == 'roleTarget') {?> checked <?php } ?>/>
+                                        <label for="roleTarget">Cible</label>
+                                    </div>
 
-                                <div class="col-3">
-                                    <input type="radio" id="roleContact" name="roleRadio" value="roleContact"
-                                    <?php if ($roleRadio == 'roleContact') {?> checked <?php } ?>/>
-                                    <label for="roleContact">Contact </label>
-                                </div>
+                                    <div class="col-3">
+                                        <input type="radio" id="roleContact" name="roleRadio" value="roleContact"
+                                        <?php if ($roleRadio == 'roleContact') {?> checked <?php } ?>/>
+                                        <label for="roleContact">Contact </label>
+                                    </div>
 
-                            </div>
-                        </fieldset> 
-                        
+                                </div>
+                            </fieldset> 
+                        </div>
                         <div id="formAdmin" class="<?php if ($roleRadio == 'roleAdmin') { echo("d-block"); } else { echo("d-none"); } ?> formCategory" >
                             <div class="mt-3 mb-5 mx-2">
                                 <label for="email" class="form-label">Email :</label>

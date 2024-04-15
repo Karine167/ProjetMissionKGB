@@ -435,6 +435,7 @@ class PersonRepository extends Repository
                     'error' => $error
                 ]);
         }
+        //mise à jour des nationalités de la personne
         try {
             $pdoRemoveCountry = $this->pdo->prepare("DELETE FROM persons_countries WHERE id_person = :id_person");
             $pdoRemoveCountry->bindParam(':id_person', $id, $this->pdo::PARAM_STR);
@@ -454,7 +455,7 @@ class PersonRepository extends Repository
             ]);
         }
         
-        
+        //Mise à jour de l'id de la mission en fonction du rôle de la personne
         if (array_key_exists('contactArray', $object[0])){
             $contact = $object[0]['contactArray']['contact'];
             $idMission = $contact->getIdMission();
@@ -502,6 +503,7 @@ class PersonRepository extends Repository
                         'error' => $error
                     ]);
             }
+            //Mise à jour des spécialités (uniquement pour les agents)
             try{
                 $pdoRemoveSpeciality = $this->pdo->prepare("DELETE FROM agents_specialities WHERE id_agent = :id_agent");
                 $pdoRemoveSpeciality->bindParam(':id_agent', $id, $this->pdo::PARAM_STR);
@@ -519,9 +521,9 @@ class PersonRepository extends Repository
                 $control->render('/errors', [
                     'error' => $error
                 ]);
-            }
-            
+            } 
         }
+        
         if (array_key_exists('adminArray', $object[0])){
             $admin = $object[0]['adminArray']['admin'];
             $email = $admin->getEmail();
