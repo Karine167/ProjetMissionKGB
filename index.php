@@ -1,5 +1,23 @@
 <?php 
+use App\Controller\Controller;
 
+// Définition d'un gestionnaire d'exception global
+set_exception_handler(function (Throwable $e){
+    $filelog = fopen('logError.txt', 'w');
+    $date = date('d-m-Y H:i:s');
+    $error = $date.", " . $e->getMessage() . ", " . $e->getCode() . ", " . $e->getFile() . ", " . $e->getLine();
+    error_log($error, 3, 'logError.txt');
+    fclose($filelog);
+    $control = new Controller();
+    $error = "Une erreur s'est produite... Veuillez nous excusez.";
+    $control->render('/errors', [
+        'error' => $error
+    ]);
+});
+// Définition d'un gestionnaire d'erreurs global
+set_error_handler(function ($errno, $errstr, $errfile, $errline){
+    throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+});
 session_set_cookie_params([
     'lifetime' => 3600,
     'path' => '/',
@@ -14,9 +32,8 @@ define('_TEMPLATEPATH_', __DIR__.'/templates');
 
 spl_autoload_register();
 
-use App\Controller\Controller;
-
 $controller = new Controller();
 $controller->route();
 
-
+restore_error_handler();
+restore_exception_handler();
