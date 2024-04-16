@@ -41,6 +41,7 @@ if(key_exists('id',$_GET)){
             $idmission = $agentDB->getIdMission();
             $IdpersonSpecialitys = $agentRepository->findAllIdSpecialityByIdPerson($idPerson);
         } else {
+            $IdpersonSpecialitys = false;
             $adminRepository = new AdminRepository();
             $adminDB = $adminRepository->findOneAdminById($idPerson);
             if ($adminDB){

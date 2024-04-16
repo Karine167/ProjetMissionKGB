@@ -161,12 +161,12 @@ class PersonRepository extends Repository
                         $response['email']='Le champ email ne doit pas être vide';
                         $response['result']= false;
                     } elseif (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
-                            $errors['email']='L\'email n\'est pas valide';
+                            $response['email']='L\'email n\'est pas valide';
                             $response['result']= false;
                     }else{
                         $adminRepository = new AdminRepository();
-                        $admin = $adminRepository->findOneAdminByEmail($_POST['email']);
-                        if (!$admin){
+                        $adminBD = $adminRepository->findOneAdminByEmail($_POST['email']);
+                        if (!$adminBD){
                             if (empty($_POST['password'])){
                                 $response['password']='Le mot de passe ne doit pas être vide. ';
                                 $response['result']= false;

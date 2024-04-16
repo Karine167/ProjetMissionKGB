@@ -34,8 +34,7 @@ $idMissionArray = [];
                         <div class="mt-3 mb-5 mx-2">
                             <label for="address" class=" col-4 d-inline attributName"> Adresse :</label>
                             <textarea class="col-8 d-inline attribueValue formInput" id="address" name="address" ><?php 
-                                if (!is_null($hideout)) { echo(trim(htmlspecialchars($hideout['address'])));}?>
-                            </textarea>
+                                if (!is_null($hideout)) { echo(trim(htmlspecialchars($hideout['address'])));}?></textarea>
                             <?php if (!empty($errors['address'])){?>
                                 <div class="alert alert-danger"><?php echo($errors['address']) ?></div>
                             <?php } ?>
