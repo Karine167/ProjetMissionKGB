@@ -6,12 +6,6 @@ use App\Repository\AgentRepository;
 
 $personRepository = new PersonRepository();
 $agentRepository = new AgentRepository();
-/* var_dump('avec la spe :');
-var_dump($idAgentsSpecialityArray);
-var_dump('en BDD :');
-var_dump($agentsDB);
-var_dump('sur la mission :');
-var_dump($idAgentsArray);  */
 
 ?>
 <div class="row d-flex justify-content-center ">
@@ -90,10 +84,10 @@ if ($country && key_exists('id',$country)) {
     <div class="col-8 mx-3 my-2 p-2  d-flex align-items-center justify-content-center pageTitle">
         <h4 class="fw-bold"> Ajouter ou supprimer des planques et des contacts : </h4>
     </div>
-    <div class="col-11 mx-3 my-1 p-3 justify-content-center formCategory">
+    <div class="col-11 mx-3 my-1 p-3 justify-content-center formCategory backForm">
         <form action="/index.php?controller=back&action=Mission&todo=complete&id=<?php echo($_GET['id']);?>" method="POST" name="hideouts">
             <div class="mt-3 mb-2 mx-2">
-                <p class="col-12 mb-2  attributName"> Sélectionner toutes les planques associées à la mission :</p>
+                <p class="col-12 mb-2  attributName"> Sélectionner toutes les planques :</p>
                 <select multiple="multiple" name="hideouts[]" id="hideouts" class="col-12  attribueValue formInput" >
                     <optgroup label="planques">
                         <option value=null > Aucune Planque </option>
@@ -112,7 +106,7 @@ if ($country && key_exists('id',$country)) {
                     <div class="alert alert-danger"><?php echo($errors['hideouts']) ?></div>
                 <?php } ?>
                 <br>
-                <p class=" col-12 mt-2 attributName"> Sélectionner tous les contacts associées à la mission :</p>
+                <p class=" col-12 mt-2 attributName"> Sélectionner tous les contacts :</p>
                 <select multiple="multiple" name="contacts[]" id="contacts" class="col-12 attribueValue formInput" >
                     <optgroup label="contacts">
                         <option value=null > Aucun contact </option>
@@ -132,7 +126,7 @@ if ($country && key_exists('id',$country)) {
                     <div class="alert alert-danger"><?php echo($errors['contacts']) ?></div>
                 <?php } ?>
                 <br>
-                <p class=" col-12 mt-2 attributName"> Sélectionner toutes les cibles de cette mission :</p>
+                <p class=" col-12 mt-2 attributName"> Sélectionner toutes les cibles :</p>
                 <select multiple="multiple" name="targets[]" id="targets" class="col-12 attribueValue formInput" >
                     <optgroup label="cibles">
                         <option value=null > Aucune cible </option>
@@ -151,7 +145,7 @@ if ($country && key_exists('id',$country)) {
                     <div class="alert alert-danger"><?php echo($errors['targets']) ?></div>
                 <?php } ?>
                 <br>
-                <p class=" col-12 mt-2 attributName"> Sélectionner tous les agents ayant la spécialité requise pour cette mission :</p>
+                <p class=" col-12 mt-2 attributName"> Sélectionner les agents ayant la spécialité requise :</p>
                 <?php if (!($idAgentsSpecialityArray) ) { ?>
                     <div class="alert alert-danger">Aucun agent disponible, il faut recruter !!</div>
                 <?php } else {  
@@ -184,7 +178,7 @@ if ($country && key_exists('id',$country)) {
                     </select>
                 <?php }} ?>
                 <br>
-                <p class=" col-12 mt-2 attributName"> Sélectionner éventuellement d'autres agents pour cette mission :</p>
+                <p class=" col-12 mt-2 attributName"> Sélectionner d'autres agents : (facultatif)</p>
                 <select multiple="multiple" name="agentsNoSpeciality[]" id="agentsNoSpeciality" class="col-12 attribueValue formInput" >
                     <optgroup label="Agents non spécialistes">
                         <option value="null"> Aucun agent </option>
