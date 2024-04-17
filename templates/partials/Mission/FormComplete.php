@@ -106,7 +106,7 @@ if ($country && key_exists('id',$country)) {
                     <div class="alert alert-danger"><?php echo($errors['hideouts']) ?></div>
                 <?php } ?>
                 <br>
-                <p class=" col-12 mt-2 attributName"> Sélectionner tous les contacts :</p>
+                <p class="col-12 mt-2 attributName"> Sélectionner tous les contacts :</p>
                 <select multiple="multiple" name="contacts[]" id="contacts" class="col-12 attribueValue formInput" >
                     <optgroup label="contacts">
                         <option value=null > Aucun contact </option>
@@ -126,7 +126,7 @@ if ($country && key_exists('id',$country)) {
                     <div class="alert alert-danger"><?php echo($errors['contacts']) ?></div>
                 <?php } ?>
                 <br>
-                <p class=" col-12 mt-2 attributName"> Sélectionner toutes les cibles :</p>
+                <p class="col-12 mt-2 attributName"> Sélectionner toutes les cibles :</p>
                 <select multiple="multiple" name="targets[]" id="targets" class="col-12 attribueValue formInput" >
                     <optgroup label="cibles">
                         <option value=null > Aucune cible </option>
@@ -145,7 +145,7 @@ if ($country && key_exists('id',$country)) {
                     <div class="alert alert-danger"><?php echo($errors['targets']) ?></div>
                 <?php } ?>
                 <br>
-                <p class=" col-12 mt-2 attributName"> Sélectionner les agents ayant la spécialité requise :</p>
+                <p class="col-12 mt-2 attributName"> Sélectionner les agents ayant la spécialité requise :</p>
                 <?php if (!($idAgentsSpecialityArray) ) { ?>
                     <div class="alert alert-danger">Aucun agent disponible, il faut recruter !!</div>
                 <?php } else {  
@@ -178,14 +178,14 @@ if ($country && key_exists('id',$country)) {
                     </select>
                 <?php }} ?>
                 <br>
-                <p class=" col-12 mt-2 attributName"> Sélectionner d'autres agents : (facultatif)</p>
+                <p class="col-12 mt-2 attributName"> Sélectionner d'autres agents : (facultatif)</p>
                 <select multiple="multiple" name="agentsNoSpeciality[]" id="agentsNoSpeciality" class="col-12 attribueValue formInput" >
                     <optgroup label="Agents non spécialistes">
                         <option value="null"> Aucun agent </option>
                         <?php if ($agentsDB){
                             foreach ($agentsDB as $agentDB) { 
                                 //vérification que l'agent n'a pas la spécialité et qu'il n'est pas déjà associé une autre mission que celle concernée par l'id de l'url
-                                if ((is_null($agentDB['id_mission']) || ($idAgentsArray && in_array($agentDB['id'],$idAgentsArray))) && (!in_array($agentDB['id'], $idAgentsSpecialityArray))) { 
+                                if ((is_null($agentDB['id_mission']) || ($idAgentsArray && in_array($agentDB['id'],$idAgentsArray))) && ($idAgentsSpecialityArray && !in_array($agentDB['id'], $idAgentsSpecialityArray))) { 
                                     $speAgent = $agentRepository->findAllSpecialitiesByIdAgent($agentDB['id']);?> 
                                     <option value="<?php echo($agentDB['id'])?>" 
                                     <?php  
