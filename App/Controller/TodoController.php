@@ -38,11 +38,11 @@ class TodoController extends BackController
                         $this->createElement();
                         break;
                     case 'edit':
-                        //ajout d'un élément
+                        //édition d'un élément
                         $this->editElement();
                         break;
                     case 'complete':
-                        //ajout d'un élément
+                        //complétion d’une mission avec les planques, contacts, cibles et agents
                         $this->completeMission();
                         break;
                     default:
